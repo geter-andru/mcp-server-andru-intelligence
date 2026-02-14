@@ -1,8 +1,8 @@
 /**
  * Andru MCP Server (Thin Proxy)
  *
- * Creates an MCP server that proxies all tool and resource requests
- * to the Andru backend API via the AndruClient.
+ * Lists tools and resources from the static catalog (no network needed).
+ * Proxies tool execution and resource reads to the Andru backend API.
  */
 
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
@@ -12,18 +12,19 @@ import {
   ListResourcesRequestSchema,
   ReadResourceRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
+import { tools, resources } from './catalog.js';
 
 /**
  * Create an MCP server backed by the Andru API.
  *
- * @param {import('./client.js').AndruClient} client
+ * @param {import('./client.js').AndruClient | null} client — null during scan mode (no API key)
  * @returns {Server}
  */
 export function createServer(client) {
   const server = new Server(
     {
       name: 'andru-intelligence',
-      version: '0.1.0',
+      version: '0.1.1',
     },
     {
       capabilities: {
@@ -33,19 +34,24 @@ export function createServer(client) {
     }
   );
 
-  // --- Tool handlers (proxy to backend) ---
+  // --- Tool listing (static catalog — no network) ---
 
   server.setRequestHandler(
     ListToolsRequestSchema,
-    async () => {
-      const result = await client.listTools();
-      return { tools: result.tools };
-    }
+    async () => ({ tools })
   );
+
+  // --- Tool execution (proxy to backend) ---
 
   server.setRequestHandler(
     CallToolRequestSchema,
     async (request) => {
+      if (!client) {
+        return {
+          content: [{ type: 'text', text: JSON.stringify({ error: 'ANDRU_API_KEY not configured. Tool execution requires an API key.' }) }],
+          isError: true,
+        };
+      }
       const { name, arguments: args } = request.params;
       try {
         return await client.callTool(name, args || {});
@@ -61,19 +67,27 @@ export function createServer(client) {
     }
   );
 
-  // --- Resource handlers (proxy to backend) ---
+  // --- Resource listing (static catalog — no network) ---
 
   server.setRequestHandler(
     ListResourcesRequestSchema,
-    async () => {
-      const result = await client.listResources();
-      return { resources: result.resources };
-    }
+    async () => ({ resources })
   );
+
+  // --- Resource reading (proxy to backend) ---
 
   server.setRequestHandler(
     ReadResourceRequestSchema,
     async (request) => {
+      if (!client) {
+        return {
+          contents: [{
+            uri: request.params.uri,
+            mimeType: 'text/plain',
+            text: JSON.stringify({ error: 'ANDRU_API_KEY not configured. Resource reads require an API key.' }),
+          }],
+        };
+      }
       const { uri } = request.params;
       try {
         return await client.readResource(uri);

@@ -31,21 +31,41 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { AndruClient } from './client.js';
 import { createServer } from './server.js';
 
-const apiKey = process.env.ANDRU_API_KEY;
+async function main() {
+  const apiKey = process.env.ANDRU_API_KEY;
+  const apiUrl = process.env.ANDRU_API_URL || 'https://api.andru.ai';
 
-if (!apiKey) {
-  console.error('[Andru MCP] Error: ANDRU_API_KEY environment variable is required');
-  console.error('[Andru MCP] Get your API key at https://app.andru.ai/settings/api-keys');
-  process.exit(1);
+  // When no API key, server still starts (tool listing works from static catalog,
+  // but tool execution will return an error). This allows registry scanners
+  // to discover tools without needing credentials.
+  let client = null;
+  if (apiKey) {
+    client = new AndruClient(apiKey, apiUrl);
+  } else {
+    console.error('[Andru MCP] Warning: ANDRU_API_KEY not set. Tool listing works, but execution requires an API key.');
+    console.error('[Andru MCP] Get your API key at https://app.andru.ai/settings/api-keys');
+  }
+
+  const server = createServer(client);
+  const transport = new StdioServerTransport();
+
+  await server.connect(transport);
+
+  console.error('[Andru MCP] Server running on stdio transport');
+  if (client) {
+    console.error(`[Andru MCP] API endpoint: ${apiUrl}`);
+  }
 }
 
-const apiUrl = process.env.ANDRU_API_URL || 'https://api.andru.ai';
+main().catch((err) => {
+  console.error('[Andru MCP] Fatal error:', err);
+  process.exit(1);
+});
 
-const client = new AndruClient(apiKey, apiUrl);
-const server = createServer(client);
-const transport = new StdioServerTransport();
-
-await server.connect(transport);
-
-console.error('[Andru MCP] Server running on stdio transport');
-console.error(`[Andru MCP] API endpoint: ${apiUrl}`);
+/**
+ * Smithery sandbox server — used by Smithery's scanner to discover
+ * tools and resources without real credentials.
+ */
+export function createSandboxServer() {
+  return createServer(null);
+}

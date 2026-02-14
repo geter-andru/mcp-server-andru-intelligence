@@ -1,6 +1,6 @@
 {
   "name": "mcp-server-andru-intelligence",
-  "version": "0.1.1",
+  "version": "0.1.3",
   "mcpName": "io.github.geter-andru/andru-intelligence",
   "description": "Andru Revenue Intelligence MCP Server — ICP scoring, persona profiling, competitive positioning, and buyer intelligence for technical SaaS founders.",
   "type": "module",
