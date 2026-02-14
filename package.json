@@ -1,0 +1,39 @@
+{
+  "name": "@andru/mcp-server-intelligence",
+  "version": "0.1.0",
+  "description": "Andru Revenue Intelligence MCP Server — ICP scoring, persona profiling, competitive positioning, and buyer intelligence for technical SaaS founders.",
+  "type": "module",
+  "bin": {
+    "andru-mcp": "./src/index.js"
+  },
+  "main": "./src/index.js",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "mcp-server",
+    "andru",
+    "revenue-intelligence",
+    "icp",
+    "buyer-intelligence",
+    "sales-intelligence",
+    "gtm",
+    "b2b",
+    "saas"
+  ],
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.26.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "author": "Andru (H&S)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/geter-andru/mcp-server-andru-intelligence.git"
+  },
+  "homepage": "https://andru.ai",
+  "bugs": {
+    "url": "https://github.com/geter-andru/mcp-server-andru-intelligence/issues"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "name": "andru-intelligence",
+  "title": "Andru Revenue Intelligence",
+  "description": "Strategic revenue intelligence for technical SaaS founders. ICP scoring, persona profiling, competitive positioning, buyer journey mapping, champion selling, and pre-meeting briefs — powered by 20 years of B2B sales wisdom.",
+  "version": "0.1.0",
+  "websiteUrl": "https://andru.ai",
+  "repository": {
+    "url": "https://github.com/geter-andru/mcp-server-andru-intelligence.git",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@andru/mcp-server-intelligence",
+      "version": "0.1.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "ANDRU_API_KEY",
+          "description": "Your Andru Platform API key. Get one at https://app.andru.ai/settings/api-keys",
+          "isRequired": true,
+          "isSecret": true
+        },
+        {
+          "name": "ANDRU_API_URL",
+          "description": "Andru API base URL (default: https://api.andru.ai)",
+          "isRequired": false,
+          "default": "https://api.andru.ai"
+        }
+      ]
+    }
+  ]
+}
