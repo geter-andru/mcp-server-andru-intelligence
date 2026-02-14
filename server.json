@@ -11,7 +11,7 @@
   "packages": [
     {
       "registryType": "npm",
-      "identifier": "@andru/mcp-server-intelligence",
+      "identifier": "mcp-server-andru-intelligence",
       "version": "0.1.0",
       "transport": {
         "type": "stdio"

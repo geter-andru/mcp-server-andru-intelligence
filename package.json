@@ -1,5 +1,5 @@
 {
-  "name": "@andru/mcp-server-intelligence",
+  "name": "mcp-server-andru-intelligence",
   "version": "0.1.0",
   "description": "Andru Revenue Intelligence MCP Server — ICP scoring, persona profiling, competitive positioning, and buyer intelligence for technical SaaS founders.",
   "type": "module",
