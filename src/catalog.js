@@ -6,19 +6,41 @@
  * Tool *execution* still proxies to the Andru API.
  *
  * Source of truth: backend/src/mcp/tools/*.js + backend/src/mcp/resources/*.js
+ *
+ * v0.2.0 — Founder-pain descriptions + cold-start product context params
  */
+
+// ── Cold-Start Product Context Params ───────────────────────────────────────
+// Added to 7 tools that support cold-start (no pipeline data required when these are provided).
+// Claude reads inputSchema.description before calling tools — these descriptions
+// guide Claude to infer from conversation context or ask the user.
+
+const COLD_START_PARAMS = {
+  productDescription: {
+    type: 'string',
+    description: 'A brief description of what the user\'s product does and who it\'s for. Infer this from the conversation if the user has already described their product. If the user hasn\'t mentioned their product yet, ask them: "What does your product do, and who do you sell to?" before calling this tool.',
+  },
+  vertical: {
+    type: 'string',
+    description: 'The industry the user sells into (e.g., "fintech", "healthcare", "defense"). Infer from conversation context — the user\'s product description, company name, or the companies they\'re asking about. If unclear, ask.',
+  },
+  targetRole: {
+    type: 'string',
+    description: 'The buyer role being evaluated (e.g., "CFO", "CTO", "VP Sales"). Infer from context — often explicit in the user\'s question. If not mentioned, default to the most senior relevant role for their vertical.',
+  },
+};
 
 // ── 15 Tools ────────────────────────────────────────────────────────────────
 
 export const tools = [
   {
     name: 'get_icp_fit_score',
-    description: 'Score a company against your ICP criteria. Returns a score (0-100), tier (A/B/C/D), and breakdown across 5 dimensions: firmographics, technographics, pain points, budget fit, and behavioral signals. No AI calls — pure algorithmic scoring.',
+    description: 'Tells you in seconds whether the company you\'re thinking about is worth your time — scores them against who actually buys from you and why, across 5 dimensions. No AI calls, instant results.',
     inputSchema: {
       type: 'object',
       properties: {
-        companyName: { type: 'string', description: 'Company name' },
-        domain: { type: 'string', description: 'Company domain' },
+        companyName: { type: 'string', description: 'Company name to evaluate' },
+        domain: { type: 'string', description: 'Company website domain' },
         industry: { type: 'string', description: 'Industry vertical' },
         employeeCount: { type: 'number', description: 'Number of employees' },
         revenue: { type: 'string', description: 'Revenue range (e.g., "$1M-$5M")' },
@@ -26,31 +48,33 @@ export const tools = [
         techStack: {
           type: 'array',
           items: { type: 'string' },
-          description: 'Technologies used',
+          description: 'Technologies the company uses',
         },
         painPoints: {
           type: 'array',
           items: { type: 'string' },
-          description: 'Known pain points or challenges',
+          description: 'Known pain points or challenges they face',
         },
         triggerEvents: {
           type: 'array',
           items: { type: 'string' },
           description: 'Recent trigger events (e.g., "just raised Series B", "new CTO hired")',
         },
+        ...COLD_START_PARAMS,
       },
     },
   },
 
   {
     name: 'get_persona_profile',
-    description: 'Find the best-matching buyer persona from your ICP for a given job title, industry, and company size. Returns persona details including MBTI distribution, pain points, empathy map, and messaging angles.',
+    description: 'Look up who you\'re actually talking to before the call — what they care about at 7 AM, why they\'ll say no, and exactly how to open. Returns persona details including MBTI distribution, empathy map, and messaging angles.',
     inputSchema: {
       type: 'object',
       properties: {
-        title: { type: 'string', description: 'Job title (e.g., "VP Engineering", "CTO", "Head of Sales")' },
-        industry: { type: 'string', description: 'Industry context' },
-        companySize: { type: 'string', description: 'Company size range' },
+        title: { type: 'string', description: 'Job title of the person you\'re meeting (e.g., "VP Engineering", "CTO", "Head of Sales")' },
+        industry: { type: 'string', description: 'Their industry' },
+        companySize: { type: 'string', description: 'Their company size range' },
+        ...COLD_START_PARAMS,
       },
       required: ['title'],
     },
@@ -58,16 +82,16 @@ export const tools = [
 
   {
     name: 'get_disqualification_signals',
-    description: 'Classify an opportunity using 3-layer scoring: ICP fit score, anti-pattern matching, and learned churn patterns. Returns STRONG/MODERATE/MARGINAL/ANTI_PATTERN classification with reasoning chain.',
+    description: 'Find out if you\'re wasting time on a deal that won\'t close. Runs the company through three layers of signal — ICP fit, anti-pattern matching, and churn patterns — and tells you whether to keep investing or walk away.',
     inputSchema: {
       type: 'object',
       properties: {
-        companyName: { type: 'string', description: 'Company name' },
+        companyName: { type: 'string', description: 'Company name to check' },
         industry: { type: 'string', description: 'Industry' },
         employeeCount: { type: 'number', description: 'Number of employees' },
         revenue: { type: 'string', description: 'Revenue range' },
         geography: { type: 'string', description: 'Location' },
-        techStack: { type: 'array', items: { type: 'string' }, description: 'Technologies used' },
+        techStack: { type: 'array', items: { type: 'string' }, description: 'Technologies they use' },
         dealContext: {
           type: 'object',
           properties: {
@@ -78,13 +102,14 @@ export const tools = [
           },
           description: 'Current deal context (if applicable)',
         },
+        ...COLD_START_PARAMS,
       },
     },
   },
 
   {
     name: 'get_messaging_framework',
-    description: 'Get messaging framework for a specific segment, funnel stage, or persona type. Returns value props, MBTI-adapted message templates, objection responses, voice variants, and content recommendations.',
+    description: 'Get the exact words to use — for a specific buyer type, channel, and funnel stage. MBTI-adapted so the analytical CTO and the results-driven VP Sales get different versions. Returns value props, objection responses, voice variants, and outbound templates.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -92,22 +117,23 @@ export const tools = [
         stage: {
           type: 'string',
           enum: ['awareness', 'consideration', 'decision'],
-          description: 'Buyer journey stage',
+          description: 'Where the buyer is in their journey',
         },
         channel: { type: 'string', description: 'Channel (email, linkedin, phone, etc.)' },
-        personaType: { type: 'string', description: 'Target persona title' },
+        personaType: { type: 'string', description: 'Target buyer title' },
         mbtiCategory: {
           type: 'string',
           enum: ['Analytical', 'Driver', 'Expressive', 'Amiable'],
           description: 'MBTI communication category for message adaptation',
         },
+        ...COLD_START_PARAMS,
       },
     },
   },
 
   {
     name: 'get_competitive_positioning',
-    description: 'Get competitive positioning intelligence against a specific competitor. Returns differentiation points, landmines to avoid, winning themes, and battlecard data.',
+    description: 'Gives you the battlecard for a specific competitor — where you win, where they\'ll attack, which questions to plant in the buyer\'s mind, and which landmines to avoid.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -121,6 +147,7 @@ export const tools = [
           type: 'string',
           description: 'Additional context (e.g., "enterprise deal", "competing on price")',
         },
+        ...COLD_START_PARAMS,
       },
       required: ['competitorName'],
     },
@@ -128,7 +155,7 @@ export const tools = [
 
   {
     name: 'classify_opportunity',
-    description: 'Classify an opportunity with full analysis: ICP fit score, persona match, disqualification check, risk assessment, and recommended next actions. Combines multiple engines for a comprehensive assessment.',
+    description: 'Run a full read on a deal in one call — fit score, persona match, risk flags, disqualification check, and a verdict: pursue, pause, or walk away. Combines multiple scoring engines for a comprehensive assessment.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -145,6 +172,7 @@ export const tools = [
         triggerEvents: { type: 'array', items: { type: 'string' }, description: 'Trigger events' },
         championIdentified: { type: 'boolean', description: 'Has a champion been identified?' },
         competitorInvolved: { type: 'string', description: 'Known competitor in the deal' },
+        ...COLD_START_PARAMS,
       },
       required: ['companyName'],
     },
@@ -152,7 +180,7 @@ export const tools = [
 
   {
     name: 'get_account_plan',
-    description: 'Get a structured account plan for a target company. Returns stakeholder map, value propositions, capability gaps, meeting prep, MEDDICC assessment, and CRM update package. Requires an existing Pure Signal ICP pipeline.',
+    description: 'Builds the account plan you\'d normally spend a weekend on — stakeholder map, what each person needs to hear, MEDDICC gaps, and the unified story across the buying committee.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -187,7 +215,7 @@ export const tools = [
 
   {
     name: 'get_capability_profile',
-    description: "Get a structured capability profile for the authenticated user's product. Returns capabilities, target customer, verified outcomes, trust signals, pricing model, and integrations. Includes values-based alignment scoring. Designed for buyer-side agent evaluation.",
+    description: 'Returns a machine-readable snapshot of what your product actually does and who it\'s for — capabilities, verified outcomes, trust signals, pricing model, and integrations. Designed for buyer-side agent evaluation.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -200,29 +228,30 @@ export const tools = [
 
   {
     name: 'get_evaluation_criteria',
-    description: "Evaluate seller-buyer alignment across Andru's 6 values: Empathy (pain point coverage), Clarity (outcome specificity), Authenticity (claim verification), Focus (feature relevance), Accountability (outcome tracking), Alignment (mutual investment). Returns scores 0-100 per dimension plus overall.",
+    description: 'Scores how well you actually match what this buyer needs — across pain coverage, outcome clarity, capability fit, and 3 more dimensions. Returns 0-100 per dimension plus overall alignment score.',
     inputSchema: {
       type: 'object',
       properties: {
         buyerPainPoints: {
           type: 'array',
           items: { type: 'string' },
-          description: "Buyer's known pain points",
+          description: 'Pain points the buyer has expressed or you expect them to have',
         },
-        buyerIndustry: { type: 'string', description: "Buyer's industry" },
+        buyerIndustry: { type: 'string', description: 'Buyer\'s industry' },
         buyerSize: { type: 'string', description: 'Buyer company size' },
         requiredCapabilities: {
           type: 'array',
           items: { type: 'string' },
-          description: 'Capabilities the buyer needs',
+          description: 'Capabilities the buyer needs from a solution',
         },
+        ...COLD_START_PARAMS,
       },
     },
   },
 
   {
     name: 'get_icp_profile',
-    description: 'Get the full Pure Signal ICP profile. Returns all 5 intelligence layers (Product-Market, Role, Psychological, Timing, Channel), the seven critical buyer questions, and anti-patterns/disqualifiers. Optionally filter to specific layers.',
+    description: 'Returns everything Andru knows about your ideal customer — all 5 intelligence layers, the 7 critical buyer questions, and the patterns that predict churn. Optionally filter to specific layers.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -231,15 +260,15 @@ export const tools = [
           items: { type: 'number', enum: [1, 2, 3, 4, 5] },
           description: 'Specific layers to include (1-5). Omit for all layers.',
         },
-        includeSevenAnswers: { type: 'boolean', description: 'Include seven answers (default: true)' },
-        includeAntiPatterns: { type: 'boolean', description: 'Include anti-patterns (default: true)' },
+        includeSevenAnswers: { type: 'boolean', description: 'Include seven critical buyer answers (default: true)' },
+        includeAntiPatterns: { type: 'boolean', description: 'Include anti-patterns and churn predictors (default: true)' },
       },
     },
   },
 
   {
     name: 'discover_prospects',
-    description: 'Discover companies that match your ICP using AI-powered web search. Returns a list of prospects with confidence scores and evidence. NOTE: This is an expensive operation that calls Claude API with web search — it may take 15-30 seconds and consumes AI credits.',
+    description: 'Finds real companies that look like your best customers — searches the web for companies showing the same buying signals your winners showed. Takes 15-30 seconds. Works without prior pipeline data.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -249,19 +278,19 @@ export const tools = [
         },
         productDescription: {
           type: 'string',
-          description: 'Description of your product or service',
+          description: 'What your product does and who it\'s for. Infer from conversation context if the user has already described their product.',
         },
         coreCapability: {
           type: 'string',
-          description: 'Your core capability or "pure signal" — the single most important thing your product does',
+          description: 'The single most important thing your product does — the core capability that makes customers buy',
         },
         industry: {
           type: 'string',
-          description: 'Target industry to search within (optional)',
+          description: 'Target industry to search within',
         },
         targetMarket: {
           type: 'string',
-          description: 'Target market segment (optional, e.g., "Series A SaaS companies")',
+          description: 'Target market segment (e.g., "Series A SaaS companies")',
         },
       },
       required: ['companyName', 'productDescription'],
@@ -270,17 +299,17 @@ export const tools = [
 
   {
     name: 'get_pre_brief',
-    description: 'Generate a pre-meeting brief with talk track, discovery questions, objection prep, and contextual intelligence. Provide an eventId for calendar-linked briefs, or provide meeting context directly. NOTE: This calls the AI API and consumes credits.',
+    description: 'Writes your pre-call prep so you don\'t walk in cold — talk track, discovery questions tuned to this buyer, anticipated objections, and the one thing you need to get done in this meeting. Requires a calendar event ID.',
     inputSchema: {
       type: 'object',
       properties: {
         eventId: {
           type: 'string',
-          description: 'Calendar event ID (from Andru calendar integration). If provided, pulls all context automatically.',
+          description: 'Calendar event ID (from Andru calendar integration). Pulls all context automatically.',
         },
         dealId: {
           type: 'string',
-          description: 'Associated deal ID for additional deal intelligence (optional)',
+          description: 'Associated deal ID for additional deal intelligence',
         },
         briefType: {
           type: 'string',
@@ -293,7 +322,7 @@ export const tools = [
 
   {
     name: 'get_syndication_status',
-    description: 'Check the sync status of your ICP intelligence across connected CRM platforms (HubSpot, Salesforce, Pipedrive). Shows which platforms are up to date, which are stale, and the last sync time for each.',
+    description: 'Shows whether your CRM has your current intelligence or is running on stale data. Checks sync status across HubSpot, Salesforce, and Pipedrive.',
     inputSchema: {
       type: 'object',
       properties: {},
@@ -302,14 +331,14 @@ export const tools = [
 
   {
     name: 'trigger_syndication',
-    description: 'Manually trigger ICP intelligence syndication to your connected CRM platforms (HubSpot, Salesforce, Pipedrive). Detects which platforms are stale and pushes updated ICP data. Use get_syndication_status first to check which platforms need updating.',
+    description: 'Pushes your latest intelligence into your CRM — detects which platforms are out of date and updates only what\'s stale. Use get_syndication_status first to see what needs updating.',
     inputSchema: {
       type: 'object',
       properties: {
         platforms: {
           type: 'array',
           items: { type: 'string' },
-          description: 'Optional filter — only sync these platforms (e.g., ["hubspot"]). If omitted, syncs all stale platforms.',
+          description: 'Only sync these platforms (e.g., ["hubspot"]). If omitted, syncs all stale platforms.',
         },
       },
     },
@@ -317,7 +346,7 @@ export const tools = [
 
   {
     name: 'batch_fit_score',
-    description: 'Score multiple companies against ICP criteria in a single batch. Returns individual scores plus aggregate statistics. Max 50 companies per call.',
+    description: 'Score up to 50 companies at once — gives each a tier and score so you can rank a list in under a second. Returns individual scores plus aggregate statistics.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -351,19 +380,19 @@ export const resources = [
   {
     uri: 'andru://icp/profile',
     name: 'ICP Profile',
-    description: 'Your canonical Ideal Customer Profile — the Pure Signal ICP output including all 5 layers of intelligence, 7 critical answers, and anti-patterns.',
+    description: 'The complete profile of the companies you should actually be selling to — 5 intelligence layers, 7 critical buyer questions, and the patterns that predict churn.',
     mimeType: 'application/json',
   },
   {
     uri: 'andru://pipeline/runs',
     name: 'Pipeline Runs',
-    description: 'Your GTM pipeline runs — lists all completed pipeline runs with their stage outputs (ICP, Lead Gen Strategy, Account Plans, Overview Deck).',
+    description: 'All your pipeline runs and what each one produced — ICP layers, lead gen strategy, account plans, and deck output.',
     mimeType: 'application/json',
   },
   {
     uri: 'andru://accounts',
     name: 'Account Plans',
-    description: 'Your account plans — company summaries, tiers, pipeline values, stakeholder counts, and generation status.',
+    description: 'Your tracked accounts — tier, pipeline value, stakeholder count, and account plan status.',
     mimeType: 'application/json',
   },
 ];

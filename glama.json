@@ -1,4 +1,5 @@
 {
   "$schema": "https://glama.ai/mcp/schemas/server.json",
+  "description": "Buyer intelligence for technical founders who sell to enterprises — know who to target, what to say, and when to walk away.",
   "maintainers": ["geter-andru"]
 }

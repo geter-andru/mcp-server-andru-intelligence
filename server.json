@@ -2,8 +2,8 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.geter-andru/andru-intelligence",
   "title": "Andru Revenue Intelligence",
-  "description": "Revenue intelligence for SaaS founders: ICP scoring, persona profiling, competitive positioning.",
-  "version": "0.1.3",
+  "description": "Buyer intelligence for technical founders who sell to enterprises — know who to target, what to say, and when to walk away. 15 tools: ICP scoring, persona lookup, battlecards, deal classification, prospect discovery.",
+  "version": "0.2.0",
   "websiteUrl": "https://andru.ai",
   "repository": {
     "url": "https://github.com/geter-andru/mcp-server-andru-intelligence.git",
@@ -13,7 +13,7 @@
     {
       "registryType": "npm",
       "identifier": "mcp-server-andru-intelligence",
-      "version": "0.1.3",
+      "version": "0.2.0",
       "transport": {
         "type": "stdio"
       },
