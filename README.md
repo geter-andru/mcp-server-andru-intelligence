@@ -1,6 +1,6 @@
 # Andru Revenue Intelligence MCP Server
 
-The revenue intelligence system that technical founders wish existed when they were Googling "how to interview a VP Sales" at 2 AM. ICP scoring, buyer persona profiling, competitive battlecards, MBTI-adapted messaging, and pre-meeting briefs — built on 20 years of B2B sales pattern data.
+19 buyer intelligence tools for technical founders who sell to enterprises. ICP scoring, buyer persona simulation, competitive battlecards, MBTI-adapted messaging, deal classification, sales hiring blueprints, VC thesis matching, founder wellness, and pre-meeting briefs — built on 20 years of B2B sales pattern data.
 
 Works immediately — no pipeline data required. Describe your product and Andru delivers pre-built buyer intelligence in seconds. Run a full pipeline for intelligence tuned to your specific market.
 
@@ -93,6 +93,30 @@ claude mcp add andru-intelligence npx mcp-server-andru-intelligence \
 |------|-------------|---------|
 | `get_syndication_status` | Shows whether your CRM has your current intelligence or is running on stale data | <200ms |
 | `trigger_syndication` | Pushes latest intelligence into your CRM — detects which platforms are out of date and updates only what's stale | 5-15s |
+
+### Founder Tools
+
+| Tool | What It Does | Latency |
+|------|-------------|---------|
+| `get_sales_blueprint` | First sales hire blueprint — JD, comp model, interview questions, and 90-day ramp plan for the stage you're at | 10-20s |
+| `get_thesis_match` | Match your company against VC investment theses — top 5 fits with reasoning for why each thesis applies | 10-20s |
+| `get_founder_wellness` | Burnout risk assessment with recovery recommendations — because 54% of founders are severely stressed and 81% hide it | <200ms |
+| `simulate_buyer_persona` | Practice your pitch against a simulated CFO, CTO, or VP Sales — get the objections before the real meeting | 5-15s |
+
+## CLI
+
+All 19 tools are also available from the command line via the companion [`andru-intel`](https://www.npmjs.com/package/andru-intel) package:
+
+```bash
+npx andru-intel list                    # see all 19 tools
+npx andru-intel score "AI code review"  # instant ICP (works offline)
+npx andru-intel persona CFO             # buyer persona deep dive
+npx andru-intel blueprint --stage "Series A" --arr "$2M"
+npx andru-intel thesis "AI sales platform" --stage "Seed"
+npx andru-intel roleplay CTO
+npx andru-intel wellness
+npx andru-intel run get_competitive_positioning --companyName "Acme"
+```
 
 ## Cold-Start Support
 
