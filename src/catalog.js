@@ -30,7 +30,7 @@ const COLD_START_PARAMS = {
   },
 };
 
-// ── 15 Tools ────────────────────────────────────────────────────────────────
+// ── 19 Tools ────────────────────────────────────────────────────────────────
 
 export const tools = [
   {
@@ -370,6 +370,119 @@ export const tools = [
         },
       },
       required: ['companies'],
+    },
+  },
+
+  {
+    name: 'get_sales_blueprint',
+    description: 'Builds everything you need to make your first sales hire — job description, comp structure, interview questions that actually reveal sales ability, 90-day ramp plan, and weekly activity targets tied to your ARR goal.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        companyStage: {
+          type: 'string',
+          enum: ['Pre-Seed', 'Seed', 'Series A', 'Series B'],
+          description: 'Current funding stage. Infer from conversation context if the user has mentioned it.',
+        },
+        arrTarget: {
+          type: 'string',
+          description: 'Annual recurring revenue target (e.g., "$2M", "$5M", "$10M"). Ask the user if not mentioned.',
+        },
+        dealSize: {
+          type: 'string',
+          description: 'Average deal size (e.g., "$15K ACV", "$50K ACV"). Infer from context or ask.',
+        },
+        avgCycleLength: {
+          type: 'string',
+          description: 'Average sales cycle length (e.g., "30 days", "60 days", "90+ days"). Infer or ask.',
+        },
+        teamSize: {
+          type: 'number',
+          description: 'Current team size. Infer from context if mentioned.',
+        },
+      },
+      required: ['companyStage', 'arrTarget'],
+    },
+  },
+
+  {
+    name: 'get_thesis_match',
+    description: 'Finds the 5 VCs whose investment thesis best matches your company — scores each on fit, explains why they\'d be interested, and tells you how to approach them. Saves weeks of investor research.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        productDescription: {
+          type: 'string',
+          description: 'What the company does and who it serves. Infer from conversation context if the user has already described their product.',
+        },
+        stage: {
+          type: 'string',
+          enum: ['Pre-Seed', 'Seed', 'Series A', 'Series B', 'Series C+'],
+          description: 'Current funding stage. Infer from context if mentioned.',
+        },
+        arrRange: {
+          type: 'string',
+          description: 'Current ARR range (e.g., "$0-$500K", "$500K-$2M", "$2M-$10M"). Infer or ask.',
+        },
+        vertical: {
+          type: 'string',
+          description: 'Industry vertical (e.g., "AI/ML", "FinTech", "HealthTech", "SaaS"). Infer from product description.',
+        },
+      },
+      required: ['productDescription', 'stage'],
+    },
+  },
+
+  {
+    name: 'get_founder_wellness',
+    description: 'Checks if you\'re burning out before you notice — tracks consecutive work days, late nights, and meeting density, then gives you a risk score and specific recovery actions. Because the founder who crashes can\'t close deals.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        userId: {
+          type: 'string',
+          description: 'The user\'s Andru account ID. Required for personalized wellness tracking.',
+        },
+        mode: {
+          type: 'string',
+          enum: ['assessment', 'dashboard'],
+          description: 'assessment = burnout risk score + recommendations. dashboard = full wellness data. Default: assessment.',
+        },
+      },
+    },
+  },
+
+  {
+    name: 'simulate_buyer_persona',
+    description: 'Practice your pitch against a realistic buyer — pick a CFO, CTO, COO, VP Sales, or VP Engineering and get their opening challenge. They\'ll push back the way real buyers do, so you can sharpen your story before the actual meeting.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        persona: {
+          type: 'string',
+          enum: ['CFO', 'CTO', 'COO', 'VP Sales', 'VP Engineering'],
+          description: 'Which buyer to simulate. Pick based on who the user is preparing to meet.',
+        },
+        stageId: {
+          type: 'number',
+          enum: [0, 1, 2, 3, 4, 5, 6, 7],
+          description: 'Buyer journey stage (0=Unaware through 7=Advocating). Default: 3.',
+        },
+        productDescription: {
+          type: 'string',
+          description: 'What the user\'s product does. Infer from conversation context.',
+        },
+        productName: {
+          type: 'string',
+          description: 'Product name. Infer from context.',
+        },
+        mode: {
+          type: 'string',
+          enum: ['opening', 'list'],
+          description: 'opening = buyer\'s opening message. list = available personas. Default: opening.',
+        },
+      },
+      required: ['persona'],
     },
   },
 ];

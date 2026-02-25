@@ -11,14 +11,14 @@
  *   ANDRU_API_URL  (optional) — API base URL (default: https://api.andru.ai)
  *
  * Usage:
- *   ANDRU_API_KEY=sk_live_... npx @andru/mcp-server-intelligence
+ *   ANDRU_API_KEY=sk_live_... npx mcp-server-andru-intelligence
  *
  * Claude Desktop config (claude_desktop_config.json):
  *   {
  *     "mcpServers": {
  *       "andru-intelligence": {
  *         "command": "npx",
- *         "args": ["@andru/mcp-server-intelligence"],
+ *         "args": ["mcp-server-andru-intelligence"],
  *         "env": {
  *           "ANDRU_API_KEY": "sk_live_your_key_here"
  *         }

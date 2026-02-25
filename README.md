@@ -7,13 +7,13 @@ Works immediately — no pipeline data required. Describe your product and Andru
 ## Installation
 
 ```bash
-npm install -g @andru/mcp-server-intelligence
+npm install -g mcp-server-andru-intelligence
 ```
 
 Or run directly:
 
 ```bash
-ANDRU_API_KEY=sk_live_... npx @andru/mcp-server-intelligence
+ANDRU_API_KEY=sk_live_... npx mcp-server-andru-intelligence
 ```
 
 ## Configuration
@@ -25,7 +25,7 @@ ANDRU_API_KEY=sk_live_... npx @andru/mcp-server-intelligence
 | `ANDRU_API_KEY` | Yes | — | Your Andru Platform API key |
 | `ANDRU_API_URL` | No | `https://api.andru.ai` | API base URL |
 
-Get your API key at [app.andru.ai/settings/api-keys](https://app.andru.ai/settings/api-keys).
+Get your API key at [platform.andru-ai.com/settings/api-keys](https://platform.andru-ai.com/settings/api-keys).
 
 ### Claude Desktop
 
@@ -36,7 +36,7 @@ Add to your `claude_desktop_config.json`:
   "mcpServers": {
     "andru-intelligence": {
       "command": "npx",
-      "args": ["@andru/mcp-server-intelligence"],
+      "args": ["mcp-server-andru-intelligence"],
       "env": {
         "ANDRU_API_KEY": "sk_live_your_key_here"
       }
@@ -48,7 +48,7 @@ Add to your `claude_desktop_config.json`:
 ### Claude Code
 
 ```bash
-claude mcp add andru-intelligence npx @andru/mcp-server-intelligence \
+claude mcp add andru-intelligence npx mcp-server-andru-intelligence \
   --env ANDRU_API_KEY=sk_live_your_key_here
 ```
 
@@ -102,7 +102,7 @@ claude mcp add andru-intelligence npx @andru/mcp-server-intelligence \
 
 Pass `productDescription`, `vertical`, and `targetRole` parameters, or let Claude infer them from your conversation. The tools use pre-built buyer intelligence (5 named buyer personas, 3 vertical segment profiles) to deliver results immediately.
 
-Run a full Pure Signal ICP pipeline at [app.andru.ai](https://app.andru.ai) for intelligence tuned to your specific product and market.
+Run a full Pure Signal ICP pipeline at [platform.andru-ai.com](https://platform.andru-ai.com) for intelligence tuned to your specific product and market.
 
 ## Available Resources
 
@@ -125,8 +125,22 @@ Claude Desktop/Code  →  MCP Server (stdio)  →  Andru API (HTTPS)
 Andru also supports the Agent-to-Agent (A2A) protocol for direct agent-to-agent communication. The AgentCard is available at:
 
 ```
-https://api.andru.ai/.well-known/agent.json
+https://platform.andru-ai.com/.well-known/agent.json
 ```
+
+## Also Available As
+
+**Chrome Extension** — Sales intelligence on LinkedIn profiles, Gmail compose, and any company page. [Install from Chrome Web Store](https://platform.andru-ai.com/tools/chrome-extension).
+
+## Intelligence Briefs
+
+Free signal reads for the questions technical founders ask at 11 PM:
+
+- [I've Done 30 Customer Interviews and Still Can't Define My ICP](https://platform.andru-ai.com/intelligence/customer-interviews-icp)
+- [I Know My ICP But My Outreach Still Isn't Working](https://platform.andru-ai.com/intelligence/icp-outreach-not-working)
+- [My Pipeline Is Full of Companies That Like Us But Nobody's Buying Urgently](https://platform.andru-ai.com/intelligence/pipeline-no-urgency)
+- [As a Technical Founder, What Am I Getting Wrong About Sales?](https://platform.andru-ai.com/intelligence/technical-founder-sales-mistakes)
+- [Why Does My Messaging Fall Flat Even When I'm Talking to the Right Companies?](https://platform.andru-ai.com/intelligence/messaging-falls-flat)
 
 ## License
 
