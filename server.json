@@ -3,7 +3,7 @@
   "name": "io.github.geter-andru/andru-intelligence",
   "title": "Andru Revenue Intelligence",
   "description": "Buyer intelligence for technical founders who sell to enterprises — know who to target, what to say, and when to walk away. 19 tools + CLI: ICP scoring, persona simulation, battlecards, deal classification, prospect discovery, sales hiring, investor matching, founder wellness.",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "websiteUrl": "https://platform.andru-ai.com",
   "repository": {
     "url": "https://github.com/geter-andru/mcp-server-andru-intelligence.git",
@@ -13,7 +13,7 @@
     {
       "registryType": "npm",
       "identifier": "mcp-server-andru-intelligence",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "transport": {
         "type": "stdio"
       },
