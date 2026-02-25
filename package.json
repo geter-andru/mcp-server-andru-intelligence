@@ -1,6 +1,6 @@
 {
   "name": "mcp-server-andru-intelligence",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "mcpName": "io.github.geter-andru/andru-intelligence",
   "description": "Buyer intelligence for technical founders who sell to enterprises — know who to target, what to say, and when to walk away. 19 MCP tools + CLI: ICP scoring, persona simulation, battlecards, deal classification, prospect discovery, sales hiring, investor matching, founder wellness.",
   "type": "module",
