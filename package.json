@@ -1,11 +1,12 @@
 {
   "name": "mcp-server-andru-intelligence",
-  "version": "1.2.0",
+  "version": "1.4.0",
   "mcpName": "io.github.geter-andru/andru-intelligence",
   "description": "Buyer intelligence for technical founders who sell to enterprises — know who to target, what to say, and when to walk away. 19 MCP tools + CLI: ICP scoring, persona simulation, battlecards, deal classification, prospect discovery, sales hiring, investor matching, founder wellness.",
   "type": "module",
   "bin": {
     "andru-mcp": "./src/index.js",
+    "andru-mcp-http": "./src/httpServer.js",
     "andru-intel": "./src/cli.js"
   },
   "main": "./src/index.js",
@@ -23,7 +24,9 @@
     "saas"
   ],
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.26.0"
+    "@modelcontextprotocol/sdk": "^1.26.0",
+    "better-sqlite3": "^12.6.2",
+    "ws": "^8.19.0"
   },
   "engines": {
     "node": ">=18.0.0"
@@ -43,6 +46,7 @@
   },
   "scripts": {
     "start": "node src/index.js",
+    "start:http": "node src/httpServer.js",
     "prepublishOnly": "node --input-type=module -e \"import {tools} from './src/catalog.js'; if(!tools?.length) {console.error('No tools in catalog'); process.exit(1)} console.log('Catalog OK:', tools.length, 'tools')\""
   },
   "files": [

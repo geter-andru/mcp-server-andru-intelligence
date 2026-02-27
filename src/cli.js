@@ -19,7 +19,7 @@
  *
  * Environment:
  *   ANDRU_API_KEY  (required) — Your Andru Platform API key
- *   ANDRU_API_URL  (optional) — API base URL (default: https://api.andru.ai)
+ *   ANDRU_API_URL  (optional) — API base URL (default: https://hs-andru-test.onrender.com)
  */
 
 import { tools } from './catalog.js';
@@ -40,8 +40,8 @@ Examples:
   andru-intel get_sales_blueprint --companyStage "Series A" --arrTarget "$5M"
 
 Environment:
-  ANDRU_API_KEY   Your API key (get one at https://app.andru.ai/settings/api-keys)
-  ANDRU_API_URL   API endpoint (default: https://api.andru.ai)
+  ANDRU_API_KEY   Your API key (get one at https://platform.andru-ai.com/settings/api-keys)
+  ANDRU_API_URL   API endpoint (default: https://hs-andru-test.onrender.com)
 
 ${tools.length} tools available. Run 'andru-intel list' to see them all.
 `);
@@ -166,13 +166,13 @@ async function main() {
   const apiKey = process.env.ANDRU_API_KEY;
   if (!apiKey) {
     console.error('ANDRU_API_KEY not set.');
-    console.error('Get your API key at https://app.andru.ai/settings/api-keys');
+    console.error('Get your API key at https://platform.andru-ai.com/settings/api-keys');
     console.error('');
     console.error('Usage: ANDRU_API_KEY=sk_live_... andru-intel ' + toolName + ' [args]');
     process.exit(1);
   }
 
-  const apiUrl = process.env.ANDRU_API_URL || 'https://api.andru.ai';
+  const apiUrl = process.env.ANDRU_API_URL || 'https://hs-andru-test.onrender.com';
   const client = new AndruClient(apiKey, apiUrl);
   const toolArgs = parseArgs(argv.slice(1));
 

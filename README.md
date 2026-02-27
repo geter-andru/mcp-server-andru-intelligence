@@ -23,7 +23,7 @@ ANDRU_API_KEY=sk_live_... npx mcp-server-andru-intelligence
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
 | `ANDRU_API_KEY` | Yes | — | Your Andru Platform API key |
-| `ANDRU_API_URL` | No | `https://api.andru.ai` | API base URL |
+| `ANDRU_API_URL` | No | `https://hs-andru-test.onrender.com` | API base URL |
 
 Get your API key at [platform.andru-ai.com/settings/api-keys](https://platform.andru-ai.com/settings/api-keys).
 
@@ -149,7 +149,7 @@ Claude Desktop/Code  →  MCP Server (stdio)  →  Andru API (HTTPS)
 Andru also supports the Agent-to-Agent (A2A) protocol for direct agent-to-agent communication. The AgentCard is available at:
 
 ```
-https://platform.andru-ai.com/.well-known/agent.json
+https://hs-andru-test.onrender.com/.well-known/agent.json
 ```
 
 ## Also Available As

@@ -5,14 +5,14 @@
  * Authenticates via X-API-Key header.
  */
 
-const DEFAULT_API_URL = 'https://api.andru.ai';
+const DEFAULT_API_URL = 'https://hs-andru-test.onrender.com';
 const REQUEST_TIMEOUT_MS = 60_000; // 60s for AI-calling tools
-const PACKAGE_VERSION = '0.2.0';
+const PACKAGE_VERSION = '1.4.0';
 
 export class AndruClient {
   /**
    * @param {string} apiKey - Andru Platform API key
-   * @param {string} [baseUrl] - API base URL (default: https://api.andru.ai)
+   * @param {string} [baseUrl] - API base URL (default: https://hs-andru-test.onrender.com)
    */
   constructor(apiKey, baseUrl = DEFAULT_API_URL) {
     this.apiKey = apiKey;

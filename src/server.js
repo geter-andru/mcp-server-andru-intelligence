@@ -1,8 +1,9 @@
 /**
- * Andru MCP Server (Thin Proxy)
+ * Andru MCP Server (Thin Proxy + Local Cache)
  *
  * Lists tools and resources from the static catalog (no network needed).
  * Proxies tool execution and resource reads to the Andru backend API.
+ * Phase 8: Falls back to SQLite cache when offline.
  */
 
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
@@ -17,7 +18,7 @@ import { tools, resources } from './catalog.js';
 /**
  * Create an MCP server backed by the Andru API.
  *
- * @param {import('./client.js').AndruClient | null} client — null during scan mode (no API key)
+ * @param {import('./client.js').AndruClient | import('./cachedClient.js').CachedClient | null} client — null during scan mode (no API key). When Phase 8 cache is active, this is a cachedClient wrapper.
  * @returns {Server}
  */
 export function createServer(client) {

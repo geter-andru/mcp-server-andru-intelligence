@@ -2,8 +2,8 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.geter-andru/andru-intelligence",
   "title": "Andru Revenue Intelligence",
-  "description": "Buyer intelligence for technical founders who sell to enterprises — know who to target, what to say, and when to walk away. 19 tools + CLI: ICP scoring, persona simulation, battlecards, deal classification, prospect discovery, sales hiring, investor matching, founder wellness.",
-  "version": "1.2.0",
+  "description": "19 buyer intelligence tools for technical founders selling to enterprises.",
+  "version": "1.4.0",
   "websiteUrl": "https://platform.andru-ai.com",
   "repository": {
     "url": "https://github.com/geter-andru/mcp-server-andru-intelligence.git",
@@ -13,22 +13,39 @@
     {
       "registryType": "npm",
       "identifier": "mcp-server-andru-intelligence",
-      "version": "1.2.0",
+      "version": "1.4.0",
       "transport": {
         "type": "stdio"
       },
       "environmentVariables": [
         {
           "name": "ANDRU_API_KEY",
-          "description": "Your Andru Platform API key. Get one at https://app.andru.ai/settings/api-keys",
+          "description": "Your Andru Platform API key. Get one at https://platform.andru-ai.com/settings/api-keys",
           "isRequired": true,
           "isSecret": true
         },
         {
           "name": "ANDRU_API_URL",
-          "description": "Andru API base URL (default: https://api.andru.ai)",
+          "description": "Andru API base URL (default: https://hs-andru-test.onrender.com)",
           "isRequired": false,
-          "default": "https://api.andru.ai"
+          "default": "https://hs-andru-test.onrender.com"
+        }
+      ]
+    },
+    {
+      "registryType": "npm",
+      "identifier": "mcp-server-andru-intelligence",
+      "version": "1.4.0",
+      "transport": {
+        "type": "http",
+        "url": "https://andru-mcp-http.onrender.com/mcp"
+      },
+      "environmentVariables": [
+        {
+          "name": "ANDRU_API_KEY",
+          "description": "Your Andru Platform API key. Get one at https://platform.andru-ai.com/settings/api-keys",
+          "isRequired": true,
+          "isSecret": true
         }
       ]
     }

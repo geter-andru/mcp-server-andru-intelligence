@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: andru-mcp-http
+    env: node
+    plan: starter
+    rootDir: packages/mcp-server-andru-intelligence
+    buildCommand: npm install
+    startCommand: node src/httpServer.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "10000"
+      - key: HOST
+        value: "0.0.0.0"
+      - key: ANDRU_API_URL
+        value: https://hs-andru-test.onrender.com
+    autoDeploy: false

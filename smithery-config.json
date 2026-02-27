@@ -1,0 +1,15 @@
+{
+  "description": "Buyer intelligence for technical founders who sell to enterprises — know who to target, what to say, and when to walk away.",
+  "type": "object",
+  "properties": {
+    "ANDRU_API_KEY": {
+      "type": "string",
+      "description": "Your Andru Platform API key. Get one at https://platform.andru-ai.com/settings/api-keys"
+    }
+  },
+  "required": ["ANDRU_API_KEY"],
+  "transport": {
+    "type": "http",
+    "url": "https://andru-mcp-http.onrender.com/mcp"
+  }
+}
