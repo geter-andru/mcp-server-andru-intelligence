@@ -37,7 +37,7 @@
       "identifier": "mcp-server-andru-intelligence",
       "version": "1.4.0",
       "transport": {
-        "type": "http",
+        "type": "streamable-http",
         "url": "https://mcp-server-andru-intelligence.onrender.com/mcp"
       },
       "environmentVariables": [
