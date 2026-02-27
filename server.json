@@ -38,7 +38,7 @@
       "version": "1.4.0",
       "transport": {
         "type": "http",
-        "url": "https://andru-mcp-http.onrender.com/mcp"
+        "url": "https://mcp-server-andru-intelligence.onrender.com/mcp"
       },
       "environmentVariables": [
         {

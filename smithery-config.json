@@ -10,6 +10,6 @@
   "required": ["ANDRU_API_KEY"],
   "transport": {
     "type": "http",
-    "url": "https://andru-mcp-http.onrender.com/mcp"
+    "url": "https://mcp-server-andru-intelligence.onrender.com/mcp"
   }
 }
