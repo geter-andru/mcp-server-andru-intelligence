@@ -58,7 +58,7 @@ async function main() {
 
   // --- Auth middleware: require X-API-Key on MCP requests ---
   function requireApiKey(req, res, next) {
-    const key = req.headers['x-api-key'];
+    const key = req.headers['x-api-key'] || req.query.ANDRU_API_KEY;
     if (!key) {
       return res.status(401).json({
         jsonrpc: '2.0',
