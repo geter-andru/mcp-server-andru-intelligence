@@ -4,6 +4,10 @@
 
 Works immediately — no pipeline data required. Describe your product and Andru delivers pre-built buyer intelligence in seconds. Run a full pipeline for intelligence tuned to your specific market.
 
+<a href="https://glama.ai/mcp/servers/@geter-andru/andru-revenue-intelligence">
+  <img width="380" height="200" src="https://glama.ai/mcp/servers/@geter-andru/andru-revenue-intelligence/badge" alt="Andru Revenue Intelligence MCP server" />
+</a>
+
 ## Installation
 
 ```bash
