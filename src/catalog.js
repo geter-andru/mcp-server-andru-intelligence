@@ -30,12 +30,18 @@ const COLD_START_PARAMS = {
   },
 };
 
+// ── Tool Annotations ─────────────────────────────────────────────────────────
+// MCP SDK annotations for directory compliance (Claude Desktop, OpenAI, etc.)
+const READ_ONLY = { readOnlyHint: true, openWorldHint: true };
+const WRITE_OP  = { readOnlyHint: false, destructiveHint: false, openWorldHint: true };
+
 // ── 19 Tools ────────────────────────────────────────────────────────────────
 
 export const tools = [
   {
     name: 'get_icp_fit_score',
     description: 'Tells you in seconds whether the company you\'re thinking about is worth your time — scores them against who actually buys from you and why, across 5 dimensions. No AI calls, instant results.',
+    annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
       properties: {
@@ -68,6 +74,7 @@ export const tools = [
   {
     name: 'get_persona_profile',
     description: 'Look up who you\'re actually talking to before the call — what they care about at 7 AM, why they\'ll say no, and exactly how to open. Returns persona details including MBTI distribution, empathy map, and messaging angles.',
+    annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
       properties: {
@@ -83,6 +90,7 @@ export const tools = [
   {
     name: 'get_disqualification_signals',
     description: 'Find out if you\'re wasting time on a deal that won\'t close. Runs the company through three layers of signal — ICP fit, anti-pattern matching, and churn patterns — and tells you whether to keep investing or walk away.',
+    annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
       properties: {
@@ -110,6 +118,7 @@ export const tools = [
   {
     name: 'get_messaging_framework',
     description: 'Get the exact words to use — for a specific buyer type, channel, and funnel stage. MBTI-adapted so the analytical CTO and the results-driven VP Sales get different versions. Returns value props, objection responses, voice variants, and outbound templates.',
+    annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
       properties: {
@@ -134,6 +143,7 @@ export const tools = [
   {
     name: 'get_competitive_positioning',
     description: 'Gives you the battlecard for a specific competitor — where you win, where they\'ll attack, which questions to plant in the buyer\'s mind, and which landmines to avoid.',
+    annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
       properties: {
@@ -156,6 +166,7 @@ export const tools = [
   {
     name: 'classify_opportunity',
     description: 'Run a full read on a deal in one call — fit score, persona match, risk flags, disqualification check, and a verdict: pursue, pause, or walk away. Combines multiple scoring engines for a comprehensive assessment.',
+    annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
       properties: {
@@ -181,6 +192,7 @@ export const tools = [
   {
     name: 'get_account_plan',
     description: 'Builds the account plan you\'d normally spend a weekend on — stakeholder map, what each person needs to hear, MEDDICC gaps, and the unified story across the buying committee.',
+    annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
       properties: {
@@ -216,6 +228,7 @@ export const tools = [
   {
     name: 'get_capability_profile',
     description: 'Returns a machine-readable snapshot of what your product actually does and who it\'s for — capabilities, verified outcomes, trust signals, pricing model, and integrations. Designed for buyer-side agent evaluation.',
+    annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
       properties: {
@@ -229,6 +242,7 @@ export const tools = [
   {
     name: 'get_evaluation_criteria',
     description: 'Scores how well you actually match what this buyer needs — across pain coverage, outcome clarity, capability fit, and 3 more dimensions. Returns 0-100 per dimension plus overall alignment score.',
+    annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
       properties: {
@@ -252,6 +266,7 @@ export const tools = [
   {
     name: 'get_icp_profile',
     description: 'Returns everything Andru knows about your ideal customer — all 5 intelligence layers, the 7 critical buyer questions, and the patterns that predict churn. Optionally filter to specific layers.',
+    annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
       properties: {
@@ -269,6 +284,7 @@ export const tools = [
   {
     name: 'discover_prospects',
     description: 'Finds real companies that look like your best customers — searches the web for companies showing the same buying signals your winners showed. Takes 15-30 seconds. Works without prior pipeline data.',
+    annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
       properties: {
@@ -300,6 +316,7 @@ export const tools = [
   {
     name: 'get_pre_brief',
     description: 'Writes your pre-call prep so you don\'t walk in cold — talk track, discovery questions tuned to this buyer, anticipated objections, and the one thing you need to get done in this meeting. Requires a calendar event ID.',
+    annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
       properties: {
@@ -323,6 +340,7 @@ export const tools = [
   {
     name: 'get_syndication_status',
     description: 'Shows whether your CRM has your current intelligence or is running on stale data. Checks sync status across HubSpot, Salesforce, and Pipedrive.',
+    annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
       properties: {},
@@ -332,6 +350,7 @@ export const tools = [
   {
     name: 'trigger_syndication',
     description: 'Pushes your latest intelligence into your CRM — detects which platforms are out of date and updates only what\'s stale. Use get_syndication_status first to see what needs updating.',
+    annotations: WRITE_OP,
     inputSchema: {
       type: 'object',
       properties: {
@@ -347,6 +366,7 @@ export const tools = [
   {
     name: 'batch_fit_score',
     description: 'Score up to 50 companies at once — gives each a tier and score so you can rank a list in under a second. Returns individual scores plus aggregate statistics.',
+    annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
       properties: {
@@ -376,6 +396,7 @@ export const tools = [
   {
     name: 'get_sales_blueprint',
     description: 'Builds everything you need to make your first sales hire — job description, comp structure, interview questions that actually reveal sales ability, 90-day ramp plan, and weekly activity targets tied to your ARR goal.',
+    annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
       properties: {
@@ -408,6 +429,7 @@ export const tools = [
   {
     name: 'get_thesis_match',
     description: 'Finds the 5 VCs whose investment thesis best matches your company — scores each on fit, explains why they\'d be interested, and tells you how to approach them. Saves weeks of investor research.',
+    annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
       properties: {
@@ -436,6 +458,7 @@ export const tools = [
   {
     name: 'get_founder_wellness',
     description: 'Checks if you\'re burning out before you notice — tracks consecutive work days, late nights, and meeting density, then gives you a risk score and specific recovery actions. Because the founder who crashes can\'t close deals.',
+    annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
       properties: {
@@ -455,6 +478,7 @@ export const tools = [
   {
     name: 'simulate_buyer_persona',
     description: 'Practice your pitch against a realistic buyer — pick a CFO, CTO, COO, VP Sales, or VP Engineering and get their opening challenge. They\'ll push back the way real buyers do, so you can sharpen your story before the actual meeting.',
+    annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
       properties: {
