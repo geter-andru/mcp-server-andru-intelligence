@@ -509,6 +509,101 @@ export const tools = [
       required: ['persona'],
     },
   },
+  // ── Memory Tools ──────────────────────────────────────────────────────────
+
+  {
+    name: 'get_revenue_memory',
+    description: 'Query this founder\'s accumulated revenue intelligence — metrics, deal patterns, account history, decisions, and behavioral insights Andru has learned over time. Filter by memory type (episodic facts, semantic patterns, procedural habits) or business domain.',
+    annotations: READ_ONLY,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        category: {
+          type: 'string',
+          enum: ['metric', 'account', 'priority', 'preference', 'decision', 'deadline'],
+          description: 'Filter to a specific memory category. Omit to search all.',
+        },
+        keyPattern: {
+          type: 'string',
+          description: 'Filter keys matching this pattern (supports * wildcards, e.g., "*mrr*", "acme_*").',
+        },
+        memoryType: {
+          type: 'string',
+          enum: ['episodic', 'semantic', 'procedural'],
+          description: 'Filter by memory type. episodic=specific facts, semantic=patterns, procedural=behavioral habits.',
+        },
+      },
+    },
+  },
+
+  {
+    name: 'log_revenue_insight',
+    description: 'Save a revenue insight, decision, metric, or pattern into Andru\'s memory so it compounds over time. Use after any deal decision, ICP refinement, metric update, or strategic pivot. The system automatically versions previous values.',
+    annotations: WRITE_OP,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        category: {
+          type: 'string',
+          enum: ['metric', 'account', 'priority', 'preference', 'decision', 'deadline'],
+          description: 'What kind of memory this is.',
+        },
+        key: {
+          type: 'string',
+          description: 'Unique identifier for this memory (lowercase_underscored, e.g., "current_arr", "acme_deal_stage").',
+        },
+        value: {
+          type: 'string',
+          description: 'The memory content — a concise, specific fact or insight.',
+        },
+        memoryType: {
+          type: 'string',
+          enum: ['episodic', 'semantic', 'procedural'],
+          description: 'episodic=time-bound fact, semantic=general pattern, procedural=behavioral habit. Default: episodic.',
+        },
+        domain: {
+          type: 'string',
+          enum: ['revenue', 'product', 'team', 'investor', 'market', 'general'],
+          description: 'Business domain this memory relates to. Default: general.',
+        },
+        confidence: {
+          type: 'number',
+          description: 'How confident this memory is (0.0-1.0). Default: 1.0 for founder-stated facts.',
+        },
+      },
+      required: ['category', 'key', 'value'],
+    },
+  },
+
+  {
+    name: 'get_founder_context',
+    description: 'Get a full context dump of everything Andru knows about this founder — organized by memory type (What I Know, Patterns I\'ve Noticed, How You Operate). Used to prime any revenue conversation with accumulated intelligence.',
+    annotations: READ_ONLY,
+    inputSchema: {
+      type: 'object',
+      properties: {},
+    },
+  },
+
+  {
+    name: 'get_memory_history',
+    description: 'Get the version history of a specific memory — see how a metric, deal stage, or priority has evolved over time. Answers questions like "What was my MRR 3 months ago?" or "When did the Acme deal move to negotiation?"',
+    annotations: READ_ONLY,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        category: {
+          type: 'string',
+          description: 'Memory category (e.g., "metric", "account").',
+        },
+        key: {
+          type: 'string',
+          description: 'Memory key (e.g., "mrr", "acme_deal_stage").',
+        },
+      },
+      required: ['category', 'key'],
+    },
+  },
 ];
 
 // ── 3 Resources ─────────────────────────────────────────────────────────────
