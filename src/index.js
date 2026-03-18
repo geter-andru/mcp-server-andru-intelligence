@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Andru Revenue Intelligence MCP Server
+ * Andru MCP Server — Operational Empathy for B2B
  *
  * Standalone entry point for use with Claude Desktop, Claude Code,
  * or any MCP-compatible client.

@@ -1,8 +1,8 @@
-# Andru Revenue Intelligence MCP Server
+# Andru MCP Server — Operational Empathy for B2B
 
-19 buyer intelligence tools for technical founders who sell to enterprises. ICP scoring, buyer persona simulation, competitive battlecards, MBTI-adapted messaging, deal classification, sales hiring blueprints, VC thesis matching, founder wellness, and pre-meeting briefs — built on 20 years of B2B sales pattern data.
+19 stakeholder understanding tools for technical founders navigating high-stakes B2B interactions. ICP scoring, buyer persona simulation, competitive battlecards, MBTI-adapted messaging, deal classification, sales hiring blueprints, VC thesis matching, founder wellness, and pre-meeting briefs — built on 20 years of B2B sales pattern data.
 
-Works immediately — no pipeline data required. Describe your product and Andru delivers pre-built buyer intelligence in seconds. Run a full pipeline for intelligence tuned to your specific market.
+Works immediately — no pipeline data required. Describe your product and Andru delivers stakeholder understanding in seconds. Run a full pipeline for empathy tuned to your specific market.
 
 ## Installation
 
@@ -63,7 +63,7 @@ claude mcp add andru-intelligence npx mcp-server-andru-intelligence \
 | `classify_opportunity` | Full read on a deal — fit score, persona match, risk flags, disqualification check, and a verdict: pursue, pause, or walk away | <200ms |
 | `get_disqualification_signals` | Find out if you're wasting time on a deal that won't close — three layers of signal and a clear recommendation | <200ms |
 
-### Buyer Intelligence
+### Stakeholder Understanding
 
 | Tool | What It Does | Latency |
 |------|-------------|---------|
@@ -124,9 +124,9 @@ npx andru-intel run get_competitive_positioning --companyName "Acme"
 
 - `get_icp_fit_score`, `get_persona_profile`, `get_messaging_framework`, `get_competitive_positioning`, `get_evaluation_criteria`, `classify_opportunity`, `get_disqualification_signals`
 
-Pass `productDescription`, `vertical`, and `targetRole` parameters, or let Claude infer them from your conversation. The tools use pre-built buyer intelligence (5 named buyer personas, 3 vertical segment profiles) to deliver results immediately.
+Pass `productDescription`, `vertical`, and `targetRole` parameters, or let Claude infer them from your conversation. The tools use pre-built stakeholder understanding (5 named buyer personas, 3 vertical segment profiles) to deliver results immediately.
 
-Run a full Pure Signal ICP pipeline at [platform.andru-ai.com](https://platform.andru-ai.com) for intelligence tuned to your specific product and market.
+Run a full ICP pipeline at [platform.andru-ai.com](https://platform.andru-ai.com) for understanding tuned to your specific product and market.
 
 ## Available Resources
 

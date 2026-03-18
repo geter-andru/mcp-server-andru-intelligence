@@ -1,8 +1,8 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.geter-andru/andru-intelligence",
-  "title": "Andru Revenue Intelligence",
-  "description": "19 buyer intelligence tools for technical founders selling to enterprises.",
+  "title": "Andru — Operational Empathy for B2B",
+  "description": "19 stakeholder understanding tools for technical founders navigating high-stakes B2B interactions.",
   "version": "1.4.0",
   "websiteUrl": "https://platform.andru-ai.com",
   "repository": {

@@ -315,14 +315,22 @@ export const tools = [
 
   {
     name: 'get_pre_brief',
-    description: 'Writes your pre-call prep so you don\'t walk in cold — talk track, discovery questions tuned to this buyer, anticipated objections, and the one thing you need to get done in this meeting. Requires a calendar event ID.',
+    description: 'Writes your pre-call prep so you don\'t walk in cold — talk track, discovery questions tuned to this buyer, anticipated objections, and the one thing you need to get done in this meeting. Just say who you\'re meeting with — Andru checks your calendar automatically.',
     annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
       properties: {
+        companyName: {
+          type: 'string',
+          description: 'Company you\'re meeting with. Andru finds the matching calendar event and pulls attendee context automatically.',
+        },
+        contactName: {
+          type: 'string',
+          description: 'Name of the person you\'re meeting (optional — helps match the right event and personalize the brief).',
+        },
         eventId: {
           type: 'string',
-          description: 'Calendar event ID (from Andru calendar integration). Pulls all context automatically.',
+          description: 'Calendar event ID (from Andru calendar integration). If provided, skips calendar search.',
         },
         dealId: {
           type: 'string',
@@ -513,7 +521,7 @@ export const tools = [
 
   {
     name: 'get_revenue_memory',
-    description: 'Query this founder\'s accumulated revenue intelligence — metrics, deal patterns, account history, decisions, and behavioral insights Andru has learned over time. Filter by memory type (episodic facts, semantic patterns, procedural habits) or business domain.',
+    description: 'Query this founder\'s accumulated stakeholder understanding — metrics, deal patterns, account history, decisions, and behavioral insights Andru has learned over time. Filter by memory type (episodic facts, semantic patterns, procedural habits) or business domain.',
     annotations: READ_ONLY,
     inputSchema: {
       type: 'object',

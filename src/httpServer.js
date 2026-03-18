@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Andru Revenue Intelligence MCP Server — Streamable HTTP Transport
+ * Andru MCP Server — Streamable HTTP Transport
  *
  * Hosted entry point for Smithery, Salesforce AgentExchange, and any
  * MCP client that connects via Streamable HTTP (the MCP 2025-03-26 spec).
@@ -21,6 +21,7 @@
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
 import { createMcpExpressApp } from '@modelcontextprotocol/sdk/server/express.js';
 import { randomUUID } from 'node:crypto';
+import rateLimit from 'express-rate-limit';
 import { AndruClient } from './client.js';
 import { createServer } from './server.js';
 import { createCachedClient } from './cachedClient.js';
@@ -70,8 +71,30 @@ async function main() {
     next();
   }
 
+  // --- Rate limiting: per API key ---
+  const mcpRateLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // 100 requests per API key per window
+    keyGenerator: (req) => req.auth?.apiKey || req.ip,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: {
+      jsonrpc: '2.0',
+      error: { code: -32000, message: 'Rate limit exceeded. Try again later.' },
+      id: null,
+    },
+    handler: (req, res) => {
+      console.warn(`[Andru MCP HTTP] Rate limit exceeded for key: ${req.auth?.apiKey?.slice(0, 8)}...`);
+      res.status(429).json({
+        jsonrpc: '2.0',
+        error: { code: -32000, message: 'Rate limit exceeded. Try again later.' },
+        id: null,
+      });
+    },
+  });
+
   // --- POST /mcp — JSON-RPC requests (initialize, tools/list, tools/call, etc.) ---
-  app.post('/mcp', requireApiKey, async (req, res) => {
+  app.post('/mcp', requireApiKey, mcpRateLimiter, async (req, res) => {
     const sessionId = req.headers['mcp-session-id'];
     let transport = sessionId ? transports.get(sessionId) : undefined;
 
@@ -105,7 +128,7 @@ async function main() {
   });
 
   // --- GET /mcp — SSE stream for server-initiated notifications ---
-  app.get('/mcp', requireApiKey, async (req, res) => {
+  app.get('/mcp', requireApiKey, mcpRateLimiter, async (req, res) => {
     const sessionId = req.headers['mcp-session-id'];
     const transport = sessionId ? transports.get(sessionId) : undefined;
     if (!transport) {

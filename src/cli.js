@@ -27,12 +27,13 @@ import { AndruClient } from './client.js';
 
 function printUsage() {
   console.log(`
-andru-intel — Buyer intelligence from your terminal
+andru-intel — Stakeholder understanding from your terminal
 
 Usage:
   andru-intel <tool-name> [--param value ...]
   andru-intel list                  Show all available tools
   andru-intel help <tool-name>      Show tool parameters
+  andru-intel usage                 Show wallet balance and recent charges
 
 Examples:
   andru-intel get_thesis_match --productDescription "AI sales platform" --stage "Series A"
@@ -150,6 +151,46 @@ async function main() {
       printUsage();
     } else {
       printToolHelp(argv[1]);
+    }
+    process.exit(0);
+  }
+
+  if (command === 'usage' || command === 'billing') {
+    const apiKey = process.env.ANDRU_API_KEY;
+    if (!apiKey) {
+      console.error('ANDRU_API_KEY not set.');
+      console.error('Get your API key at https://platform.andru-ai.com/settings/api-keys');
+      process.exit(1);
+    }
+
+    const apiUrl = process.env.ANDRU_API_URL || 'https://hs-andru-test.onrender.com';
+    const client = new AndruClient(apiKey, apiUrl);
+
+    try {
+      const res = await client.getUsage();
+      const d = res.data;
+
+      console.log(`\nAndru Wallet`);
+      console.log(`${'─'.repeat(40)}`);
+      console.log(`  Balance:  ${d.balance?.formatted || '$0.00'}`);
+      console.log(`  Plan:     ${d.plan}${d.unlimited ? ' (unlimited)' : ''}`);
+
+      if (d.recent_mcp_charges && d.recent_mcp_charges.length > 0) {
+        console.log(`\nRecent MCP Usage:`);
+        for (const charge of d.recent_mcp_charges) {
+          const tool = charge.tool.padEnd(30);
+          const amt = charge.amount_formatted.padStart(8);
+          const date = new Date(charge.date).toLocaleString();
+          console.log(`  ${tool} ${amt}  ${date}`);
+        }
+      } else {
+        console.log(`\nNo recent MCP tool charges.`);
+      }
+
+      console.log(`\nTop up: ${d.topup_url}\n`);
+    } catch (error) {
+      console.error(`Error: ${error.message}`);
+      process.exit(1);
     }
     process.exit(0);
   }
