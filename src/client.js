@@ -55,6 +55,54 @@ export class AndruClient {
   }
 
   /**
+   * Get wallet balance and recent MCP usage.
+   * @returns {Promise<{ data: { balance: object, plan: string, unlimited: boolean, recent_mcp_charges: Array, topup_url: string } }>}
+   */
+  async getUsage() {
+    return this.get('/api/mcp/usage');
+  }
+
+  /**
+   * @private
+   */
+  async get(path) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
+    try {
+      const response = await fetch(`${this.baseUrl}${path}`, {
+        method: 'GET',
+        headers: {
+          'X-API-Key': this.apiKey,
+          'User-Agent': `andru-mcp-server/${PACKAGE_VERSION}`,
+        },
+        signal: controller.signal,
+      });
+
+      if (!response.ok) {
+        const errorBody = await response.text().catch(() => '');
+        let errorMessage;
+        try {
+          const parsed = JSON.parse(errorBody);
+          errorMessage = parsed.error || parsed.message || `HTTP ${response.status}`;
+        } catch {
+          errorMessage = `HTTP ${response.status}: ${errorBody.slice(0, 200)}`;
+        }
+        throw new Error(errorMessage);
+      }
+
+      return await response.json();
+    } catch (error) {
+      if (error.name === 'AbortError') {
+        throw new Error(`Request to ${path} timed out after ${REQUEST_TIMEOUT_MS / 1000}s`);
+      }
+      throw error;
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
+
+  /**
    * @private
    */
   async post(path, body) {
