@@ -612,6 +612,77 @@ export const tools = [
       required: ['category', 'key'],
     },
   },
+
+  // ── Tier-2/3 outcome tools (market + portfolio intelligence + agent consultation) ──
+  {
+    name: 'get_market_signals',
+    description: "Surfaces what's moving in your market right now — relevance-ranked industry signals (trends, buyer pain, competitor moves, regulatory/tech shifts, hiring + funding) each with its buyer impact and a recommended action. Use it for deal/market context before a screen, or to time GTM moves.",
+    annotations: READ_ONLY,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        signalType: { type: 'string', enum: ['market_trend', 'buyer_pain', 'competitor_move', 'regulatory', 'technology_shift', 'hiring_trend', 'funding_landscape'], description: 'Optional filter to one signal category.' },
+        industry: { type: 'string', description: 'Optional industry/vertical filter.' },
+        windowDays: { type: 'number', description: 'Look-back window in days (1–30). Default 7.' },
+        limit: { type: 'number', description: 'Max signals (1–25). Default 10.' },
+        minRelevance: { type: 'number', description: 'Minimum relevance 0–1. Default 0.5.' },
+      },
+    },
+  },
+  {
+    name: 'assess_company_readiness',
+    description: "Scores a company's Revenue Readiness Index (0–100) from its operating metrics — stage-fit, confidence, NRR / CAC-payback / pipeline-coverage, and the #1 growth constraint. Use it to screen a target or assess a portfolio company. Pass the metrics you have; more metrics = higher confidence.",
+    annotations: READ_ONLY,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        companyName: { type: 'string', description: 'Optional label for the company being assessed.' },
+        metrics: { type: 'object', description: 'Operating metrics (any subset): arr, mrr, growthRate, netRevenueRetention, grossMargin, cac, ltv, burnRate, runwayMonths, pipelineValue, customerCount, churnRate, etc.' },
+      },
+      required: ['metrics'],
+    },
+  },
+  {
+    name: 'get_portfolio_readiness_rollup',
+    description: 'A board-ready scorecard of every portfolio company by Revenue Readiness Index — comparable by construction — with aggregates (avg readiness, at-risk count, customer-concentration risk). For PE/VC operators monitoring a book.',
+    annotations: READ_ONLY,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        portfolioId: { type: 'string', description: 'The portfolio to roll up. Must belong to the caller.' },
+      },
+      required: ['portfolioId'],
+    },
+  },
+  {
+    name: 'generate_portfolio_brief',
+    description: 'Generates a board/LP-grade intelligence brief for a portfolio — per-company performance, market context, and cross-portfolio opportunities — for a reporting period. For PE/VC fund reporting and quarterly reviews.',
+    annotations: READ_ONLY,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        portfolioId: { type: 'string', description: 'The portfolio to brief. Must belong to the caller.' },
+        periodType: { type: 'string', enum: ['quarterly', 'monthly', 'annual'], description: 'Reporting period type. Default quarterly.' },
+        periodStart: { type: 'string', description: 'Optional ISO date for the period start.' },
+        periodEnd: { type: 'string', description: 'Optional ISO date for the period end.' },
+      },
+      required: ['portfolioId'],
+    },
+  },
+  {
+    name: 'consult_agent',
+    description: "Consult one of Andru's domain expert agents in natural language and get a domain-scoped answer (it may call internal tools). One consultation turn per call; pass prior turns as `history` to continue. Use `module` to pick the expert (e.g. 'market-clarity', 'deal-acceleration', 'due-diligence', 'portfolio-ops').",
+    annotations: READ_ONLY,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        module: { type: 'string', description: "Which domain agent to consult (e.g. 'market-clarity', 'due-diligence', 'portfolio-ops')." },
+        message: { type: 'string', description: 'Your question / request for the agent.' },
+        history: { type: 'array', description: 'Optional prior turns: [{ role, content }].', items: { type: 'object' } },
+      },
+      required: ['module', 'message'],
+    },
+  },
 ];
 
 // ── 3 Resources ─────────────────────────────────────────────────────────────
