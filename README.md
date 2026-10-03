@@ -1,6 +1,6 @@
 # Andru MCP Server — Operational Empathy for B2B
 
-19 stakeholder understanding tools for technical founders navigating high-stakes B2B interactions. ICP scoring, buyer persona simulation, competitive battlecards, MBTI-adapted messaging, deal classification, sales hiring blueprints, VC thesis matching, founder wellness, and pre-meeting briefs — built on 20 years of B2B sales pattern data.
+28 tools for technical founders and PE/VC operators navigating high-stakes B2B interactions. ICP scoring, buyer persona simulation, competitive battlecards, MBTI-adapted messaging, deal classification, sales hiring blueprints, VC thesis matching, founder wellness, and pre-meeting briefs — built on 20 years of B2B sales pattern data.
 
 Works immediately — no pipeline data required. Describe your product and Andru delivers stakeholder understanding in seconds. Run a full pipeline for empathy tuned to your specific market.
 
@@ -23,7 +23,7 @@ ANDRU_API_KEY=sk_live_... npx mcp-server-andru-intelligence
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
 | `ANDRU_API_KEY` | Yes | — | Your Andru Platform API key |
-| `ANDRU_API_URL` | No | `https://hs-andru-test.onrender.com` | API base URL |
+| `ANDRU_API_URL` | No | `https://hs-andru-test.onrender.com` | API base URL. The default is Andru's production API; you don't need to change it. |
 
 Get your API key at [platform.andru-ai.com/settings/api-keys](https://platform.andru-ai.com/settings/api-keys).
 
@@ -103,9 +103,34 @@ claude mcp add andru-intelligence npx mcp-server-andru-intelligence \
 | `get_founder_wellness` | Burnout risk assessment with recovery recommendations — because 54% of founders are severely stressed and 81% hide it | <200ms |
 | `simulate_buyer_persona` | Practice your pitch against a simulated CFO, CTO, or VP Sales — get the objections before the real meeting | 5-15s |
 
+
+### Revenue Memory
+
+| Tool | What It Does | Latency |
+|------|-------------|---------|
+| `get_revenue_memory` | Query what Andru has learned about your business over time: metrics, deal patterns, account history, decisions | varies |
+| `log_revenue_insight` | Save an insight, decision, metric or pattern to Andru's memory; earlier values are versioned automatically | varies |
+| `get_founder_context` | Everything Andru knows about you, organised by memory type, to prime any revenue conversation | varies |
+| `get_memory_history` | How a metric, deal stage or priority has changed over time ("What was my MRR 3 months ago?") | varies |
+
+### Market & Portfolio Intelligence
+
+| Tool | What It Does | Latency |
+|------|-------------|---------|
+| `get_market_signals` | What's moving in your market now: ranked signals, each with its buyer impact and a recommended action | varies |
+| `assess_company_readiness` | Scores a company's Revenue Readiness Index (0–100) from its operating metrics, with its #1 growth constraint | varies |
+| `get_portfolio_readiness_rollup` | A board-ready scorecard of every portfolio company by Revenue Readiness Index, with aggregates | varies |
+| `generate_portfolio_brief` | A board/LP-grade brief for a portfolio: per-company performance, market context, cross-portfolio opportunities | varies |
+
+### Consultation
+
+| Tool | What It Does | Latency |
+|------|-------------|---------|
+| `consult_agent` | Ask one of Andru's domain expert agents in natural language and get a domain-scoped answer | varies |
+
 ## CLI
 
-All 19 tools are also available from the command line via the companion [`andru-intel`](https://www.npmjs.com/package/andru-intel) package:
+19 of these tools are also available from the command line via the companion [`andru-intel`](https://www.npmjs.com/package/andru-intel) package:
 
 ```bash
 npx andru-intel list                    # see all 19 tools
