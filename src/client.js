@@ -7,7 +7,7 @@
 
 const DEFAULT_API_URL = 'https://hs-andru-test.onrender.com';
 const REQUEST_TIMEOUT_MS = 60_000; // 60s for AI-calling tools
-const PACKAGE_VERSION = '1.4.0';
+const PACKAGE_VERSION = '1.5.1';
 
 export class AndruClient {
   /**
