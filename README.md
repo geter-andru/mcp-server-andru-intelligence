@@ -139,13 +139,13 @@ claude mcp add andru-intelligence npx mcp-server-andru-intelligence \
 ## Pricing
 
 The same work costs the same as in the Andru platform, from the same wallet:
-- **Answers from your own data** (fit scores, ICP, personas, account plan…): free within the monthly allowance.
+- **Answers from your own data** (fit scores, ICP, personas, account plan…): always free.
 - **Pre-meeting brief:** $1.50.
 - **Buyer role-play:** $5.
 - **Catalog assets:** $3 / $12 / $49.
 - **Expert consultation:** $3 per turn.
 
-**25 free calls a month,** shared with A2A, cover lookups and anything priced $5 or less; consultations and catalog assets are always paid. A call that only asks you for more information is never charged. Check your balance and free calls with `andru-intel usage`.
+**25 free calls a month,** shared with A2A, cover paid calls priced $5 or less (pre-meeting brief, role-play); consultations and catalog assets are always paid. A call that only asks you for more information is never charged. Check your balance and free calls with `andru-intel usage`.
 
 ## CLI
 
