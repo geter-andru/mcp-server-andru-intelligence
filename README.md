@@ -23,9 +23,9 @@ ANDRU_API_KEY=sk_live_... npx mcp-server-andru-intelligence
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
 | `ANDRU_API_KEY` | Yes | — | Your Andru Platform API key |
-| `ANDRU_API_URL` | No | `https://hs-andru-test.onrender.com` | API base URL. The default is Andru's production API; you don't need to change it. |
+| `ANDRU_API_URL` | No | `https://api.andru-ai.com` | API base URL. The default is Andru's production API; you don't need to change it. |
 
-Get your API key at [platform.andru-ai.com/settings/api-keys](https://platform.andru-ai.com/settings/api-keys).
+Get your API key at [platform.andru-ai.com/settings/developer](https://platform.andru-ai.com/settings/developer).
 
 ### Claude Desktop
 
@@ -126,14 +126,35 @@ claude mcp add andru-intelligence npx mcp-server-andru-intelligence \
 
 | Tool | What It Does | Latency |
 |------|-------------|---------|
-| `consult_agent` | Ask one of Andru's domain expert agents in natural language and get a domain-scoped answer | varies |
+| `consult_agent` | Ask one of Andru's domain expert agents in natural language and get a domain-scoped answer ($3 per turn) | varies |
+
+### Asset Catalog
+
+| Tool | What It Does | Price |
+|------|-------------|-------|
+| `list_assets` | Search Andru's catalog of 138 sales, hiring, fundraising and buying assets: what each is, its business outcome, price, and whether it can be generated today | Free |
+| `generate_asset` | Generate any catalog asset from everything Andru knows about your company; saved to your Andru library | Its catalog price: Tool $3, Framework $12, Decision $49 (your first ICP is free) |
+| `get_asset` | Collect a generated asset as markdown | Free |
+
+## Pricing
+
+The same work costs the same as in the Andru platform, from the same wallet:
+- **Answers from your own data** (fit scores, ICP, personas, account plan…): free within the monthly allowance.
+- **Pre-meeting brief:** $1.50.
+- **Buyer role-play:** $5.
+- **Catalog assets:** $3 / $12 / $49.
+- **Expert consultation:** $3 per turn.
+
+**25 free calls a month,** shared with A2A, cover lookups and anything priced $5 or less; consultations and catalog assets are always paid. A call that only asks you for more information is never charged. Check your balance and free calls with `andru-intel usage`.
 
 ## CLI
 
 19 of these tools are also available from the command line via the companion [`andru-intel`](https://www.npmjs.com/package/andru-intel) package:
 
 ```bash
-npx andru-intel list                    # see all 19 tools
+npx andru-intel assets board            # search the asset catalog (free)
+npx andru-intel generate "Board Presentation" --out board-deck.md   # build it, save as markdown
+npx andru-intel list                    # see all tools
 npx andru-intel score "AI code review"  # instant ICP (works offline)
 npx andru-intel persona CFO             # buyer persona deep dive
 npx andru-intel blueprint --stage "Series A" --arr "$2M"
@@ -174,7 +195,7 @@ Claude Desktop/Code  →  MCP Server (stdio)  →  Andru API (HTTPS)
 Andru also supports the Agent-to-Agent (A2A) protocol for direct agent-to-agent communication. The AgentCard is available at:
 
 ```
-https://hs-andru-test.onrender.com/.well-known/agent.json
+https://api.andru-ai.com/.well-known/agent.json
 ```
 
 ## Also Available As

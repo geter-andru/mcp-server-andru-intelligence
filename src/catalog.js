@@ -671,16 +671,51 @@ export const tools = [
   },
   {
     name: 'consult_agent',
-    description: "Consult one of Andru's domain expert agents in natural language and get a domain-scoped answer (it may call internal tools). One consultation turn per call; pass prior turns as `history` to continue. Use `module` to pick the expert (e.g. 'market-clarity', 'deal-acceleration', 'due-diligence', 'portfolio-ops').",
+    description: "Consult one of Andru's domain expert agents in natural language and get a domain-scoped answer (it may call free lookup tools; paid tools must be called directly). $3 per turn. One consultation turn per call; pass prior turns as `history` to continue. Use `module` to pick the expert (e.g. 'market-clarity', 'deal-acceleration', 'due-diligence', 'portfolio-ops').",
     annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
       properties: {
         module: { type: 'string', description: "Which domain agent to consult (e.g. 'market-clarity', 'due-diligence', 'portfolio-ops')." },
-        message: { type: 'string', description: 'Your question / request for the agent.' },
-        history: { type: 'array', description: 'Optional prior turns: [{ role, content }].', items: { type: 'object' } },
+        message: { type: 'string', description: 'Your question / request for the agent (up to 4,000 characters).' },
+        history: { type: 'array', description: 'Optional prior turns: [{ role, content }]. At most 10 turns of 2,000 characters each.', items: { type: 'object' } },
       },
       required: ['module', 'message'],
+    },
+  },
+  // ── Asset catalog (1.6.0): find, generate and collect any of Andru's 138 assets ──
+  {
+    name: 'list_assets',
+    description: "Search Andru's catalog of sales, hiring, fundraising and buying assets — 138 deliverables from email drafts to board decks. Each entry says what it is, the business outcome, its price (Tool $3, Framework $12, Decision $49), whether it needs your own data, and whether it can be generated today. Free. Then call generate_asset with the asset's name.",
+    annotations: READ_ONLY,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        query: { type: 'string', description: "Keywords for what you need, e.g. 'board deck', 'buying committee', 'first sales hire'." },
+        group: { type: 'string', enum: ['Core', 'Advanced', 'Strategic', 'Buy-side'], description: 'Optional catalog group.' },
+        available_only: { type: 'boolean', description: 'Only assets that can be generated today.' },
+        limit: { type: 'number', description: 'Maximum results (default 15).' },
+      },
+    },
+  },
+  {
+    name: 'generate_asset',
+    description: "Generate an asset from Andru's catalog (find it with list_assets) — e.g. 'Board Presentation', 'Buying Committee Navigation'. Charged at its catalog price (Tool $3, Framework $12, Decision $49); your first ICP is free. Built from everything Andru knows about your company and saved to your Andru library. Takes up to a few minutes: returns a job_id — call get_asset with it to receive the asset as markdown.",
+    annotations: WRITE_OP,
+    inputSchema: {
+      type: 'object',
+      properties: { asset: { type: 'string', description: 'The asset name from list_assets.' } },
+      required: ['asset'],
+    },
+  },
+  {
+    name: 'get_asset',
+    description: 'Collect an asset started with generate_asset. While it is building you get its progress; when it is done you get the full asset as markdown (also saved to your Andru library). Free.',
+    annotations: READ_ONLY,
+    inputSchema: {
+      type: 'object',
+      properties: { job_id: { type: 'string', description: 'The job_id returned by generate_asset.' } },
+      required: ['job_id'],
     },
   },
 ];

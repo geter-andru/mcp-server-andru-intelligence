@@ -15,5 +15,5 @@ services:
       - key: HOST
         value: "0.0.0.0"
       - key: ANDRU_API_URL
-        value: https://hs-andru-test.onrender.com
+        value: https://api.andru-ai.com
     autoDeploy: false

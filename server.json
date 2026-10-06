@@ -3,7 +3,7 @@
   "name": "io.github.geter-andru/andru-intelligence",
   "title": "Andru — Operational Empathy for B2B",
   "description": "28 signed tools for founders + PE/VC operators: ICP scoring, deal classification, market signals.",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "websiteUrl": "https://platform.andru-ai.com",
   "repository": {
     "url": "https://github.com/geter-andru/mcp-server-andru-intelligence.git",
@@ -13,29 +13,29 @@
     {
       "registryType": "npm",
       "identifier": "mcp-server-andru-intelligence",
-      "version": "1.5.1",
+      "version": "1.6.0",
       "transport": {
         "type": "stdio"
       },
       "environmentVariables": [
         {
           "name": "ANDRU_API_KEY",
-          "description": "Your Andru Platform API key. Get one at https://platform.andru-ai.com/settings/api-keys",
+          "description": "Your Andru Platform API key. Get one at https://platform.andru-ai.com/settings/developer",
           "isRequired": true,
           "isSecret": true
         },
         {
           "name": "ANDRU_API_URL",
-          "description": "Andru API base URL (default: https://hs-andru-test.onrender.com)",
+          "description": "Andru API base URL (default: https://api.andru-ai.com)",
           "isRequired": false,
-          "default": "https://hs-andru-test.onrender.com"
+          "default": "https://api.andru-ai.com"
         }
       ]
     },
     {
       "registryType": "npm",
       "identifier": "mcp-server-andru-intelligence",
-      "version": "1.5.1",
+      "version": "1.6.0",
       "transport": {
         "type": "streamable-http",
         "url": "https://mcp-server-andru-intelligence.onrender.com/mcp"
@@ -43,7 +43,7 @@
       "environmentVariables": [
         {
           "name": "ANDRU_API_KEY",
-          "description": "Your Andru Platform API key. Get one at https://platform.andru-ai.com/settings/api-keys",
+          "description": "Your Andru Platform API key. Get one at https://platform.andru-ai.com/settings/developer",
           "isRequired": true,
           "isSecret": true
         }

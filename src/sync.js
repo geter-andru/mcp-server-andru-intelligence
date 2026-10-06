@@ -29,7 +29,7 @@ let isConnecting = false;
  * keeps the local cache updated.
  *
  * @param {object} opts
- * @param {string} opts.wsUrl - WebSocket URL (e.g., wss://hs-andru-test.onrender.com/ws)
+ * @param {string} opts.wsUrl - WebSocket URL (e.g., wss://api.andru-ai.com/ws)
  * @param {string} opts.token - Auth token (Supabase JWT or API key)
  * @param {function} [opts.onSync] - Called when sync event received
  * @param {function} [opts.onError] - Called on connection error

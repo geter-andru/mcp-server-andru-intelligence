@@ -7,7 +7,7 @@
  * MCP client that connects via Streamable HTTP (the MCP 2025-03-26 spec).
  *
  * Environment variables:
- *   ANDRU_API_URL  (optional) — API base URL (default: https://hs-andru-test.onrender.com)
+ *   ANDRU_API_URL  (optional) — API base URL (default: https://api.andru-ai.com)
  *   PORT           (optional) — HTTP port (default: 3100)
  *   HOST           (optional) — Bind address (default: 0.0.0.0)
  *
@@ -31,7 +31,7 @@ import { initCache, closeCache } from './cache.js';
 const transports = new Map();
 
 async function main() {
-  const apiUrl = process.env.ANDRU_API_URL || 'https://hs-andru-test.onrender.com';
+  const apiUrl = process.env.ANDRU_API_URL || 'https://api.andru-ai.com';
   const port = parseInt(process.env.PORT || '3100', 10);
   const host = process.env.HOST || '0.0.0.0';
   const cacheEnabled = process.env.ANDRU_CACHE !== 'false';
