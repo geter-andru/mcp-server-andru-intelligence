@@ -24,8 +24,6 @@ import { randomUUID } from 'node:crypto';
 import rateLimit from 'express-rate-limit';
 import { AndruClient } from './client.js';
 import { createServer } from './server.js';
-import { createCachedClient } from './cachedClient.js';
-import { initCache, closeCache } from './cache.js';
 
 // Per-session transport map (stateful mode)
 const transports = new Map();
@@ -34,17 +32,10 @@ async function main() {
   const apiUrl = process.env.ANDRU_API_URL || 'https://api.andru-ai.com';
   const port = parseInt(process.env.PORT || '3100', 10);
   const host = process.env.HOST || '0.0.0.0';
-  const cacheEnabled = process.env.ANDRU_CACHE !== 'false';
-
-  // Initialize SQLite cache
-  if (cacheEnabled) {
-    try {
-      initCache();
-      console.log('[Andru MCP HTTP] Cache initialized');
-    } catch (err) {
-      console.warn('[Andru MCP HTTP] Cache init failed (continuing without):', err.message);
-    }
-  }
+  // No local cache on the HTTP server (2026-10-07). It serves many API keys from one process, and the
+  // cache keys results by tool name and arguments only, so one account could be served another's
+  // cached answer. (On Render the cache's native module never loaded, so every tool call failed
+  // instead.) The cache stays on for the single-user stdio server.
 
   const app = createMcpExpressApp({ host });
 
@@ -100,8 +91,7 @@ async function main() {
 
     if (!transport) {
       // New session — create per-key client, server, and transport
-      const baseClient = new AndruClient(req.auth.apiKey, apiUrl);
-      const client = cacheEnabled ? createCachedClient(baseClient) : baseClient;
+      const client = new AndruClient(req.auth.apiKey, apiUrl);
       const server = createServer(client);
 
       transport = new StreamableHTTPServerTransport({
@@ -160,7 +150,6 @@ async function main() {
       await transport.close().catch(() => {});
       transports.delete(id);
     }
-    closeCache();
     process.exit(0);
   };
   process.on('SIGINT', shutdown);
