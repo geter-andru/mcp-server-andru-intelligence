@@ -485,8 +485,8 @@ export const tools = [
 
   {
     name: 'simulate_buyer_persona',
-    description: 'Practice your pitch against a realistic buyer — pick a CFO, CTO, COO, VP Sales, or VP Engineering and get their opening challenge. They\'ll push back the way real buyers do, so you can sharpen your story before the actual meeting.',
-    annotations: READ_ONLY,
+    description: 'Practice your pitch against a realistic buyer — a CFO, CTO, COO, VP Sales, or VP Engineering who pushes back the way real buyers do. A Deal Prep session is $5 for 25 turns: open it, reply turn by turn with the session_id, and say "End role-play. How did I do?" for a scored debrief.',
+    annotations: WRITE_OP,
     inputSchema: {
       type: 'object',
       properties: {
@@ -497,8 +497,8 @@ export const tools = [
         },
         stageId: {
           type: 'number',
-          enum: [0, 1, 2, 3, 4, 5, 6, 7],
-          description: 'Buyer journey stage (0=Unaware through 7=Advocating). Default: 3.',
+          enum: [1, 2, 3, 4, 5, 6, 7],
+          description: 'Buyer journey stage (1=Researching through 7=Advocating). Default: 3.',
         },
         productDescription: {
           type: 'string',
@@ -510,11 +510,23 @@ export const tools = [
         },
         mode: {
           type: 'string',
-          enum: ['opening', 'list'],
-          description: 'opening = buyer\'s opening message. list = available personas. Default: opening.',
+          enum: ['opening', 'reply', 'list'],
+          description: 'opening = open a session ($5) and get the buyer\'s opening line. reply = send the seller\'s next message on session_id. list = available personas. Default: opening.',
+        },
+        session_id: {
+          type: 'string',
+          description: 'The Deal Prep session to continue (returned by mode=opening). Required for mode=reply.',
+        },
+        message: {
+          type: 'string',
+          description: 'mode=reply: what the seller says to the buyer. "End role-play. How did I do?" ends with a debrief.',
+        },
+        session_key: {
+          type: 'string',
+          description: 'Optional idempotency key for opening a session: retrying with the same key never charges twice.',
         },
       },
-      required: ['persona'],
+      required: [],
     },
   },
   // ── Memory Tools ──────────────────────────────────────────────────────────

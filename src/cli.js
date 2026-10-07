@@ -284,7 +284,7 @@ async function main() {
       console.log(`${'─'.repeat(40)}`);
       console.log(`  Balance:  ${d.balance?.formatted || '$0.00'}`);
       console.log(`  Plan:     ${d.plan}${d.unlimited ? ' (unlimited)' : ''}`);
-      if (d.free_calls_remaining != null) console.log(`  Free calls left this month: ${d.free_calls_remaining} of ${d.free_calls_per_month}`);
+      if (d.free_calls_remaining != null) console.log(`  Free calls left today: ${d.free_calls_remaining} of ${d.free_calls_per_day ?? d.free_calls_per_month}`);
 
       if (d.recent_mcp_charges && d.recent_mcp_charges.length > 0) {
         console.log(`\nRecent MCP Usage:`);

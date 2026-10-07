@@ -101,7 +101,7 @@ claude mcp add andru-intelligence npx mcp-server-andru-intelligence \
 | `get_sales_blueprint` | First sales hire blueprint — JD, comp model, interview questions, and 90-day ramp plan for the stage you're at | 10-20s |
 | `get_thesis_match` | Match your company against VC investment theses — top 5 fits with reasoning for why each thesis applies | 10-20s |
 | `get_founder_wellness` | Burnout risk assessment with recovery recommendations — because 54% of founders are severely stressed and 81% hide it | <200ms |
-| `simulate_buyer_persona` | Practice your pitch against a simulated CFO, CTO, or VP Sales — get the objections before the real meeting | 5-15s |
+| `simulate_buyer_persona` | A Deal Prep session ($5, 25 turns): practice your pitch against a simulated CFO, CTO, or VP Sales — get the objections before the real meeting | 5-15s |
 
 
 ### Revenue Memory
@@ -146,12 +146,11 @@ claude mcp add andru-intelligence npx mcp-server-andru-intelligence \
 
 The same work costs the same as in the Andru platform, from the same wallet:
 - **Answers from your own data** (fit scores, ICP, personas, account plan…): always free.
-- **Pre-meeting brief:** $1.50.
-- **Buyer role-play:** $5.
-- **Catalog assets:** $3 / $12 / $49.
-- **Expert consultation:** $3 per turn.
+- **Tool, $3:** a pre-meeting brief, a diagnostic, one expert-agent turn, or a single-piece catalog asset.
+- **Framework, $12** and **Decision, $49:** the rest of the catalog.
+- **Deal Prep session, $5:** 25 turns of buyer role-play and coaching (`simulate_buyer_persona`).
 
-**25 free calls a month,** shared with A2A, cover paid calls priced $5 or less (pre-meeting brief, role-play); consultations and catalog assets are always paid. A call that only asks you for more information is never charged. Check your balance and free calls with `andru-intel usage`.
+**5 free calls a day,** shared with A2A, cover paid calls priced $3 or less (pre-meeting brief, diagnostic); Deal Prep sessions, consultations and catalog assets are always paid. A call that only asks you for more information is never charged. Check your balance and free calls with `andru-intel usage`.
 
 ## CLI
 
