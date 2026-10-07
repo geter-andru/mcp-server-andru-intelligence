@@ -718,6 +718,21 @@ export const tools = [
       required: ['job_id'],
     },
   },
+  // ── Product context (2026-10-07): say what you sell once ──────────────────
+  {
+    name: 'set_product_context',
+    description: 'Tell Andru what you sell, once. Give your company website (Andru reads it and remembers your product) or a short product description. Every later call uses it, so tools stop asking for product context. Call with no arguments to see what Andru has saved. Free.',
+    annotations: { readOnlyHint: false, idempotentHint: true, openWorldHint: true },
+    inputSchema: {
+      type: 'object',
+      properties: {
+        website: { type: 'string', description: 'Your company website, e.g. acme.com. Andru reads the homepage once.' },
+        productDescription: { type: 'string', description: 'Or: what your product does and who it is for (2-3 sentences).' },
+        vertical: { type: 'string', description: 'Optional: the industry you sell into.' },
+        targetRole: { type: 'string', description: 'Optional: the buyer role you target, e.g. CFO.' },
+      },
+    },
+  },
 ];
 
 // ── 3 Resources ─────────────────────────────────────────────────────────────

@@ -136,6 +136,12 @@ claude mcp add andru-intelligence npx mcp-server-andru-intelligence \
 | `generate_asset` | Generate any catalog asset from everything Andru knows about your company; saved to your Andru library | Its catalog price: Tool $3, Framework $12, Decision $49 (your first ICP is free) |
 | `get_asset` | Collect a generated asset as markdown | Free |
 
+### Product Context
+
+| Tool | What It Does | Price |
+|------|-------------|-------|
+| `set_product_context` | Tell Andru what you sell, once: your company website (Andru reads it) or a short description. Every later call uses it | Free |
+
 ## Pricing
 
 The same work costs the same as in the Andru platform, from the same wallet:
@@ -170,7 +176,13 @@ npx andru-intel run get_competitive_positioning --companyName "Acme"
 
 - `get_icp_fit_score`, `get_persona_profile`, `get_messaging_framework`, `get_competitive_positioning`, `get_evaluation_criteria`, `classify_opportunity`, `get_disqualification_signals`
 
-Pass `productDescription`, `vertical`, and `targetRole` parameters, or let Claude infer them from your conversation. The tools use pre-built stakeholder understanding (5 named buyer personas, 3 vertical segment profiles) to deliver results immediately.
+Andru only needs to know what you sell once:
+
+- **Signed up with a company email?** Andru reads your company's website and remembers your product. Nothing to do.
+- **Client shows forms** (Claude Code, Cursor, VS Code)? The first tool that needs it asks for your website in one field, then answers.
+- **Otherwise:** call `set_product_context` with your website (or a description) once.
+
+You can still pass `productDescription`, `vertical`, and `targetRole` on any call; what you send first is remembered. The tools use pre-built stakeholder understanding (5 named buyer personas, 3 vertical segment profiles) to deliver results immediately.
 
 Run a full ICP pipeline at [platform.andru-ai.com](https://platform.andru-ai.com) for understanding tuned to your specific product and market.
 

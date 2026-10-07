@@ -15,6 +15,68 @@ import {
 } from '@modelcontextprotocol/sdk/types.js';
 import { tools, resources } from './catalog.js';
 
+/** The needs_context payload of a tool result, or null. */
+export function needsContextOf(result) {
+  try {
+    const text = result?.content?.[0]?.text;
+    const parsed = typeof text === 'string' ? JSON.parse(text) : null;
+    return parsed?.status === 'needs_context' ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+/** The one-question form: the company website, or a description instead. */
+export const PRODUCT_FORM = {
+  message: 'Andru needs to know what you sell, once. Share your company website and Andru will read it and remember your product for every later call. Or describe it instead.',
+  requestedSchema: {
+    type: 'object',
+    properties: {
+      website: { type: 'string', title: 'Company website', description: 'e.g. acme.com' },
+      productDescription: { type: 'string', title: 'Or: what your product does and who it is for' },
+    },
+  },
+};
+
+/**
+ * Ask once (2026-10-07). When a tool needs to know what the founder sells and the client can show
+ * forms (MCP elicitation: Claude Code, Cursor, VS Code), ask for the website in one field, save it
+ * with set_product_context, and retry the original call, so the person gets the answer instead of
+ * an error. Clients without forms (e.g. Claude Desktop) get the original reply, which says how.
+ */
+export async function askOnceForProduct(server, client, name, args, result) {
+  const needs = needsContextOf(result);
+  const rc = needs?.required_context || needs?.requiredContext;
+  if (!rc || !('productDescription' in rc) || name === 'set_product_context') return result;
+  if (!server.getClientCapabilities?.()?.elicitation) return result;
+
+  let answer;
+  try {
+    answer = await server.elicitInput(PRODUCT_FORM);
+  } catch {
+    return result;
+  }
+  const content = answer?.action === 'accept' ? answer.content || {} : null;
+  const website = typeof content?.website === 'string' ? content.website.trim() : '';
+  const productDescription = typeof content?.productDescription === 'string' ? content.productDescription.trim() : '';
+  if (!website && !productDescription) return result;
+
+  const saved = await client.callTool('set_product_context', website ? { website } : { productDescription });
+  const savedInfo = (() => {
+    try { return JSON.parse(saved?.content?.[0]?.text || '{}'); } catch { return {}; }
+  })();
+  if (!['saved', 'kept'].includes(savedInfo.status)) {
+    // The site could not be read: retry with the description if given, else explain.
+    if (productDescription) return client.callTool(name, { ...args, productDescription });
+    return saved;
+  }
+  const retried = await client.callTool(name, args);
+  const note = savedInfo.status === 'saved'
+    ? `Andru saved your product${savedInfo.source && savedInfo.source !== 'description' ? ` from ${savedInfo.source}` : ''}: ${savedInfo.product?.productDescription || ''} Call set_product_context to correct it.`
+    : savedInfo.message;
+  return { ...retried, content: [...(retried?.content || []), { type: 'text', text: note }] };
+}
+
 /**
  * Create an MCP server backed by the Andru API.
  *
@@ -25,7 +87,7 @@ export function createServer(client) {
   const server = new Server(
     {
       name: 'andru-intelligence',
-      version: '1.0.0',
+      version: '1.7.0',
     },
     {
       capabilities: {
@@ -55,7 +117,8 @@ export function createServer(client) {
       }
       const { name, arguments: args } = request.params;
       try {
-        return await client.callTool(name, args || {});
+        const result = await client.callTool(name, args || {});
+        return await askOnceForProduct(server, client, name, args || {}, result);
       } catch (error) {
         return {
           content: [{
