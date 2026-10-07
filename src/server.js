@@ -87,7 +87,7 @@ export function createServer(client) {
   const server = new Server(
     {
       name: 'andru-intelligence',
-      version: '1.7.0',
+      version: '1.8.0',
     },
     {
       capabilities: {

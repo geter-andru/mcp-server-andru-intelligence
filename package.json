@@ -1,6 +1,6 @@
 {
   "name": "mcp-server-andru-intelligence",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "mcpName": "io.github.geter-andru/andru-intelligence",
   "description": "Operational empathy for technical founders + PE/VC operators navigating high-stakes B2B interactions. 28 MCP tools + CLI: ICP scoring, persona simulation, battlecards, deal classification, prospect discovery, investor matching, founder wellness, plus market signals, company revenue-readiness scoring, portfolio rollups/briefs, and natural-language consultation with Andru's domain agents. Every result is cryptographically signed (verify against /.well-known/jwks.json).",
   "type": "module",

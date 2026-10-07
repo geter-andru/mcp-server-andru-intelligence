@@ -3,7 +3,7 @@
   "name": "io.github.geter-andru/andru-intelligence",
   "title": "Andru — Operational Empathy for B2B",
   "description": "28 signed tools for founders + PE/VC operators: ICP scoring, deal classification, market signals.",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "websiteUrl": "https://platform.andru-ai.com",
   "repository": {
     "url": "https://github.com/geter-andru/mcp-server-andru-intelligence.git",
@@ -13,7 +13,7 @@
     {
       "registryType": "npm",
       "identifier": "mcp-server-andru-intelligence",
-      "version": "1.7.0",
+      "version": "1.8.0",
       "transport": {
         "type": "stdio"
       },
@@ -35,7 +35,7 @@
     {
       "registryType": "npm",
       "identifier": "mcp-server-andru-intelligence",
-      "version": "1.7.0",
+      "version": "1.8.0",
       "transport": {
         "type": "streamable-http",
         "url": "https://mcp-server-andru-intelligence.onrender.com/mcp"
