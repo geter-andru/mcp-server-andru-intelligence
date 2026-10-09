@@ -54,4 +54,6 @@ test('tool copy uses buyer-side language (approved by Geter, 2026-10-09)', () =>
   assert.ok(descriptions.length > 30);
   assert.doesNotMatch(descriptions.join('\n'), /MBTI|battle ?card|objection|landmine|where they'll attack|questions to plant/i);
   assert.doesNotMatch(readme, /MBTI|battle ?card|where they'll attack|questions to plant|anticipated objections/i);
+  // Role-play prepares for the real meeting; it is not pitch practice (Geter, 2026-10-09).
+  for (const text of [descriptions.join('\n'), readme]) assert.doesNotMatch(text, /practi[cs]e (your|a) pitch|pitch practice|push(es)? back|get the objections/i);
 });

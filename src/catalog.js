@@ -459,7 +459,7 @@ export const tools = [
 
   {
     name: 'simulate_buyer_persona',
-    description: 'Practice your pitch against a realistic buyer — a CFO, CTO, COO, VP Sales, or VP Engineering who pushes back the way real buyers do. A Deal Prep session is $5 for 25 turns: open it, reply turn by turn with the session_id, and say "End role-play. How did I do?" for a scored debrief.',
+    description: 'Prepare for a key meeting with the buying committee. Andru acts as key decision-makers asking you questions your real buyers ask so you come into real-world meetings equipped to succeed. A Deal Prep session is $5 for 25 turns: open it, reply turn by turn with the session_id, and say "End role-play. How did I do?" for a scored debrief.',
     annotations: WRITE_OP,
     inputSchema: {
       type: 'object',
