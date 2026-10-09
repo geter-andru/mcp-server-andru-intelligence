@@ -1,13 +1,15 @@
 {
-  "description": "Operational empathy for technical founders navigating high-stakes B2B interactions — understand who to target, what they actually need, and when to walk away.",
+  "description": "Revenue intelligence for complex B2B growth. Your agent builds the assets technical founders sell with, and prepares them for real buyer conversations.",
   "type": "object",
   "properties": {
     "ANDRU_API_KEY": {
       "type": "string",
-      "description": "Your Andru Platform API key. Get one at https://platform.andru-ai.com/settings/api-keys"
+      "description": "Your Andru Platform API key. Get one at https://platform.andru-ai.com/settings/developer"
     }
   },
-  "required": ["ANDRU_API_KEY"],
+  "required": [
+    "ANDRU_API_KEY"
+  ],
   "transport": {
     "type": "http",
     "url": "https://mcp-server-andru-intelligence.onrender.com/mcp"

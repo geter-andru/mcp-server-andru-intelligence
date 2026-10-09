@@ -1,8 +1,18 @@
-# Andru MCP Server — Operational Empathy for B2B
+# Andru MCP Server
 
-28 tools for technical founders and PE/VC operators navigating high-stakes B2B interactions. ICP scoring, buyer persona simulation, competitive battlecards, MBTI-adapted messaging, deal classification, sales hiring blueprints, VC thesis matching, founder wellness, and pre-meeting briefs — built on 20 years of B2B sales pattern data.
+Revenue intelligence for complex B2B growth. Your agent builds the assets technical founders sell with, and prepares them for real buyer conversations.
 
-Works immediately — no pipeline data required. Describe your product and Andru delivers stakeholder understanding in seconds. Run a full pipeline for empathy tuned to your specific market.
+Andru is a revenue intelligence layer for complex B2B growth. Give your agent 30 tools and a catalog of 139 assets, built from what Andru knows about your company and buyers. Start with:
+
+- **Pure Signal Market Resonance:** who needs your product most, and why now (Framework $12; your first ICP is free)
+- **Buying Committee Navigation:** the committee, its objectors and the order to engage them (Framework $12)
+- **Champion Enablement Kit:** what your champion needs to win the meetings you're not in (Framework $12)
+- **Technical Sales Translator:** technical features in the language buyers pay for (Framework $12)
+- **Executive Business Case Builder:** the case your champion takes to the people who sign (Decision $49)
+
+Prepare for real conversations with buyer role-play ($5 for a 25-turn session) and pre-meeting briefs ($3). Lookups are free. Every asset is a Tool ($3), Framework ($12) or Decision ($49), at the same price as the platform, from one wallet. 5 free calls a day, shared across MCP and A2A, cover paid calls of $3 or less.
+
+Build any of them with `generate_asset` (for example `generate_asset` with `asset: "Champion Enablement Kit"`), and find the rest with `list_assets`.
 
 ## Installation
 
@@ -87,13 +97,6 @@ claude mcp add andru-intelligence npx mcp-server-andru-intelligence \
 | `discover_prospects` | Finds real companies showing the same buying signals your best customers showed — searches the web live | 15-30s |
 | `get_pre_brief` | Pre-call prep so you don't walk in cold — talk track, discovery questions, anticipated objections, and the one thing to get done | 10-20s |
 
-### CRM Syndication
-
-| Tool | What It Does | Latency |
-|------|-------------|---------|
-| `get_syndication_status` | Shows whether your CRM has your current intelligence or is running on stale data | <200ms |
-| `trigger_syndication` | Pushes latest intelligence into your CRM — detects which platforms are out of date and updates only what's stale | 5-15s |
-
 ### Founder Tools
 
 | Tool | What It Does | Latency |
@@ -132,7 +135,7 @@ claude mcp add andru-intelligence npx mcp-server-andru-intelligence \
 
 | Tool | What It Does | Price |
 |------|-------------|-------|
-| `list_assets` | Search Andru's catalog of 138 sales, hiring, fundraising and buying assets: what each is, its business outcome, price, and whether it can be generated today | Free |
+| `list_assets` | Search Andru's catalog of 139 sales, hiring, fundraising and buying assets: what each is, its business outcome, price, and whether it can be generated today | Free |
 | `generate_asset` | Generate any catalog asset from everything Andru knows about your company; saved to your Andru library | Its catalog price: Tool $3, Framework $12, Decision $49 (your first ICP is free) |
 | `get_asset` | Collect a generated asset as markdown | Free |
 
@@ -154,7 +157,7 @@ The same work costs the same as in the Andru platform, from the same wallet:
 
 ## CLI
 
-19 of these tools are also available from the command line via the companion [`andru-intel`](https://www.npmjs.com/package/andru-intel) package:
+These tools are also available from the command line via the companion [`andru-intel`](https://www.npmjs.com/package/andru-intel) package:
 
 ```bash
 npx andru-intel assets board            # search the asset catalog (free)
@@ -209,19 +212,15 @@ Andru also supports the Agent-to-Agent (A2A) protocol for direct agent-to-agent 
 https://api.andru-ai.com/.well-known/agent.json
 ```
 
-## Also Available As
-
-**Chrome Extension** — Sales intelligence on LinkedIn profiles, Gmail compose, and any company page. [Install from Chrome Web Store](https://platform.andru-ai.com/tools/chrome-extension).
-
 ## Intelligence Briefs
 
 Free signal reads for the questions technical founders ask at 11 PM:
 
-- [I've Done 30 Customer Interviews and Still Can't Define My ICP](https://platform.andru-ai.com/intelligence/customer-interviews-icp)
-- [I Know My ICP But My Outreach Still Isn't Working](https://platform.andru-ai.com/intelligence/icp-outreach-not-working)
-- [My Pipeline Is Full of Companies That Like Us But Nobody's Buying Urgently](https://platform.andru-ai.com/intelligence/pipeline-no-urgency)
-- [As a Technical Founder, What Am I Getting Wrong About Sales?](https://platform.andru-ai.com/intelligence/technical-founder-sales-mistakes)
-- [Why Does My Messaging Fall Flat Even When I'm Talking to the Right Companies?](https://platform.andru-ai.com/intelligence/messaging-falls-flat)
+- [I've Done 30 Customer Interviews and Still Can't Define My ICP](https://andru-ai.com/answers/customer-interviews-icp)
+- [I Know My ICP But My Outreach Still Isn't Working](https://andru-ai.com/answers/icp-outreach-not-working)
+- [My Pipeline Is Full of Companies That Like Us But Nobody's Buying Urgently](https://andru-ai.com/answers/pipeline-no-urgency)
+- [As a Technical Founder, What Am I Getting Wrong About Sales?](https://andru-ai.com/answers/technical-founder-sales-mistakes)
+- [Why Does My Messaging Fall Flat Even When I'm Talking to the Right Companies?](https://andru-ai.com/answers/messaging-falls-flat)
 
 ## License
 

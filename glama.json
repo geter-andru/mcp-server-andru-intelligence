@@ -1,5 +1,7 @@
 {
   "$schema": "https://glama.ai/mcp/schemas/server.json",
-  "description": "28 cryptographically-signed tools for technical founders + PE/VC operators navigating high-stakes B2B: ICP scoring, persona simulation, battlecards, deal classification, market signals, company revenue-readiness scoring, portfolio rollups/briefs, and natural-language consultation with Andru's domain agents. Verify every result against /.well-known/jwks.json.",
-  "maintainers": ["geter-andru"]
+  "description": "Revenue intelligence for complex B2B growth. Your agent builds the assets technical founders sell with, and prepares them for real buyer conversations.",
+  "maintainers": [
+    "geter-andru"
+  ]
 }

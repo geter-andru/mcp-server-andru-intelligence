@@ -38,6 +38,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Test
+        run: npm test
+
       - name: Scan packed artifact for secrets
         run: |
           echo "### Artifact Security Scan" >> $GITHUB_STEP_SUMMARY

@@ -13,7 +13,12 @@ import {
   ListResourcesRequestSchema,
   ReadResourceRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
+import { readFileSync } from 'node:fs';
 import { tools, resources } from './catalog.js';
+
+// The version clients see comes from package.json, so it can't drift from the release (it said
+// 1.8.0 while 1.9.0 was being prepared, 2026-10-08).
+export const PACKAGE_VERSION = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')).version;
 
 /** The needs_context payload of a tool result, or null. */
 export function needsContextOf(result) {
@@ -87,7 +92,7 @@ export function createServer(client) {
   const server = new Server(
     {
       name: 'andru-intelligence',
-      version: '1.8.0',
+      version: PACKAGE_VERSION,
     },
     {
       capabilities: {

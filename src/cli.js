@@ -43,7 +43,7 @@ Usage:
   andru-intel help <tool-name>      Show tool parameters
   andru-intel usage                 Show wallet balance and recent charges
 
-Assets (138 deliverables from Andru's catalog):
+Assets (139 deliverables from Andru's catalog):
   andru-intel assets [keywords]     Search the catalog (free)
       --group <Core|Advanced|Strategic|Buy-side>   --available   Only assets you can generate today
   andru-intel generate "<asset>"    Generate an asset at its catalog price; waits and saves it as markdown

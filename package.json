@@ -1,8 +1,8 @@
 {
   "name": "mcp-server-andru-intelligence",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "mcpName": "io.github.geter-andru/andru-intelligence",
-  "description": "Operational empathy for technical founders + PE/VC operators navigating high-stakes B2B interactions. 28 MCP tools + CLI: ICP scoring, persona simulation, battlecards, deal classification, prospect discovery, investor matching, founder wellness, plus market signals, company revenue-readiness scoring, portfolio rollups/briefs, and natural-language consultation with Andru's domain agents. Every result is cryptographically signed (verify against /.well-known/jwks.json).",
+  "description": "Revenue intelligence for complex B2B growth. Your agent builds the assets technical founders sell with, and prepares them for real buyer conversations.",
   "type": "module",
   "bin": {
     "mcp-server-andru-intelligence": "./src/index.js",
@@ -48,7 +48,8 @@
   "scripts": {
     "start": "node src/index.js",
     "start:http": "node src/httpServer.js",
-    "prepublishOnly": "node --input-type=module -e \"import {tools} from './src/catalog.js'; if(!tools?.length) {console.error('No tools in catalog'); process.exit(1)} console.log('Catalog OK:', tools.length, 'tools')\""
+    "prepublishOnly": "node --input-type=module -e \"import {tools} from './src/catalog.js'; if(!tools?.length) {console.error('No tools in catalog'); process.exit(1)} console.log('Catalog OK:', tools.length, 'tools')\"",
+    "test": "node --test test/*.test.js"
   },
   "files": [
     "src/",

@@ -346,32 +346,6 @@ export const tools = [
   },
 
   {
-    name: 'get_syndication_status',
-    description: 'Shows whether your CRM has your current intelligence or is running on stale data. Checks sync status across HubSpot, Salesforce, and Pipedrive.',
-    annotations: READ_ONLY,
-    inputSchema: {
-      type: 'object',
-      properties: {},
-    },
-  },
-
-  {
-    name: 'trigger_syndication',
-    description: 'Pushes your latest intelligence into your CRM — detects which platforms are out of date and updates only what\'s stale. Use get_syndication_status first to see what needs updating.',
-    annotations: WRITE_OP,
-    inputSchema: {
-      type: 'object',
-      properties: {
-        platforms: {
-          type: 'array',
-          items: { type: 'string' },
-          description: 'Only sync these platforms (e.g., ["hubspot"]). If omitted, syncs all stale platforms.',
-        },
-      },
-    },
-  },
-
-  {
     name: 'batch_fit_score',
     description: 'Score up to 50 companies at once — gives each a tier and score so you can rank a list in under a second. Returns individual scores plus aggregate statistics.',
     annotations: READ_ONLY,
@@ -695,10 +669,10 @@ export const tools = [
       required: ['module', 'message'],
     },
   },
-  // ── Asset catalog (1.6.0): find, generate and collect any of Andru's 138 assets ──
+  // ── Asset catalog (1.6.0): find, generate and collect any of Andru's 139 assets ──
   {
     name: 'list_assets',
-    description: "Search Andru's catalog of sales, hiring, fundraising and buying assets — 138 deliverables from email drafts to board decks. Each entry says what it is, the business outcome, its price (Tool $3, Framework $12, Decision $49), whether it needs your own data, and whether it can be generated today. Free. Then call generate_asset with the asset's name.",
+    description: "Search Andru's catalog of sales, hiring, fundraising and buying assets — 139 deliverables from email drafts to board decks. Each entry says what it is, the business outcome, its price (Tool $3, Framework $12, Decision $49), whether it needs your own data, and whether it can be generated today. Free. Then call generate_asset with the asset's name.",
     annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
