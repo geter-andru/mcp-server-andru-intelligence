@@ -36,3 +36,9 @@ test('the server reports the package version', () => {
   assert.equal(PACKAGE_VERSION, pkg.version);
   assert.doesNotMatch(read('src/server.js'), /version: '\d+\.\d+\.\d+'/);
 });
+
+test('the README says free calls are per channel, names no personas, and points at real commands', () => {
+  assert.doesNotMatch(readme, /shared (across|with) (MCP|A2A)/i);
+  assert.match(readme, /5 free calls a day on MCP and another 5 on A2A/);
+  assert.doesNotMatch(readme, /named buyer personas|andru-intel usage/);
+});

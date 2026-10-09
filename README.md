@@ -10,7 +10,7 @@ Andru is a revenue intelligence layer for complex B2B growth. Give your agent 30
 - **Technical Sales Translator:** technical features in the language buyers pay for (Framework $12)
 - **Executive Business Case Builder:** the case your champion takes to the people who sign (Decision $49)
 
-Prepare for real conversations with buyer role-play ($5 for a 25-turn session) and pre-meeting briefs ($3). Lookups are free. Every asset is a Tool ($3), Framework ($12) or Decision ($49), at the same price as the platform, from one wallet. 5 free calls a day, shared across MCP and A2A, cover paid calls of $3 or less.
+Prepare for real conversations with buyer role-play ($5 for a 25-turn session) and pre-meeting briefs ($3). Lookups are free. Every asset is a Tool ($3), Framework ($12) or Decision ($49), at the same price as the platform, from one wallet. 5 free calls a day on MCP and another 5 on A2A cover paid calls of $3 or less.
 
 Build any of them with `generate_asset` (for example `generate_asset` with `asset: "Champion Enablement Kit"`), and find the rest with `list_assets`.
 
@@ -153,7 +153,7 @@ The same work costs the same as in the Andru platform, from the same wallet:
 - **Framework, $12** and **Decision, $49:** the rest of the catalog.
 - **Deal Prep session, $5:** 25 turns of buyer role-play and coaching (`simulate_buyer_persona`).
 
-**5 free calls a day,** shared with A2A, cover paid calls priced $3 or less (pre-meeting brief, diagnostic); Deal Prep sessions, consultations and catalog assets are always paid. A call that only asks you for more information is never charged. Check your balance and free calls with `andru-intel usage`.
+**5 free calls a day on MCP,** and another 5 on A2A, cover paid calls priced $3 or less (pre-meeting brief, diagnostic); Deal Prep sessions, consultations and catalog assets are always paid. A call that only asks you for more information is never charged. Your wallet balance is at [platform.andru-ai.com/settings/billing](https://platform.andru-ai.com/settings/billing).
 
 ## CLI
 
@@ -184,7 +184,7 @@ Andru only needs to know what you sell once:
 - **Client shows forms** (Claude Code, Cursor, VS Code)? The first tool that needs it asks for your website in one field, then answers.
 - **Otherwise:** call `set_product_context` with your website (or a description) once.
 
-You can still pass `productDescription`, `vertical`, and `targetRole` on any call; what you send first is remembered. The tools use pre-built stakeholder understanding (5 named buyer personas, 3 vertical segment profiles) to deliver results immediately.
+You can still pass `productDescription`, `vertical`, and `targetRole` on any call; what you send first is remembered. The tools use pre-built stakeholder understanding (5 pre-built buyer personas, 3 vertical segment profiles) to deliver results immediately.
 
 Run a full ICP pipeline at [platform.andru-ai.com](https://platform.andru-ai.com) for understanding tuned to your specific product and market.
 
