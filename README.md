@@ -77,9 +77,9 @@ claude mcp add andru-intelligence npx mcp-server-andru-intelligence \
 
 | Tool | What It Does | Latency |
 |------|-------------|---------|
-| `get_persona_profile` | Look up who you're actually talking to — what they care about at 7 AM, why they'll say no, and exactly how to open | <50ms |
-| `get_messaging_framework` | Get the exact words to use — MBTI-adapted so the analytical CTO and the results-driven VP Sales get different versions | <50ms |
-| `get_competitive_positioning` | Battlecard for a specific competitor — where you win, where they'll attack, which questions to plant | <100ms |
+| `get_persona_profile` | Look up who you're actually talking to — what they care about at 7 AM, what they need before they say yes, and exactly how to open | <50ms |
+| `get_messaging_framework` | Words that fit each buyer, adapted to how each person prefers to communicate, so the analytical CTO and the results-driven VP Sales each get a version that fits them | <50ms |
+| `get_competitive_positioning` | How you compare with a specific competitor, from the buyer's point of view: what you have in common, where you're the better fit, and the discovery questions that help the buyer see the difference | <100ms |
 | `get_evaluation_criteria` | Scores how well you match what a buyer needs — across pain coverage, outcome clarity, capability fit, and 3 more dimensions | <100ms |
 
 ### Account & Pipeline
@@ -95,7 +95,7 @@ claude mcp add andru-intelligence npx mcp-server-andru-intelligence \
 | Tool | What It Does | Latency |
 |------|-------------|---------|
 | `discover_prospects` | Finds real companies showing the same buying signals your best customers showed — searches the web live | 15-30s |
-| `get_pre_brief` | Pre-call prep so you don't walk in cold — talk track, discovery questions, anticipated objections, and the one thing to get done | 10-20s |
+| `get_pre_brief` | Pre-call prep so you don't walk in cold — talk track, discovery questions, the concerns this buyer is likely to raise and what they need to hear, and the one thing to get done | 10-20s |
 
 ### Founder Tools
 

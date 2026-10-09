@@ -42,3 +42,16 @@ test('the README says free calls are per channel, names no personas, and points 
   assert.match(readme, /5 free calls a day on MCP and another 5 on A2A/);
   assert.doesNotMatch(readme, /named buyer personas|andru-intel usage/);
 });
+
+test('tool copy uses buyer-side language (approved by Geter, 2026-10-09)', () => {
+  // Descriptions only; the mbtiCategory field name stays so existing callers keep working.
+  const descriptions = [];
+  const walk = (v) => {
+    if (Array.isArray(v)) v.forEach(walk);
+    else if (v && typeof v === 'object') for (const [k, x] of Object.entries(v)) (k === 'description' && typeof x === 'string' ? descriptions.push(x) : walk(x));
+  };
+  walk(tools);
+  assert.ok(descriptions.length > 30);
+  assert.doesNotMatch(descriptions.join('\n'), /MBTI|battle ?card|objection|landmine|where they'll attack|questions to plant/i);
+  assert.doesNotMatch(readme, /MBTI|battle ?card|where they'll attack|questions to plant|anticipated objections/i);
+});

@@ -73,7 +73,7 @@ export const tools = [
 
   {
     name: 'get_persona_profile',
-    description: 'Look up who you\'re actually talking to before the call — what they care about at 7 AM, why they\'ll say no, and exactly how to open. Returns persona details including MBTI distribution, empathy map, and messaging angles.',
+    description: 'Look up who you\'re actually talking to before the call — what they care about at 7 AM, what they need before they say yes, and exactly how to open. Returns persona details including communication preferences, empathy map and messaging angles.',
     annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
@@ -117,7 +117,7 @@ export const tools = [
 
   {
     name: 'get_messaging_framework',
-    description: 'Get the exact words to use — for a specific buyer type, channel, and funnel stage. MBTI-adapted so the analytical CTO and the results-driven VP Sales get different versions. Returns value props, objection responses, voice variants, and outbound templates.',
+    description: 'Words that fit each buyer, by buyer type, channel and funnel stage, adapted to how each person prefers to communicate, so the analytical CTO and the results-driven VP Sales each get a version that fits them. Returns value propositions, answers to the concerns each buyer raises, voice variants and outbound templates.',
     annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
@@ -133,7 +133,7 @@ export const tools = [
         mbtiCategory: {
           type: 'string',
           enum: ['Analytical', 'Driver', 'Expressive', 'Amiable'],
-          description: 'MBTI communication category for message adaptation',
+          description: 'Communication style to adapt the message to',
         },
         ...COLD_START_PARAMS,
       },
@@ -142,7 +142,7 @@ export const tools = [
 
   {
     name: 'get_competitive_positioning',
-    description: 'Gives you the battlecard for a specific competitor — where you win, where they\'ll attack, which questions to plant in the buyer\'s mind, and which landmines to avoid.',
+    description: 'How you compare with a specific competitor, from the buyer\'s point of view: what you have in common, where you\'re the better fit, and the discovery questions that help the buyer see the difference.',
     annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
@@ -315,7 +315,7 @@ export const tools = [
 
   {
     name: 'get_pre_brief',
-    description: 'Writes your pre-call prep so you don\'t walk in cold — talk track, discovery questions tuned to this buyer, anticipated objections, and the one thing you need to get done in this meeting. Just say who you\'re meeting with — Andru checks your calendar automatically.',
+    description: 'Writes your pre-call prep so you don\'t walk in cold — talk track, discovery questions tuned to this buyer, the concerns this buyer is likely to raise and what they need to hear, and the one thing you need to get done in this meeting. Just say who you\'re meeting with — Andru checks your calendar automatically.',
     annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
