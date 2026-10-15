@@ -52,8 +52,18 @@ test('tool copy uses buyer-side language (approved by Geter, 2026-10-09)', () =>
   };
   walk(tools);
   assert.ok(descriptions.length > 30);
-  assert.doesNotMatch(descriptions.join('\n'), /MBTI|battle ?card|objection|landmine|where they'll attack|questions to plant/i);
+  // Parameter names in backticks (`mbtiCategory`) are identifiers, not the retired label.
+  assert.doesNotMatch(descriptions.join('\n').replace(/`[^`]*`/g, ''), /MBTI|battle ?card|objection|landmine|where they'll attack|questions to plant/i);
   assert.doesNotMatch(readme, /MBTI|battle ?card|where they'll attack|questions to plant|anticipated objections/i);
   // Role-play prepares for the real meeting; it is not pitch practice (Geter, 2026-10-09).
   for (const text of [descriptions.join('\n'), readme]) assert.doesNotMatch(text, /practi[cs]e (your|a) pitch|pitch practice|push(es)? back|get the objections/i);
+});
+
+// Descriptions promise only what the tools return (audited 2026-10-15 by running each tool).
+test('tool claims match what the backend returns', () => {
+  const d = (n) => tools.find((t) => t.name === n).description;
+  assert.doesNotMatch(d('get_competitive_positioning'), /what you have in common|discovery questions/i);
+  assert.match(d('get_competitive_positioning'), /competitorFeatures/);
+  assert.doesNotMatch(d('get_evaluation_criteria'), /actually/i);
+  assert.doesNotMatch(readme, /what you have in common|app\.andru-ai\.com/);
 });

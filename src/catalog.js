@@ -117,7 +117,7 @@ export const tools = [
 
   {
     name: 'get_messaging_framework',
-    description: 'Words that fit each buyer, by buyer type, channel and funnel stage, adapted to how each person prefers to communicate, so the analytical CTO and the results-driven VP Sales each get a version that fits them. Returns value propositions, answers to the concerns each buyer raises, voice variants and outbound templates.',
+    description: 'Words that fit each buyer, by buyer type, channel and funnel stage, adapted to how each person prefers to communicate, so the analytical CTO and the results-driven VP Sales each get a version that fits them. Returns value propositions, answers to the concerns each buyer raises, voice variants and outbound templates. Set `mbtiCategory` for one communication style, or leave it out to get all four. Use `get_persona_profile` to learn who the buyer is, and `get_pre_brief` to prepare for one specific meeting. Free.',
     annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
@@ -142,7 +142,7 @@ export const tools = [
 
   {
     name: 'get_competitive_positioning',
-    description: 'How you compare with a specific competitor, from the buyer\'s point of view: what you have in common, where you\'re the better fit, and the discovery questions that help the buyer see the difference.',
+    description: 'How you compare with a specific competitor, from the buyer\'s point of view. Pass the competitor\'s features in `competitorFeatures` to get where you overlap, where you\'re different, and where you\'re the better fit; without them you get the concerns this buyer is likely to raise. Free. For a written comparison to share, generate the Competitive Positioning Framework with `generate_asset`.',
     annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
@@ -241,7 +241,7 @@ export const tools = [
 
   {
     name: 'get_evaluation_criteria',
-    description: 'Scores how well you actually match what this buyer needs — across pain coverage, outcome clarity, capability fit, and 3 more dimensions. Returns 0-100 per dimension plus overall alignment score.',
+    description: 'Scores how well you match what this buyer needs — across pain coverage, outcome clarity, capability fit, and 3 more dimensions. Returns 0-100 per dimension plus overall alignment score. Pass the buyer\'s `buyerPainPoints` and `requiredCapabilities`; pain coverage and capability fit are scored against them. Use `get_icp_fit_score` to check whether a company is worth pursuing at all, and this tool once you know what the buyer needs. Free.',
     annotations: READ_ONLY,
     inputSchema: {
       type: 'object',

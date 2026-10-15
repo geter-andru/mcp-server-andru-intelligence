@@ -79,7 +79,7 @@ claude mcp add andru-intelligence npx mcp-server-andru-intelligence \
 |------|-------------|---------|
 | `get_persona_profile` | Look up who you're actually talking to — what they care about at 7 AM, what they need before they say yes, and exactly how to open | <50ms |
 | `get_messaging_framework` | Words that fit each buyer, adapted to how each person prefers to communicate, so the analytical CTO and the results-driven VP Sales each get a version that fits them | <50ms |
-| `get_competitive_positioning` | How you compare with a specific competitor, from the buyer's point of view: what you have in common, where you're the better fit, and the discovery questions that help the buyer see the difference | <100ms |
+| `get_competitive_positioning` | How you compare with a specific competitor, from the buyer's point of view: pass their features to see where you overlap, where you're different and where you're the better fit; without them, the concerns this buyer is likely to raise | <100ms |
 | `get_evaluation_criteria` | Scores how well you match what a buyer needs — across pain coverage, outcome clarity, capability fit, and 3 more dimensions | <100ms |
 
 ### Account & Pipeline
