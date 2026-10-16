@@ -94,7 +94,7 @@ claude mcp add andru-intelligence npx mcp-server-andru-intelligence \
 
 | Tool | What It Does | Latency |
 |------|-------------|---------|
-| `discover_prospects` | Finds real companies showing the same buying signals your best customers showed — searches the web live | 15-30s |
+| `discover_prospects` | Finds real companies likely to buy your product — searches the web live and links the page behind every piece of evidence | up to ~2 min |
 | `get_pre_brief` | Pre-call prep so you don't walk in cold — talk track, discovery questions, the concerns this buyer is likely to raise and what they need to hear, and the one thing to get done | 10-20s |
 
 ### Founder Tools
@@ -103,7 +103,7 @@ claude mcp add andru-intelligence npx mcp-server-andru-intelligence \
 |------|-------------|---------|
 | `get_sales_blueprint` | First sales hire blueprint — JD, comp model, interview questions, and 90-day ramp plan for the stage you're at | 10-20s |
 | `get_thesis_match` | Match your company against VC investment theses — top 5 fits with reasoning for why each thesis applies | 10-20s |
-| `get_founder_wellness` | Burnout risk assessment with recovery recommendations — because 54% of founders are severely stressed and 81% hide it | <200ms |
+| `get_founder_wellness` | Burnout risk from your work days, late nights and meeting load, with recovery actions — "not scored yet" until Andru has your activity or calendar data | <200ms |
 | `simulate_buyer_persona` | A Deal Prep session ($5, 25 turns): Andru acts as the CFO, CTO or VP Sales and asks the questions your real buyers ask, so you come into the real meeting equipped | 5-15s |
 
 

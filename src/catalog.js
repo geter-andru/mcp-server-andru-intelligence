@@ -283,18 +283,18 @@ export const tools = [
 
   {
     name: 'discover_prospects',
-    description: 'Finds real companies that look like your best customers — searches the web for companies showing the same buying signals your winners showed. Takes 15-30 seconds. Works without prior pipeline data.',
+    description: 'Finds real companies likely to buy your product. Searches the web for companies showing they have the problem you solve right now (hiring, launches, funding, expansion) and links the page behind every piece of evidence. Uses the product saved on your account. Takes up to a couple of minutes; nothing is charged if no company has sourced evidence.',
     annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
       properties: {
         companyName: {
           type: 'string',
-          description: 'Your company name',
+          description: 'Your company name. Defaults to the product saved on your account.',
         },
         productDescription: {
           type: 'string',
-          description: 'What your product does and who it\'s for. Infer from conversation context if the user has already described their product.',
+          description: 'What your product does and who it\'s for. Defaults to the product saved on your account.',
         },
         coreCapability: {
           type: 'string',
@@ -309,7 +309,6 @@ export const tools = [
           description: 'Target market segment (e.g., "Series A SaaS companies")',
         },
       },
-      required: ['companyName', 'productDescription'],
     },
   },
 
@@ -439,15 +438,11 @@ export const tools = [
 
   {
     name: 'get_founder_wellness',
-    description: 'Checks if you\'re burning out before you notice — tracks consecutive work days, late nights, and meeting density, then gives you a risk score and specific recovery actions. Because the founder who crashes can\'t close deals.',
+    description: 'Checks for early signs of burnout from your work days, late nights and meeting load, then gives you a risk score and specific recovery actions. Until Andru has your activity or calendar data, it says the risk is not scored yet.',
     annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
       properties: {
-        userId: {
-          type: 'string',
-          description: 'The user\'s Andru account ID. Required for personalized wellness tracking.',
-        },
         mode: {
           type: 'string',
           enum: ['assessment', 'dashboard'],
@@ -623,7 +618,7 @@ export const tools = [
       type: 'object',
       properties: {
         companyName: { type: 'string', description: 'Optional label for the company being assessed.' },
-        metrics: { type: 'object', description: 'Operating metrics (any subset): arr, mrr, growthRate, netRevenueRetention, grossMargin, cac, ltv, burnRate, runwayMonths, pipelineValue, customerCount, churnRate, etc.' },
+        metrics: { type: 'object', description: 'Operating metrics (any subset): arr, mrr, momGrowth or yoyGrowth (%), netRevenueRetention (%), grossMargin (%), monthlyChurn (%), cac, ltv, burnMultiple, customerCount, pipelineValue, salesCycleDays. Percentages as numbers (110 = 110%; 1.1 is read as 110% for retention and margin). The more provided, the higher the confidence.' },
       },
       required: ['metrics'],
     },
@@ -649,8 +644,8 @@ export const tools = [
       properties: {
         portfolioId: { type: 'string', description: 'The portfolio to brief. Must belong to the caller.' },
         periodType: { type: 'string', enum: ['quarterly', 'monthly', 'annual'], description: 'Reporting period type. Default quarterly.' },
-        periodStart: { type: 'string', description: 'Optional ISO date for the period start.' },
-        periodEnd: { type: 'string', description: 'Optional ISO date for the period end.' },
+        periodStart: { type: 'string', description: 'Optional ISO date for the period start. Default: the start of the last full period.' },
+        periodEnd: { type: 'string', description: 'Optional ISO date for the period end. Default: the end of the last full period.' },
       },
       required: ['portfolioId'],
     },

@@ -66,4 +66,11 @@ test('tool claims match what the backend returns', () => {
   assert.match(d('get_competitive_positioning'), /competitorFeatures/);
   assert.doesNotMatch(d('get_evaluation_criteria'), /actually/i);
   assert.doesNotMatch(readme, /what you have in common|app\.andru-ai\.com/);
+  // 2026-10-16: prospects come from a web search for the user's product, not past winners;
+  // wellness says "not scored yet" without data instead of reporting low risk.
+  assert.doesNotMatch(d('discover_prospects'), /winners|15-30 seconds/i);
+  assert.match(d('discover_prospects'), /links the page behind every piece of evidence/);
+  assert.doesNotMatch(d('get_founder_wellness'), /before you notice/i);
+  assert.match(d('get_founder_wellness'), /not scored yet/);
+  assert.equal(tools.find((t) => t.name === 'get_founder_wellness').inputSchema.properties.userId, undefined);
 });
