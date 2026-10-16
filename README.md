@@ -33,7 +33,7 @@ ANDRU_API_KEY=sk_live_... npx mcp-server-andru-intelligence
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
 | `ANDRU_API_KEY` | Yes | — | Your Andru Platform API key |
-| `ANDRU_API_URL` | No | `https://api.andru-ai.com` | API base URL. The default is Andru's production API; you don't need to change it. |
+| `ANDRU_API_URL` | No | `https://api.andru-ai.com` | API base URL. The default is Andru's production API; you don't need to change it. Your key is only sent to `*.andru-ai.com` or this machine; set `ANDRU_ALLOW_CUSTOM_API_URL=true` to use another host on purpose. |
 
 Get your API key at [platform.andru-ai.com/settings/developer](https://platform.andru-ai.com/settings/developer).
 

@@ -21,7 +21,7 @@
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
 import { createMcpExpressApp } from '@modelcontextprotocol/sdk/server/express.js';
 import { randomUUID } from 'node:crypto';
-import rateLimit from 'express-rate-limit';
+import rateLimit, { ipKeyGenerator } from 'express-rate-limit';
 import { AndruClient } from './client.js';
 import { createServer } from './server.js';
 
@@ -66,7 +66,7 @@ async function main() {
   const mcpRateLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 100, // 100 requests per API key per window
-    keyGenerator: (req) => req.auth?.apiKey || req.ip,
+    keyGenerator: (req) => req.auth?.apiKey || ipKeyGenerator(req.ip),
     standardHeaders: true,
     legacyHeaders: false,
     message: {

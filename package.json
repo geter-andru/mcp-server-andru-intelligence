@@ -1,6 +1,6 @@
 {
   "name": "mcp-server-andru-intelligence",
-  "version": "1.9.5",
+  "version": "1.9.6",
   "mcpName": "io.github.geter-andru/andru-intelligence",
   "description": "Revenue intelligence for complex B2B growth. Your agent builds the assets technical founders sell with, and prepares them for real buyer conversations.",
   "type": "module",
@@ -25,9 +25,10 @@
     "saas"
   ],
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.26.0",
+    "@modelcontextprotocol/sdk": "^1.32.1",
     "better-sqlite3": "^12.6.2",
-    "ws": "^8.19.0"
+    "express-rate-limit": "^8.7.1",
+    "ws": "^8.22.0"
   },
   "engines": {
     "node": ">=18.0.0"

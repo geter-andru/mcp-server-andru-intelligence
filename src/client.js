@@ -5,9 +5,25 @@
  * Authenticates via X-API-Key header.
  */
 
+import { readFileSync } from 'node:fs';
+import { assertTrustedApiUrl } from './apiUrl.js';
+
 const DEFAULT_API_URL = 'https://api.andru-ai.com';
 const REQUEST_TIMEOUT_MS = 60_000; // 60s for AI-calling tools
-const PACKAGE_VERSION = '1.5.1';
+const PACKAGE_VERSION = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')).version;
+
+/**
+ * The backend sends errors as a string or as { code, message, suggestion }. Return readable text
+ * either way (an object used to come through as "[object Object]").
+ */
+export function readErrorMessage(parsed) {
+  const err = parsed?.error;
+  if (typeof err === 'string') return err;
+  if (err && typeof err === 'object') {
+    return [err.message, err.suggestion].filter(Boolean).join('. ') || err.code || null;
+  }
+  return typeof parsed?.message === 'string' ? parsed.message : null;
+}
 
 export class AndruClient {
   /**
@@ -16,7 +32,7 @@ export class AndruClient {
    */
   constructor(apiKey, baseUrl = DEFAULT_API_URL) {
     this.apiKey = apiKey;
-    this.baseUrl = baseUrl.replace(/\/+$/, ''); // Strip trailing slashes
+    this.baseUrl = assertTrustedApiUrl(baseUrl).replace(/\/+$/, ''); // Strip trailing slashes
   }
 
   /**
@@ -84,7 +100,7 @@ export class AndruClient {
         let errorMessage;
         try {
           const parsed = JSON.parse(errorBody);
-          errorMessage = parsed.error || parsed.message || `HTTP ${response.status}`;
+          errorMessage = readErrorMessage(parsed) || `HTTP ${response.status}`;
         } catch {
           errorMessage = `HTTP ${response.status}: ${errorBody.slice(0, 200)}`;
         }
@@ -126,7 +142,7 @@ export class AndruClient {
         let errorMessage;
         try {
           const parsed = JSON.parse(errorBody);
-          errorMessage = parsed.error || parsed.message || `HTTP ${response.status}`;
+          errorMessage = readErrorMessage(parsed) || `HTTP ${response.status}`;
         } catch {
           errorMessage = `HTTP ${response.status}: ${errorBody.slice(0, 200)}`;
         }

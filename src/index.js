@@ -29,6 +29,7 @@
 
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { AndruClient } from './client.js';
+import { assertTrustedApiUrl } from './apiUrl.js';
 import { createServer } from './server.js';
 import { initCache, closeCache, getStats } from './cache.js';
 import { createCachedClient } from './cachedClient.js';
@@ -109,7 +110,7 @@ async function main() {
  */
 function deriveWsUrl(apiUrl) {
   const wsOverride = process.env.ANDRU_WS_URL;
-  if (wsOverride) return wsOverride;
+  if (wsOverride) return assertTrustedApiUrl(wsOverride, 'ANDRU_WS_URL');
 
   return apiUrl
     .replace(/^https:/, 'wss:')
