@@ -64,7 +64,7 @@ async function main() {
     console.error('[Andru MCP] Get your API key at https://platform.andru-ai.com/settings/developer');
   }
 
-  const server = createServer(client);
+  const server = createServer(client, { transport: 'stdio' });
   const transport = new StdioServerTransport();
 
   await server.connect(transport);

@@ -148,6 +148,13 @@ function parseArgs(argv) {
   return args;
 }
 
+/** An API client that says it is the CLI (X-MCP-Transport: cli, 1.9.7). */
+function cliClient(apiKey, apiUrl) {
+  const client = new AndruClient(apiKey, apiUrl);
+  client.setClientInfo({ transport: 'cli' });
+  return client;
+}
+
 function requireClient() {
   const apiKey = process.env.ANDRU_API_KEY;
   if (!apiKey) {
@@ -155,7 +162,7 @@ function requireClient() {
     console.error('Get your API key at https://platform.andru-ai.com/settings/developer');
     process.exit(1);
   }
-  return new AndruClient(apiKey, process.env.ANDRU_API_URL || DEFAULT_URL);
+  return cliClient(apiKey, process.env.ANDRU_API_URL || DEFAULT_URL);
 }
 
 const slug = (s) => String(s || 'andru-asset').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'andru-asset';
@@ -274,7 +281,7 @@ async function main() {
     }
 
     const apiUrl = process.env.ANDRU_API_URL || 'https://api.andru-ai.com';
-    const client = new AndruClient(apiKey, apiUrl);
+    const client = cliClient(apiKey, apiUrl);
 
     try {
       const res = await client.getUsage();
@@ -325,7 +332,7 @@ async function main() {
   }
 
   const apiUrl = process.env.ANDRU_API_URL || 'https://api.andru-ai.com';
-  const client = new AndruClient(apiKey, apiUrl);
+  const client = cliClient(apiKey, apiUrl);
   const toolArgs = parseArgs(argv.slice(1));
 
   try {

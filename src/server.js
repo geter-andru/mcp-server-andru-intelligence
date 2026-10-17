@@ -86,9 +86,10 @@ export async function askOnceForProduct(server, client, name, args, result) {
  * Create an MCP server backed by the Andru API.
  *
  * @param {import('./client.js').AndruClient | import('./cachedClient.js').CachedClient | null} client — null during scan mode (no API key). When Phase 8 cache is active, this is a cachedClient wrapper.
+ * @param {{ transport?: 'stdio' | 'http' }} [options] — how this server is reached, sent with each request (1.9.7)
  * @returns {Server}
  */
-export function createServer(client) {
+export function createServer(client, { transport } = {}) {
   const server = new Server(
     {
       name: 'andru-intelligence',
@@ -101,6 +102,15 @@ export function createServer(client) {
       },
     }
   );
+
+  // Once the client has introduced itself, pass its name and version on with every request and note
+  // the connection, so installs that never call a tool are visible to Andru (1.9.7).
+  server.oninitialized = () => {
+    if (!client) return;
+    const info = server.getClientVersion?.() || {};
+    client.setClientInfo?.({ name: info.name, version: info.version, transport });
+    client.connect?.();
+  };
 
   // --- Tool listing (static catalog — no network) ---
 

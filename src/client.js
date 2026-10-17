@@ -33,6 +33,48 @@ export class AndruClient {
   constructor(apiKey, baseUrl = DEFAULT_API_URL) {
     this.apiKey = apiKey;
     this.baseUrl = assertTrustedApiUrl(baseUrl).replace(/\/+$/, ''); // Strip trailing slashes
+    this.clientInfo = {};
+  }
+
+  /**
+   * Which app the person is using, as the MCP client named itself when it connected (1.9.7), and
+   * how it connects ('stdio', 'http', 'cli'). Sent with every request as X-MCP-Client-Name /
+   * -Version and X-MCP-Transport, so Andru can tell Claude Desktop from Cursor or Claude Code.
+   * Names only; never prompts or content.
+   */
+  setClientInfo({ name, version, transport } = {}) {
+    const clean = (v) => {
+      const s = String(v ?? '').replace(/[^\x20-\x7E]/g, '').trim().slice(0, 80);
+      return s || undefined;
+    };
+    this.clientInfo = {
+      ...this.clientInfo,
+      ...(clean(name) ? { name: clean(name) } : {}),
+      ...(clean(version) ? { version: clean(version) } : {}),
+      ...(clean(transport) ? { transport: clean(transport) } : {}),
+    };
+  }
+
+  /** The X-MCP-* headers for the client info set so far. */
+  clientHeaders() {
+    const h = {};
+    if (this.clientInfo.name) h['X-MCP-Client-Name'] = this.clientInfo.name;
+    if (this.clientInfo.version) h['X-MCP-Client-Version'] = this.clientInfo.version;
+    if (this.clientInfo.transport) h['X-MCP-Transport'] = this.clientInfo.transport;
+    return h;
+  }
+
+  /**
+   * Tell Andru a client connected (1.9.7), so a connection that never calls a tool is still seen.
+   * Never throws: a failed connect note must not affect the session.
+   */
+  async connect() {
+    try {
+      await this.post('/api/mcp/connect', {});
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   /**
@@ -91,6 +133,7 @@ export class AndruClient {
         headers: {
           'X-API-Key': this.apiKey,
           'User-Agent': `andru-mcp-server/${PACKAGE_VERSION}`,
+          ...this.clientHeaders(),
         },
         signal: controller.signal,
       });
@@ -132,6 +175,7 @@ export class AndruClient {
           'Content-Type': 'application/json',
           'X-API-Key': this.apiKey,
           'User-Agent': `andru-mcp-server/${PACKAGE_VERSION}`,
+          ...this.clientHeaders(),
         },
         body: JSON.stringify(body),
         signal: controller.signal,
@@ -149,6 +193,7 @@ export class AndruClient {
         throw new Error(errorMessage);
       }
 
+      if (response.status === 204) return null; // no content (e.g. /api/mcp/connect)
       return await response.json();
     } catch (error) {
       if (error.name === 'AbortError') {

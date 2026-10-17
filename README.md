@@ -200,6 +200,8 @@ Run a full ICP pipeline at [platform.andru-ai.com](https://platform.andru-ai.com
 
 This MCP server is a thin proxy that authenticates with your Andru API key and forwards tool/resource requests to the Andru backend. All intelligence generation, ICP scoring, and data access happens server-side — the MCP server itself is stateless.
 
+When your AI app connects, the server tells Andru the app's name and version. Each tool call is recorded by tool name, outcome and cost; what you typed isn't part of that record.
+
 ```
 Claude Desktop/Code  →  MCP Server (stdio)  →  Andru API (HTTPS)
 ```

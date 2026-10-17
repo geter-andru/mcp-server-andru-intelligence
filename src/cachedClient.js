@@ -19,6 +19,15 @@ import { get, set } from './cache.js';
  */
 export function createCachedClient(client) {
   return {
+    /** Client info and the connect note pass straight through (1.9.7); nothing about them is cached. */
+    setClientInfo(info) {
+      client.setClientInfo?.(info);
+    },
+
+    async connect() {
+      return client.connect ? client.connect() : false;
+    },
+
     /**
      * Execute a tool with cache fallback.
      */

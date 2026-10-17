@@ -92,7 +92,7 @@ async function main() {
     if (!transport) {
       // New session — create per-key client, server, and transport
       const client = new AndruClient(req.auth.apiKey, apiUrl);
-      const server = createServer(client);
+      const server = createServer(client, { transport: 'http' });
 
       transport = new StreamableHTTPServerTransport({
         sessionIdGenerator: () => randomUUID(),
