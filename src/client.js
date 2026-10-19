@@ -6,7 +6,8 @@
  */
 
 import { readFileSync } from 'node:fs';
-import { assertTrustedApiUrl } from './apiUrl.js';
+import { assertTrustedApiUrl, isAndruApiUrl } from './apiUrl.js';
+import { requestOrigin } from './clientOrigin.js';
 
 const DEFAULT_API_URL = 'https://api.andru-ai.com';
 const REQUEST_TIMEOUT_MS = 60_000; // 60s for AI-calling tools
@@ -62,6 +63,22 @@ export class AndruClient {
     if (this.clientInfo.version) h['X-MCP-Client-Version'] = this.clientInfo.version;
     if (this.clientInfo.transport) h['X-MCP-Transport'] = this.clientInfo.transport;
     return h;
+  }
+
+  /**
+   * On the hosted HTTP server only (MCP_RELAY_KEY set): the person's IP and country for the request
+   * being handled, with the relay key that lets the API believe them (see clientOrigin.js). Never
+   * sent to a host that isn't Andru's, even with ANDRU_ALLOW_CUSTOM_API_URL.
+   */
+  relayHeaders() {
+    const key = process.env.MCP_RELAY_KEY;
+    const origin = requestOrigin.getStore();
+    if (!key || !origin?.ip || !isAndruApiUrl(this.baseUrl)) return {};
+    return {
+      'X-Andru-Relay-Key': key,
+      'X-Andru-Client-IP': origin.ip,
+      ...(origin.country ? { 'X-Andru-Client-Country': origin.country } : {}),
+    };
   }
 
   /**
@@ -134,6 +151,7 @@ export class AndruClient {
           'X-API-Key': this.apiKey,
           'User-Agent': `andru-mcp-server/${PACKAGE_VERSION}`,
           ...this.clientHeaders(),
+          ...this.relayHeaders(),
         },
         signal: controller.signal,
       });
@@ -176,6 +194,7 @@ export class AndruClient {
           'X-API-Key': this.apiKey,
           'User-Agent': `andru-mcp-server/${PACKAGE_VERSION}`,
           ...this.clientHeaders(),
+          ...this.relayHeaders(),
         },
         body: JSON.stringify(body),
         signal: controller.signal,

@@ -10,6 +10,8 @@
  *   ANDRU_API_URL  (optional) — API base URL (default: https://api.andru-ai.com)
  *   PORT           (optional) — HTTP port (default: 3100)
  *   HOST           (optional) — Bind address (default: 0.0.0.0)
+ *   MCP_RELAY_KEY  (hosted server only) — lets the API believe the person's IP (src/clientOrigin.js)
+ *   TRUST_PROXY_HOPS (optional) — proxies in front of this server (default: 2 on Render, else none)
  *
  * Each client authenticates with X-API-Key header per request.
  * Sessions are stateful — each initialization creates a scoped Server+Transport.
@@ -18,130 +20,13 @@
  *   PORT=3100 node src/httpServer.js
  */
 
-import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
-import { createMcpExpressApp } from '@modelcontextprotocol/sdk/server/express.js';
-import { randomUUID } from 'node:crypto';
-import rateLimit, { ipKeyGenerator } from 'express-rate-limit';
-import { AndruClient } from './client.js';
-import { createServer } from './server.js';
-
-// Per-session transport map (stateful mode)
-const transports = new Map();
+import { createHttpApp } from './httpApp.js';
 
 async function main() {
   const apiUrl = process.env.ANDRU_API_URL || 'https://api.andru-ai.com';
   const port = parseInt(process.env.PORT || '3100', 10);
   const host = process.env.HOST || '0.0.0.0';
-  // No local cache on the HTTP server (2026-10-07). It serves many API keys from one process, and the
-  // cache keys results by tool name and arguments only, so one account could be served another's
-  // cached answer. (On Render the cache's native module never loaded, so every tool call failed
-  // instead.) The cache stays on for the single-user stdio server.
-
-  const app = createMcpExpressApp({ host });
-
-  // --- Health check ---
-  app.get('/health', (_req, res) => {
-    res.json({
-      status: 'ok',
-      transport: 'streamable-http',
-      sessions: transports.size,
-    });
-  });
-
-  // --- Auth middleware: require X-API-Key on MCP requests ---
-  function requireApiKey(req, res, next) {
-    const key = req.headers['x-api-key'] || req.query.ANDRU_API_KEY;
-    if (!key) {
-      return res.status(401).json({
-        jsonrpc: '2.0',
-        error: { code: -32000, message: 'X-API-Key header required' },
-        id: null,
-      });
-    }
-    req.auth = { apiKey: key };
-    next();
-  }
-
-  // --- Rate limiting: per API key ---
-  const mcpRateLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // 100 requests per API key per window
-    keyGenerator: (req) => req.auth?.apiKey || ipKeyGenerator(req.ip),
-    standardHeaders: true,
-    legacyHeaders: false,
-    message: {
-      jsonrpc: '2.0',
-      error: { code: -32000, message: 'Rate limit exceeded. Try again later.' },
-      id: null,
-    },
-    handler: (req, res) => {
-      console.warn(`[Andru MCP HTTP] Rate limit exceeded for key: ${req.auth?.apiKey?.slice(0, 8)}...`);
-      res.status(429).json({
-        jsonrpc: '2.0',
-        error: { code: -32000, message: 'Rate limit exceeded. Try again later.' },
-        id: null,
-      });
-    },
-  });
-
-  // --- POST /mcp — JSON-RPC requests (initialize, tools/list, tools/call, etc.) ---
-  app.post('/mcp', requireApiKey, mcpRateLimiter, async (req, res) => {
-    const sessionId = req.headers['mcp-session-id'];
-    let transport = sessionId ? transports.get(sessionId) : undefined;
-
-    if (!transport) {
-      // New session — create per-key client, server, and transport
-      const client = new AndruClient(req.auth.apiKey, apiUrl);
-      const server = createServer(client, { transport: 'http' });
-
-      transport = new StreamableHTTPServerTransport({
-        sessionIdGenerator: () => randomUUID(),
-      });
-
-      await server.connect(transport);
-
-      transport.onclose = () => {
-        if (transport.sessionId) {
-          transports.delete(transport.sessionId);
-          console.log(`[Andru MCP HTTP] Session closed: ${transport.sessionId}`);
-        }
-      };
-    }
-
-    await transport.handleRequest(req, res, req.body);
-
-    // Store transport by its generated session ID (set after first handleRequest)
-    if (transport.sessionId && !transports.has(transport.sessionId)) {
-      transports.set(transport.sessionId, transport);
-      console.log(`[Andru MCP HTTP] Session created: ${transport.sessionId}`);
-    }
-  });
-
-  // --- GET /mcp — SSE stream for server-initiated notifications ---
-  app.get('/mcp', requireApiKey, mcpRateLimiter, async (req, res) => {
-    const sessionId = req.headers['mcp-session-id'];
-    const transport = sessionId ? transports.get(sessionId) : undefined;
-    if (!transport) {
-      return res.status(400).json({
-        jsonrpc: '2.0',
-        error: { code: -32000, message: 'No active session. Send initialize first via POST.' },
-        id: null,
-      });
-    }
-    await transport.handleRequest(req, res);
-  });
-
-  // --- DELETE /mcp — session termination ---
-  app.delete('/mcp', async (req, res) => {
-    const sessionId = req.headers['mcp-session-id'];
-    const transport = sessionId ? transports.get(sessionId) : undefined;
-    if (transport) {
-      await transport.close();
-      transports.delete(sessionId);
-      console.log(`[Andru MCP HTTP] Session terminated: ${sessionId}`);
-    }
-    res.status(200).end();
-  });
+  const { app, transports } = createHttpApp({ apiUrl, host });
 
   // --- Cleanup on exit ---
   const shutdown = async () => {

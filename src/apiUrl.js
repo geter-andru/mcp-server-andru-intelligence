@@ -14,6 +14,20 @@ function isTrustedHost(hostname) {
 }
 
 /**
+ * True when `url` points at an Andru host (https/wss) or this machine, whatever
+ * ANDRU_ALLOW_CUSTOM_API_URL says. The hosted server's relay key is sent only to these.
+ * @param {string} url
+ */
+export function isAndruApiUrl(url) {
+  try {
+    const { protocol, hostname } = new URL(url);
+    return LOCAL_HOSTS.includes(hostname) || ((protocol === 'https:' || protocol === 'wss:') && isTrustedHost(hostname));
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Throws unless `url` points at an Andru host (https/wss) or this machine (any scheme).
  * @param {string} url
  * @param {string} [name] - the setting the URL came from, for the error message
