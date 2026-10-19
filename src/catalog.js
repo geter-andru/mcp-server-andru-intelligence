@@ -685,7 +685,11 @@ export const tools = [
     annotations: WRITE_OP,
     inputSchema: {
       type: 'object',
-      properties: { asset: { type: 'string', description: 'The asset name from list_assets.' } },
+      properties: {
+        asset: { type: 'string', description: 'The asset name from list_assets.' },
+        prospectCompany: { type: 'string', description: 'For a prospect asset (Pre-Call Intelligence Brief, Deal Reengagement Strategy, Personalized Cost of Inaction One-Pager): the company it is for.' },
+        prospectContact: { type: 'string', description: 'For a prospect asset: the person it is for, name and title.' },
+      },
       required: ['asset'],
     },
   },
