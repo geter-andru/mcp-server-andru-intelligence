@@ -8,9 +8,10 @@
  * its own MCP_RELAY_KEY, so nobody else can put an address of their choice in the log. Without
  * MCP_RELAY_KEY (stdio, the CLI, a self-hosted HTTP server) nothing is sent.
  *
- * Render's edge is Cloudflare, which sets cf-connecting-ip to the real client. Anyone can send that
- * header, so it is believed only when the connection itself came from a Cloudflare address — the
- * same rule as the API (backend src/utils/requestOrigin.js).
+ * The person's IP is req.ip (httpApp.js trusts Render's 2 proxy hops). When req.ip is itself a
+ * Cloudflare address (another Cloudflare hop in front), cf-connecting-ip is used instead. Anyone can
+ * send that header, so it is believed only then — the same rule as the API (backend
+ * src/utils/requestOrigin.js).
  */
 import net from 'node:net';
 import { AsyncLocalStorage } from 'node:async_hooks';

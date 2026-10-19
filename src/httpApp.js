@@ -19,9 +19,10 @@ export function createHttpApp({ apiUrl, host = '0.0.0.0' }) {
   const transports = new Map();
 
   const app = createMcpExpressApp({ host });
-  // On Render a request passes Cloudflare and Render's proxy, so req.ip is the Cloudflare edge two
-  // hops back (the API uses the same 2), and originOf takes the person's IP from cf-connecting-ip.
-  // Elsewhere the direct peer is used unless TRUST_PROXY_HOPS says otherwise.
+  // On Render a request passes Render's Cloudflare edge and Render's proxy, so with 2 trusted hops
+  // (the API uses the same 2) req.ip is the person. If another Cloudflare hop is ever put in front,
+  // req.ip is that edge and originOf takes cf-connecting-ip instead. Elsewhere the direct peer is
+  // used unless TRUST_PROXY_HOPS says otherwise.
   const hops = Number.parseInt(process.env.TRUST_PROXY_HOPS, 10);
   app.set('trust proxy', Number.isInteger(hops) ? hops : (process.env.RENDER === 'true' ? 2 : false));
 
