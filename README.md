@@ -102,7 +102,7 @@ claude mcp add andru-intelligence npx mcp-server-andru-intelligence \
 | Tool | What It Does | Latency |
 |------|-------------|---------|
 | `get_sales_blueprint` | First sales hire blueprint — JD, comp model, interview questions, and 90-day ramp plan for the stage you're at | 10-20s |
-| `get_thesis_match` | Match your company against VC investment theses — top 5 fits with reasoning for why each thesis applies | 10-20s |
+| `get_thesis_match` | Up to 3 VC firms investing now in companies like yours, each with a recent deal or stated focus and a link to the page it came from; the full analysis is the Pure Signal Investor Resonance asset | ~30s |
 | `get_founder_wellness` | Burnout risk from your work days, late nights and meeting load, with recovery actions — "not scored yet" until Andru has your activity or calendar data | <200ms |
 | `simulate_buyer_persona` | A Deal Prep session ($5, 25 turns): Andru acts as the CFO, CTO or VP Sales and asks the questions your real buyers ask, so you come into the real meeting equipped | 5-15s |
 

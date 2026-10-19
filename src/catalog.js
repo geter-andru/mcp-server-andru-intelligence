@@ -409,7 +409,7 @@ export const tools = [
 
   {
     name: 'get_thesis_match',
-    description: 'Finds the 5 VCs whose investment thesis best matches your company — scores each on fit, explains why they\'d be interested, and tells you how to approach them. Saves weeks of investor research.',
+    description: 'Finds up to 3 VC firms investing now in companies like yours, each with a recent deal or stated focus and a link to the page it came from (a live web search, about 30 seconds). For the full investor analysis, generate the Pure Signal Investor Resonance asset. Nothing is charged if no firm has sourced evidence.',
     annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
