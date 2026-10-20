@@ -123,7 +123,7 @@ claude mcp add andru-intelligence npx mcp-server-andru-intelligence \
 | `get_market_signals` | What's moving in your market now: ranked signals, each with its buyer impact and a recommended action | varies |
 | `assess_company_readiness` | Scores a company's Revenue Readiness Index (0–100) from its operating metrics, with its #1 growth constraint | varies |
 | `get_portfolio_readiness_rollup` | A board-ready scorecard of every portfolio company by Revenue Readiness Index, with aggregates | varies |
-| `generate_portfolio_brief` | A board/LP-grade brief for a portfolio: per-company performance, market context, cross-portfolio opportunities | varies |
+| `generate_portfolio_brief` | A brief on your portfolio's go-to-market activity for a period, with sources (not a financial or performance report) | $49 |
 
 ### Consultation
 
@@ -137,7 +137,7 @@ claude mcp add andru-intelligence npx mcp-server-andru-intelligence \
 |------|-------------|-------|
 | `list_assets` | Search Andru's catalog of 139 sales, hiring, fundraising and buying assets: what each is, its business outcome, price, and whether it can be generated today | Free |
 | `generate_asset` | Generate any catalog asset from everything Andru knows about your company; saved to your Andru library | Its catalog price: Tool $3, Framework $12, Decision $49 (your first ICP is free) |
-| `get_asset` | Collect a generated asset as markdown | Free |
+| `get_asset` | Collect a generated asset or portfolio brief as markdown | Free |
 
 ### Product Context
 

@@ -637,17 +637,26 @@ export const tools = [
   },
   {
     name: 'generate_portfolio_brief',
-    description: 'Generates a board/LP-grade intelligence brief for a portfolio — per-company performance, market context, and cross-portfolio opportunities — for a reporting period. For PE/VC fund reporting and quarterly reviews.',
-    annotations: READ_ONLY,
+    description: "A brief on your portfolio's go-to-market activity for a period: what Andru's work across your portfolio companies found (targets, opportunities, overlaps), each company's public go-to-market news, and the market signals around their buyers, with sources. Not a financial or performance report. Send the companies (name and website, up to 15) or a portfolioId; with neither, Andru suggests the companies on your firm's website for you to confirm, free. $49, charged only if the brief is saved. Takes a few minutes: returns a job_id; call get_asset with it.",
+    annotations: WRITE_OP,
     inputSchema: {
       type: 'object',
       properties: {
-        portfolioId: { type: 'string', description: 'The portfolio to brief. Must belong to the caller.' },
+        companies: {
+          type: 'array',
+          maxItems: 15,
+          description: 'The portfolio companies to brief, up to 15. Saved as a portfolio on your account the first time.',
+          items: {
+            type: 'object',
+            properties: { name: { type: 'string' }, website: { type: 'string', description: 'e.g. example.com; tells companies with similar names apart.' } },
+            required: ['name'],
+          },
+        },
+        portfolioId: { type: 'string', description: 'A portfolio already on your account (returned by an earlier brief). With companies, they are added to it.' },
         periodType: { type: 'string', enum: ['quarterly', 'monthly', 'annual'], description: 'Reporting period type. Default quarterly.' },
         periodStart: { type: 'string', description: 'Optional ISO date for the period start. Default: the start of the last full period.' },
         periodEnd: { type: 'string', description: 'Optional ISO date for the period end. Default: the end of the last full period.' },
       },
-      required: ['portfolioId'],
     },
   },
   {
@@ -695,11 +704,11 @@ export const tools = [
   },
   {
     name: 'get_asset',
-    description: 'Collect an asset started with generate_asset. While it is building you get its progress; when it is done you get the full asset as markdown (also saved to your Andru library). Free.',
+    description: 'Collect an asset started with generate_asset, or a brief started with generate_portfolio_brief. While it is building you get its progress; when it is done you get it in full as markdown (also saved to your Andru account). Free.',
     annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
-      properties: { job_id: { type: 'string', description: 'The job_id returned by generate_asset.' } },
+      properties: { job_id: { type: 'string', description: 'The job_id returned by generate_asset or generate_portfolio_brief.' } },
       required: ['job_id'],
     },
   },
