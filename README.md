@@ -10,7 +10,7 @@ Andru is a revenue intelligence layer for complex B2B growth. Give your agent 30
 - **Technical Sales Translator:** technical features in the language buyers pay for (Framework $12)
 - **Executive Business Case Builder:** the case your champion takes to the people who sign (Decision $49)
 
-Prepare for real conversations with buyer role-play ($5 for a 25-turn session) and pre-meeting briefs ($3). Lookups are free. Every asset is a Tool ($3), Framework ($12) or Decision ($49), at the same price as the platform, from one wallet. 5 free calls a day on MCP and another 5 on A2A cover paid calls of $3 or less.
+Prepare for real conversations with buyer role-play ($5 for a 25-turn session) and pre-meeting briefs ($3). Lookups are free. Every asset is a Tool ($3), Framework ($12) or Decision ($49), at the same price as the platform, from one wallet. 5 free calls a day on MCP (and another 5 on A2A) cover pre-meeting briefs and quick thesis checks; catalog assets are always paid.
 
 Build any of them with `generate_asset` (for example `generate_asset` with `asset: "Champion Enablement Kit"`), and find the rest with `list_assets`.
 
@@ -153,7 +153,7 @@ The same work costs the same as in the Andru platform, from the same wallet:
 - **Framework, $12** and **Decision, $49:** the rest of the catalog.
 - **Deal Prep session, $5:** 25 turns of buyer role-play and coaching (`simulate_buyer_persona`).
 
-**5 free calls a day on MCP,** and another 5 on A2A, cover paid calls priced $3 or less (pre-meeting brief, diagnostic); Deal Prep sessions, consultations and catalog assets are always paid. A call that only asks you for more information is never charged. Your wallet balance is at [platform.andru-ai.com/settings/billing](https://platform.andru-ai.com/settings/billing).
+**5 free calls a day on MCP,** and another 5 on A2A, cover pre-meeting briefs and quick thesis checks; Deal Prep sessions, consultations and catalog assets are always paid. A call that only asks you for more information is never charged. Your wallet balance is at [platform.andru-ai.com/settings/billing](https://platform.andru-ai.com/settings/billing).
 
 ## CLI
 

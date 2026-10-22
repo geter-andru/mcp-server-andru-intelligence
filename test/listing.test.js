@@ -39,7 +39,8 @@ test('the server reports the package version', () => {
 
 test('the README says free calls are per channel, names no personas, and points at real commands', () => {
   assert.doesNotMatch(readme, /shared (across|with) (MCP|A2A)/i);
-  assert.match(readme, /5 free calls a day on MCP and another 5 on A2A/);
+  assert.match(readme, /5 free calls a day on MCP \(and another 5 on A2A\) cover pre-meeting briefs and quick thesis checks/);
+  assert.doesNotMatch(readme, /\$3 or less/);
   assert.doesNotMatch(readme, /named buyer personas|andru-intel usage/);
 });
 
