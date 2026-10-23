@@ -63,8 +63,13 @@ async function main() {
     client = cacheEnabled ? createCachedClient(baseClient) : baseClient;
   } else {
     client = new AndruClient(null, apiUrl);
-    // Copy batch 5 G1 (approved by Geter 2026-10-23).
-    console.error('[Andru MCP] No ANDRU_API_KEY yet. signup_start, signup_verify, signup_status and preview_company work now; the other tools work after signup.');
+    if (process.env.ANDRU_API_KEY && process.env.ANDRU_API_KEY.trim()) {
+      // Copy batch 10 K4, option B (approved by Geter 2026-10-23): a value was set, but it isn't a key.
+      console.error("[Andru MCP] ANDRU_API_KEY isn't an Andru API key (those start with sk_live_), so this session starts without one. signup_start, signup_verify, signup_status and preview_company work now; the other tools work after signup.");
+    } else {
+      // Copy batch 5 G1 (approved by Geter 2026-10-23).
+      console.error('[Andru MCP] No ANDRU_API_KEY yet. signup_start, signup_verify, signup_status and preview_company work now; the other tools work after signup.');
+    }
   }
 
   const server = createServer(client, { transport: 'stdio' });

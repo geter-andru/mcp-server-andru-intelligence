@@ -10,7 +10,7 @@ Andru is a revenue intelligence layer for complex B2B growth. Give your agent 30
 - **Technical Sales Translator:** technical features in the language buyers pay for (Framework $12)
 - **Executive Business Case Builder:** the case your champion takes to the people who sign (Decision $49)
 
-Prepare for real conversations with buyer role-play ($5 for a 25-turn session) and pre-meeting briefs ($3). Lookups are free. Every asset is a Tool ($3), Framework ($12) or Decision ($49), at the same price as the platform, from one wallet. 5 free calls a day on MCP (and another 5 on A2A) cover pre-meeting briefs and quick thesis checks; catalog assets are always paid.
+Prepare for real conversations with buyer role-play ($5 for a 25-turn session) and pre-meeting briefs ($3). Lookups are free. Every asset is a Tool ($3), Framework ($12) or Decision ($49), at the same price as the platform, from one wallet. 5 free calls a day, shared across MCP and A2A, cover pre-meeting briefs and quick thesis checks; catalog assets are always paid.
 
 Build any of them with `generate_asset` (for example `generate_asset` with `asset: "Champion Enablement Kit"`), and find the rest with `list_assets`.
 
@@ -23,7 +23,7 @@ npm install -g mcp-server-andru-intelligence
 Or run directly:
 
 ```bash
-ANDRU_API_KEY=sk_live_... npx mcp-server-andru-intelligence
+npx mcp-server-andru-intelligence
 ```
 
 ## Configuration
@@ -48,21 +48,21 @@ Add to your `claude_desktop_config.json`:
   "mcpServers": {
     "andru-intelligence": {
       "command": "npx",
-      "args": ["mcp-server-andru-intelligence"],
-      "env": {
-        "ANDRU_API_KEY": "sk_live_your_key_here"
-      }
+      "args": ["mcp-server-andru-intelligence"]
     }
   }
 }
 ```
 
+Already have a key? Add `"env": { "ANDRU_API_KEY": "<your key>" }`. Without one, ask your agent to sign you up.
+
 ### Claude Code
 
 ```bash
-claude mcp add andru-intelligence npx mcp-server-andru-intelligence \
-  --env ANDRU_API_KEY=sk_live_your_key_here
+claude mcp add andru-intelligence npx mcp-server-andru-intelligence
 ```
+
+Already have a key? Add `--env ANDRU_API_KEY=<your key>`.
 
 ## Available Tools
 
@@ -155,7 +155,7 @@ The same work costs the same as in the Andru platform, from the same wallet:
 - **Framework, $12** and **Decision, $49:** the rest of the catalog.
 - **Deal Prep session, $5:** 25 turns of buyer role-play and coaching (`simulate_buyer_persona`).
 
-**5 free calls a day on MCP,** and another 5 on A2A, cover pre-meeting briefs and quick thesis checks; Deal Prep sessions, consultations and catalog assets are always paid. A call that only asks you for more information is never charged. Your wallet balance is at [platform.andru-ai.com/settings/billing](https://platform.andru-ai.com/settings/billing).
+**5 free calls a day,** shared across MCP and A2A, cover pre-meeting briefs and quick thesis checks; Deal Prep sessions, consultations and catalog assets are always paid. A call that only asks you for more information is never charged. Your wallet balance is at [platform.andru-ai.com/settings/billing](https://platform.andru-ai.com/settings/billing).
 
 ## CLI
 
@@ -213,7 +213,7 @@ Claude Desktop/Code  →  MCP Server (stdio)  →  Andru API (HTTPS)
 Andru also supports the Agent-to-Agent (A2A) protocol for direct agent-to-agent communication. The AgentCard is available at:
 
 ```
-https://api.andru-ai.com/.well-known/agent.json
+https://api.andru-ai.com/.well-known/agent-card.json
 ```
 
 ## Intelligence Briefs

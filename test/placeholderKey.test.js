@@ -70,8 +70,8 @@ test('the old README placeholder counts as no key: signup works and the session 
     assert.match(signedIn.content.at(-1).text, /^This session now uses the new key\./);
     await s.client.callTool({ name: 'whoami', arguments: {} });
     assert.equal(api.calls.find((c) => c.tool === 'whoami').key, NEW_KEY, 'the call after signup carries the new key');
-    // Copy batch 5 G1, reused until batch 10 has its own line.
-    assert.match(s.stderr(), /No ANDRU_API_KEY yet\. signup_start, signup_verify, signup_status and preview_company work now/);
+    // Copy batch 10 K4, option B: a value was set, but it isn't a key.
+    assert.match(s.stderr(), /ANDRU_API_KEY isn't an Andru API key \(those start with sk_live_\), so this session starts without one\. signup_start, signup_verify, signup_status and preview_company work now; the other tools work after signup\./);
   } finally {
     await s.close();
     await api.close();
