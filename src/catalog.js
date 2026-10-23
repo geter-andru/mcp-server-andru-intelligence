@@ -902,6 +902,53 @@ const BILLING_PARAMS = {
 };
 
 /** Every tool a client sees: the account tools, then the 30 intelligence tools with billing terms on paid ones. */
+/**
+ * Tool titles (copy batch 12 T1–T37, approved by Geter 2026-10-23): what Claude shows a person when it
+ * asks to run a tool. Short and plain; no prices or promotion.
+ */
+export const TOOL_TITLES = {
+  preview_company: "Preview a company",
+  signup_start: "Start sign-up",
+  signup_verify: "Finish sign-up with a code",
+  signup_status: "Check sign-up approval",
+  whoami: "Show this key's account and limits",
+  quote: "Get the price of a call",
+  get_topup_link: "Get a wallet top-up link",
+  set_product_context: "Tell Andru what you sell",
+  get_icp_profile: "Read your ideal customer profile",
+  get_icp_fit_score: "Score a company's fit",
+  batch_fit_score: "Score a list of companies",
+  get_disqualification_signals: "Check a deal for red flags",
+  classify_opportunity: "Read a deal",
+  get_persona_profile: "Profile a buyer",
+  get_messaging_framework: "Messaging for each buyer",
+  get_competitive_positioning: "Compare with a competitor",
+  get_evaluation_criteria: "Score fit to a buyer's needs",
+  get_capability_profile: "Your product's capability profile",
+  get_account_plan: "Build an account plan",
+  discover_prospects: "Find likely buyers",
+  get_pre_brief: "Prepare for a meeting",
+  simulate_buyer_persona: "Prepare with buyer role-play",
+  get_sales_blueprint: "Plan your first sales hire",
+  get_thesis_match: "Find investors who fit",
+  get_market_signals: "See what's moving in your market",
+  get_founder_wellness: "Check burnout risk",
+  get_founder_context: "Read what Andru knows about you",
+  get_revenue_memory: "Search revenue memory",
+  get_memory_history: "Show how a memory changed",
+  log_revenue_insight: "Save a revenue insight",
+  consult_agent: "Ask an Andru specialist",
+  list_assets: "Search the asset catalog",
+  generate_asset: "Build an asset",
+  get_asset: "Collect a finished result",
+  assess_company_readiness: "Score a company's revenue readiness",
+  get_portfolio_readiness_rollup: "Portfolio readiness scorecard",
+  generate_portfolio_brief: "Brief on portfolio go-to-market",
+};
+
+/** Server instructions (copy batch 12 I, approved by Geter 2026-10-23): when to use Andru, how to start, when not to. */
+export const SERVER_INSTRUCTIONS = 'Andru helps B2B founders and PE/VC operating partners understand their buyers and prepare to sell. Use it when the person asks who to sell to, whether a company or deal is worth pursuing, who is on a buying committee and what each person needs, how to prepare for a specific sales meeting, how to make a first sales hire, which investors fit their company, or how their portfolio companies\' go-to-market is going.\n\nStart with set_product_context if Andru doesn\'t yet know what the person sells. Lookups that read the person\'s own data are free. Some tools cost money: quote returns the exact price first, and a paid call is charged only when it delivers. Tools that take minutes return a job_id; collect the result with get_asset.\n\nDon\'t use Andru for general web research, for companies unrelated to the person\'s own sales or portfolio, or to send messages to anyone.';
+
 export function listedTools() {
   const priced = tools.map((t) => (PAID_TOOLS.has(t.name)
     ? {
@@ -910,5 +957,5 @@ export function listedTools() {
       inputSchema: { ...t.inputSchema, properties: { ...(t.inputSchema?.properties || {}), ...BILLING_PARAMS } },
     }
     : t));
-  return [...accountTools, ...priced];
+  return [...accountTools, ...priced].map((t) => ({ ...t, title: TOOL_TITLES[t.name] }));
 }

@@ -14,7 +14,7 @@ import {
   ReadResourceRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
 import { readFileSync } from 'node:fs';
-import { listedTools, resources, KEYLESS_TOOLS } from './catalog.js';
+import { listedTools, resources, KEYLESS_TOOLS, SERVER_INSTRUCTIONS } from './catalog.js';
 
 // The version clients see comes from package.json, so it can't drift from the release (it said
 // 1.8.0 while 1.9.0 was being prepared, 2026-10-08).
@@ -115,6 +115,7 @@ export function createServer(client, { transport } = {}) {
         tools: {},
         resources: {},
       },
+      instructions: SERVER_INSTRUCTIONS,
     }
   );
 
