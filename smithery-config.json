@@ -4,12 +4,13 @@
   "properties": {
     "ANDRU_API_KEY": {
       "type": "string",
-      "description": "Your Andru Platform API key. Get one at https://platform.andru-ai.com/settings/developer"
+      "x-from": {
+        "query": "ANDRU_API_KEY"
+      },
+      "x-order": 0,
+      "description": "Your Andru API key. Optional: without one, your agent can sign you up from the conversation. Or get one at https://platform.andru-ai.com/settings/developer"
     }
   },
-  "required": [
-    "ANDRU_API_KEY"
-  ],
   "transport": {
     "type": "http",
     "url": "https://mcp-server-andru-intelligence.onrender.com/mcp"
