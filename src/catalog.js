@@ -34,6 +34,10 @@ const COLD_START_PARAMS = {
 // MCP SDK annotations for directory compliance (Claude Desktop, OpenAI, etc.)
 const READ_ONLY = { readOnlyHint: true, openWorldHint: true };
 const WRITE_OP  = { readOnlyHint: false, destructiveHint: false, openWorldHint: true };
+// Paid tools that otherwise only read (Geter 2026-10-23: "I approve marking the 7 paid tools as not
+// read-only"). Claude runs read-only tools without asking each time; these charge the person's wallet,
+// so they ask first. They change no data and delete nothing.
+const PAID_ASKS_FIRST = { readOnlyHint: false, destructiveHint: false, openWorldHint: true };
 
 // ── 19 Tools ────────────────────────────────────────────────────────────────
 
@@ -274,7 +278,7 @@ export const tools = [
   {
     name: 'discover_prospects',
     description: 'Finds real companies likely to buy your product. Searches the web for companies showing they have the problem you solve right now (hiring, launches, funding, expansion) and links the page behind every piece of evidence. Uses the product saved on your account. Takes up to a couple of minutes; nothing is charged if no company has sourced evidence.',
-    annotations: READ_ONLY,
+    annotations: PAID_ASKS_FIRST,
     inputSchema: {
       type: 'object',
       properties: {
@@ -305,7 +309,7 @@ export const tools = [
   {
     name: 'get_pre_brief',
     description: "Writes your pre-call prep so you don't walk in cold — talk track, discovery questions tuned to this buyer, the concerns this buyer is likely to raise and what they need to hear, and the one thing you need to get done in this meeting. Provide a company name and Andru checks your calendar automatically.",
-    annotations: READ_ONLY,
+    annotations: PAID_ASKS_FIRST,
     inputSchema: {
       type: 'object',
       properties: {
@@ -367,7 +371,7 @@ export const tools = [
   {
     name: 'get_sales_blueprint',
     description: 'Builds everything you need to make your first sales hire — job description, comp structure, interview questions that actually reveal sales ability, 90-day ramp plan, and weekly activity targets tied to your ARR goal.',
-    annotations: READ_ONLY,
+    annotations: PAID_ASKS_FIRST,
     inputSchema: {
       type: 'object',
       properties: {
@@ -400,7 +404,7 @@ export const tools = [
   {
     name: 'get_thesis_match',
     description: 'Finds up to 3 VC firms investing now in companies like yours, each with a recent deal or stated focus and a link to the page it came from (a live web search, about 30 seconds). For the full investor analysis, generate the Pure Signal Investor Resonance asset. Nothing is charged if no firm has sourced evidence.',
-    annotations: READ_ONLY,
+    annotations: PAID_ASKS_FIRST,
     inputSchema: {
       type: 'object',
       properties: {
@@ -641,7 +645,7 @@ export const tools = [
   {
     name: 'assess_company_readiness',
     description: "Scores a company's Revenue Readiness Index (0–100) from its operating metrics — stage-fit, confidence, NRR / CAC-payback / pipeline-coverage, and the #1 growth constraint. Use it to screen a target or assess a portfolio company. Pass the metrics you have; more metrics = higher confidence.",
-    annotations: READ_ONLY,
+    annotations: PAID_ASKS_FIRST,
     inputSchema: {
       type: 'object',
       properties: {
@@ -654,7 +658,7 @@ export const tools = [
   {
     name: 'get_portfolio_readiness_rollup',
     description: 'A board-ready scorecard of every portfolio company by Revenue Readiness Index — comparable by construction — with aggregates (avg readiness, at-risk count, customer-concentration risk). For PE/VC operators monitoring a book.',
-    annotations: READ_ONLY,
+    annotations: PAID_ASKS_FIRST,
     inputSchema: {
       type: 'object',
       properties: {
@@ -690,7 +694,7 @@ export const tools = [
   {
     name: 'consult_agent',
     description: "Consult one of Andru's domain expert agents in natural language and get a domain-scoped answer (it may call free lookup tools; paid tools must be called directly). $3 per turn. One consultation turn per call; pass prior turns as `history` to continue. Use `module` to pick the expert (e.g. 'market-clarity', 'deal-acceleration', 'due-diligence', 'portfolio-ops').",
-    annotations: READ_ONLY,
+    annotations: PAID_ASKS_FIRST,
     inputSchema: {
       type: 'object',
       properties: {
