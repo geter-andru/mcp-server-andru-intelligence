@@ -86,7 +86,7 @@ claude mcp add andru-intelligence npx mcp-server-andru-intelligence \
 
 | Tool | What It Does | Latency |
 |------|-------------|---------|
-| `get_account_plan` | Builds the account plan you'd normally spend a weekend on — stakeholder map, MEDDICC gaps, and the unified story | <100ms |
+| `get_account_plan` | Builds the account plan in your Andru account and returns its link with a short summary ($12; a plan from the last 30 days is free). Returns a job_id; `get_asset` collects it | 1–3 min |
 | `get_icp_profile` | Returns everything Andru knows about your ideal customer — all 5 intelligence layers and the patterns that predict churn | <100ms |
 | `get_capability_profile` | Machine-readable snapshot of what your product does and who it's for — designed for buyer-side evaluation | <50ms |
 
@@ -137,7 +137,7 @@ claude mcp add andru-intelligence npx mcp-server-andru-intelligence \
 |------|-------------|-------|
 | `list_assets` | Search Andru's catalog of 139 sales, hiring, fundraising and buying assets: what each is, its business outcome, price, and whether it can be generated today | Free |
 | `generate_asset` | Generate any catalog asset from everything Andru knows about your company; saved to your Andru library | Its catalog price: Tool $3, Framework $12, Decision $49 (your first ICP is free) |
-| `get_asset` | Collect a generated asset or portfolio brief as markdown | Free |
+| `get_asset` | Collect a generated asset or portfolio brief as markdown, or an account plan's link and summary | Free |
 
 ### Product Context
 

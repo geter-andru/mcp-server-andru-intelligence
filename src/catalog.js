@@ -191,38 +191,28 @@ export const tools = [
 
   {
     name: 'get_account_plan',
-    description: 'Builds the account plan you\'d normally spend a weekend on — stakeholder map, what each person needs to hear, MEDDICC gaps, and the unified story across the buying committee.',
-    annotations: READ_ONLY,
+    description: 'Builds an account plan for a target company in your Andru account: the buying committee, the opportunities that fit what you sell, the champion to work with, talk tracks and next steps, from sourced research. Returns the link to the plan with a short summary. $12, charged only if the plan is saved; a plan for the same company from the last 30 days comes back free. Takes 1 to 3 minutes: returns a job_id; call get_asset with it.',
+    annotations: WRITE_OP,
     inputSchema: {
       type: 'object',
       properties: {
-        accountName: { type: 'string', description: 'Target account/company name' },
-        domain: { type: 'string', description: 'Company domain' },
-        industry: { type: 'string', description: 'Industry vertical' },
-        stakeholders: {
-          type: 'array',
-          items: {
-            type: 'object',
-            properties: {
-              name: { type: 'string' },
-              title: { type: 'string' },
-              role: { type: 'string', description: 'Buying committee role (champion, economic_buyer, etc.)' },
-            },
-          },
-          description: 'Known stakeholders at the account',
+        accountName: {
+          type: 'string',
+          description: 'The company to plan for, e.g. \"Acme Logistics\".'
         },
-        dealContext: {
-          type: 'object',
-          properties: {
-            stage: { type: 'string', description: 'Current deal stage' },
-            value: { type: 'number', description: 'Deal value' },
-            nextMeeting: { type: 'string', description: 'Next meeting date/context' },
-          },
-          description: 'Current deal context',
+        productDescription: {
+          type: 'string',
+          description: 'What you sell to this account, if different from the product saved in Andru (a sentence or two).'
         },
+        refresh: {
+          type: 'boolean',
+          description: 'Build a new plan even if one from the last 30 days exists ($12). Default false.'
+        }
       },
-      required: ['accountName'],
-    },
+      required: [
+        'accountName'
+      ]
+    }
   },
 
   {
@@ -704,13 +694,20 @@ export const tools = [
   },
   {
     name: 'get_asset',
-    description: 'Collect an asset started with generate_asset, or a brief started with generate_portfolio_brief. While it is building you get its progress; when it is done you get it in full as markdown (also saved to your Andru account). Free.',
+    description: 'Collect an asset started with generate_asset, a brief started with generate_portfolio_brief, or an account plan started with get_account_plan. While it is building you get its progress; when it is done you get the asset or brief in full as markdown, or the account plan\'s link and summary (all saved to your Andru account). Free.',
     annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
-      properties: { job_id: { type: 'string', description: 'The job_id returned by generate_asset or generate_portfolio_brief.' } },
-      required: ['job_id'],
-    },
+      properties: {
+        job_id: {
+          type: 'string',
+          description: 'The job_id returned by generate_asset, generate_portfolio_brief or get_account_plan.'
+        }
+      },
+      required: [
+        'job_id'
+      ]
+    }
   },
   // ── Product context (2026-10-07): say what you sell once ──────────────────
   {
