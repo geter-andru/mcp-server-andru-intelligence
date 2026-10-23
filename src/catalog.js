@@ -878,15 +878,8 @@ export const accountTools = [
       required: ['tool'],
     },
   },
-  {
-    name: 'get_topup_link',
-    description: 'Get a payment link that adds money to your Andru wallet, for paid calls. Open it in a browser to pay by card. $25 to $500; $25 if no amount is given. Free.',
-    annotations: FREE_TOOL,
-    inputSchema: {
-      type: 'object',
-      properties: { amount: { type: 'number', description: 'Whole dollars to add, from 25 to 500. Default 25.' } },
-    },
-  },
+  // No top-up tool (Geter 2026-10-23: "remove the top-up tool"): money is added only on Andru's own
+  // billing page, which a low-wallet result links to.
 ];
 
 // ── Paid tools: the billing terms (copy batch 1 C9) ─────────────────────────
@@ -917,7 +910,6 @@ export const TOOL_TITLES = {
   signup_status: "Check sign-up approval",
   whoami: "Show this key's account and limits",
   quote: "Get the price of a call",
-  get_topup_link: "Get a wallet top-up link",
   set_product_context: "Tell Andru what you sell",
   get_icp_profile: "Read your ideal customer profile",
   get_icp_fit_score: "Score a company's fit",

@@ -48,7 +48,7 @@ test('no key: list everything, refuse paid work with how to sign up, sign up, th
 
     const { tools } = await client.listTools();
     const names = tools.map((t) => t.name);
-    for (const n of ['preview_company', 'signup_start', 'signup_verify', 'signup_status', 'whoami', 'quote', 'get_topup_link', 'get_pre_brief']) {
+    for (const n of ['preview_company', 'signup_start', 'signup_verify', 'signup_status', 'whoami', 'quote', 'get_pre_brief']) {
       assert.ok(names.includes(n), `${n} listed`);
     }
     const brief = tools.find((t) => t.name === 'get_pre_brief');

@@ -11,7 +11,7 @@ import { AndruClient } from '../src/client.js';
 
 test('every listed tool has its approved title, and every title belongs to a listed tool', () => {
   const tools = listedTools();
-  assert.equal(tools.length, 37);
+  assert.equal(tools.length, 36); // no top-up tool since 2026-10-23
   for (const t of tools) assert.equal(t.title, TOOL_TITLES[t.name], `${t.name} has its title`);
   assert.deepEqual(Object.keys(TOOL_TITLES).sort(), tools.map((t) => t.name).sort());
 });
@@ -37,4 +37,9 @@ test('the server sends the approved instructions when a client connects, and the
   } finally {
     await client.close().catch(() => {});
   }
+});
+
+test('there is no top-up tool: money is added only on Andru\'s billing page (Geter 2026-10-23)', () => {
+  assert.equal(listedTools().find((t) => t.name === 'get_topup_link'), undefined);
+  assert.equal(TOOL_TITLES.get_topup_link, undefined);
 });
