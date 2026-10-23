@@ -897,6 +897,8 @@ export const PAID_TOOL_LINE = 'Charged only when delivered; refunded automatical
 const BILLING_PARAMS = {
   idempotencyKey: { type: 'string', description: 'Optional: any unique string for this call. Retrying with the same key returns the first result and never charges twice.' },
   quoteId: { type: 'string', description: 'Optional: the quote_id from quote, to pay the quoted price (held for 30 minutes).' },
+  // Copy batch 6 J1 (approved by Geter 2026-10-23); the same parameter the backend lists.
+  maxAmountCents: { type: 'integer', minimum: 0, description: 'Optional: the most this call may cost, in cents. If the price is higher, nothing runs and nothing is charged.' },
 };
 
 /** Every tool a client sees: the account tools, then the 30 intelligence tools with billing terms on paid ones. */

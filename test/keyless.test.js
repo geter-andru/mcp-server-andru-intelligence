@@ -54,6 +54,8 @@ test('no key: list everything, refuse paid work with how to sign up, sign up, th
     const brief = tools.find((t) => t.name === 'get_pre_brief');
     assert.ok(brief.description.endsWith(PAID_TOOL_LINE), 'paid tools carry the billing terms');
     assert.ok(brief.inputSchema.properties.idempotencyKey && brief.inputSchema.properties.quoteId);
+    // Copy batch 6 J1: the agent's own price ceiling, as the backend lists it.
+    assert.deepEqual(brief.inputSchema.properties.maxAmountCents, { type: 'integer', minimum: 0, description: 'Optional: the most this call may cost, in cents. If the price is higher, nothing runs and nothing is charged.' });
 
     const refused = await client.callTool({ name: 'get_pre_brief', arguments: { companyName: 'Acme' } });
     assert.equal(refused.isError, true);
