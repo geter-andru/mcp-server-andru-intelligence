@@ -444,33 +444,71 @@ export const tools = [
 
   {
     name: 'simulate_buyer_persona',
-    description: 'Prepare for a key meeting with the buying committee. Andru acts as key decision-makers asking you questions your real buyers ask so you come into real-world meetings equipped to succeed. A Deal Prep session is $5 for 25 turns: open it, reply turn by turn with the session_id, and say "End role-play. How did I do?" for a scored debrief.',
+    description: 'Prepare for a meeting with the people who\'ll be in the room. Andru writes a free brief of what each person likely thinks going in, then plays them, one or several at once, asking what your real buyers ask. The brief is free (10 a day). A Deal Prep session is $5 for 25 turns, charged at your first reply. Say "End role-play. How did I do?" for a scored debrief and what to take into the meeting.',
     annotations: WRITE_OP,
     inputSchema: {
       type: 'object',
       properties: {
+        mode: {
+          type: 'string',
+          enum: ['meetings', 'brief', 'opening', 'reply', 'list'],
+          description: 'meetings = the user\'s calendar meetings in the next 7 days (free). brief = the free brief for a meeting (10 a day). opening = open a session ($5) from a brief_id, or with one buyer. reply = the founder\'s next message; speaker picks who answers. list = the user\'s six buyers (free).',
+        },
+        situation: {
+          type: 'string',
+          enum: ['discovery', 'deal', 'customer_review'],
+          description: 'discovery, deal or customer_review.',
+        },
+        stage: {
+          type: 'number',
+          enum: [0, 1, 2, 3, 4, 5, 6, 7],
+          description: 'The deal\'s stage, 0–7.',
+        },
+        meeting_id: {
+          type: 'string',
+          description: 'A meeting from mode=meetings.',
+        },
+        meeting: {
+          type: 'string',
+          description: 'The meeting in a sentence, when it isn\'t on the calendar.',
+        },
+        room: {
+          type: 'array',
+          description: 'Who\'s in the room, 1–8 people, each with persona (one of the six buyers) and an optional title and name.',
+          items: {
+            type: 'object',
+            properties: {
+              persona: { type: 'string' },
+              title: { type: 'string' },
+              name: { type: 'string' },
+            },
+            required: ['persona'],
+          },
+        },
+        brief_id: {
+          type: 'string',
+          description: 'The brief to open a session from.',
+        },
+        speaker: {
+          type: 'string',
+          description: 'Who answers this turn (p1, p2…, from the brief).',
+        },
         persona: {
           type: 'string',
-          enum: ['CFO', 'CTO', 'COO', 'VP Sales', 'VP Engineering'],
-          description: 'Which buyer to simulate. Pick based on who the user is preparing to meet.',
+          description: 'Which of the user\'s six buyers to simulate (mode=list shows them, from their buying committee). Pick based on who the user is preparing to meet.',
         },
         stageId: {
           type: 'number',
           enum: [1, 2, 3, 4, 5, 6, 7],
-          description: 'Buyer journey stage (1=Researching through 7=Advocating). Default: 3.',
+          description: 'Buyer journey stage (1=Researching, 2=Quantifying, 3=Exploring, 4=Comparing, 5=Business Case, 6=Implementing, 7=Advocating). Default: 3 (Exploring).',
         },
         productDescription: {
           type: 'string',
-          description: 'What the user\'s product does. Infer from conversation context.',
+          description: 'What the user\'s product does. Defaults to the product in their ICP.',
         },
         productName: {
           type: 'string',
-          description: 'Product name. Infer from context.',
-        },
-        mode: {
-          type: 'string',
-          enum: ['opening', 'reply', 'list'],
-          description: 'opening = open a session ($5) and get the buyer\'s opening line. reply = send the seller\'s next message on session_id. list = available personas. Default: opening.',
+          description: 'Product name. Defaults to the product in their ICP.',
         },
         session_id: {
           type: 'string',

@@ -104,7 +104,7 @@ claude mcp add andru-intelligence npx mcp-server-andru-intelligence \
 | `get_sales_blueprint` | First sales hire blueprint — JD, comp model, interview questions, and 90-day ramp plan for the stage you're at | 10-20s |
 | `get_thesis_match` | Up to 3 VC firms investing now in companies like yours, each with a recent deal or stated focus and a link to the page it came from; the full analysis is the Pure Signal Investor Resonance asset | ~30s |
 | `get_founder_wellness` | Burnout risk from your work days, late nights and meeting load, with recovery actions — "not scored yet" until Andru has your activity or calendar data | <200ms |
-| `simulate_buyer_persona` | A Deal Prep session ($5, 25 turns): Andru acts as the CFO, CTO or VP Sales and asks the questions your real buyers ask, so you come into the real meeting equipped | 5-15s |
+| `simulate_buyer_persona` | Prepare for a meeting with the people who'll be in the room: a free brief of what each person likely thinks going in (10 a day), then a Deal Prep session ($5, 25 turns) where Andru plays them, one or several at once | 5-15s |
 
 
 ### Revenue Memory
