@@ -7,21 +7,19 @@
  * or any MCP-compatible client.
  *
  * Environment variables:
- *   ANDRU_API_KEY  (required) — Your Andru Platform API key
+ *   ANDRU_API_KEY  (optional) — an Andru API key (sk_live_ + 64 hex). Without one, or with anything
+ *                  else in it, the agent can sign the person up from the conversation (1.10.3).
  *   ANDRU_API_URL  (optional) — API base URL (default: https://api.andru-ai.com)
  *
  * Usage:
- *   ANDRU_API_KEY=sk_live_... npx mcp-server-andru-intelligence
+ *   npx mcp-server-andru-intelligence
  *
  * Claude Desktop config (claude_desktop_config.json):
  *   {
  *     "mcpServers": {
  *       "andru-intelligence": {
  *         "command": "npx",
- *         "args": ["mcp-server-andru-intelligence"],
- *         "env": {
- *           "ANDRU_API_KEY": "sk_live_your_key_here"
- *         }
+ *         "args": ["mcp-server-andru-intelligence"]
  *       }
  *     }
  *   }
@@ -34,9 +32,11 @@ import { createServer } from './server.js';
 import { initCache, closeCache, getStats } from './cache.js';
 import { createCachedClient } from './cachedClient.js';
 import { startSync, stopSync } from './sync.js';
+import { realKey } from './apiKey.js';
 
 async function main() {
-  const apiKey = process.env.ANDRU_API_KEY;
+  // A value that isn't a real key (the old README placeholder, a fragment) counts as no key (1.10.3).
+  const apiKey = realKey(process.env.ANDRU_API_KEY);
   const apiUrl = process.env.ANDRU_API_URL || 'https://api.andru-ai.com';
   const cacheEnabled = process.env.ANDRU_CACHE !== 'false'; // Default: enabled
 

@@ -152,8 +152,10 @@ export function createServer(client, { transport } = {}) {
         const result = await client.callTool(name, args || {});
         // Signed up inside this session: use the new key for the rest of it, so the agent can go
         // straight on to its first call. (Saving it for next time is the agent's job; the reply says so.)
-        const newKey = !client.apiKey ? keyFromSignup(name, result) : null;
-        if (newKey) {
+        // Also when a key was already set (1.10.3): one that doesn't work, like a revoked key, would
+        // otherwise keep every later call failing.
+        const newKey = keyFromSignup(name, result);
+        if (newKey && newKey !== client.apiKey) {
           client.setApiKey(newKey);
           // Copy batch 5 G2 (approved by Geter 2026-10-23).
           const note = 'This session now uses the new key. To keep it after this session, save it in your MCP client settings as ANDRU_API_KEY, or send it as the X-API-Key header.';
