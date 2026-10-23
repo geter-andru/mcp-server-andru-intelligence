@@ -166,7 +166,7 @@ export function createServer(client, { transport } = {}) {
         return {
           content: [{
             type: 'text',
-            text: JSON.stringify({ error: error.message }),
+            text: JSON.stringify(error.reply || { error: error.message }),
           }],
           isError: true,
         };
@@ -203,7 +203,7 @@ export function createServer(client, { transport } = {}) {
           contents: [{
             uri,
             mimeType: 'text/plain',
-            text: JSON.stringify({ error: error.message }),
+            text: JSON.stringify(error.reply || { error: error.message }),
           }],
         };
       }

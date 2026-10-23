@@ -26,6 +26,27 @@ export function readErrorMessage(parsed) {
   return typeof parsed?.message === 'string' ? parsed.message : null;
 }
 
+/**
+ * The error for a refused request. A 429 carries a reply the agent can act on (copy batch 11 R4,
+ * approved by Geter 2026-10-23): RATE_LIMITED, how long to wait, and the backend's sentence.
+ */
+export async function errorFor(response) {
+  const errorBody = await response.text().catch(() => '');
+  let parsed = null;
+  try { parsed = JSON.parse(errorBody); } catch { /* not JSON */ }
+  if (response.status === 429) {
+    const retry = Number(parsed?.retry_after_seconds ?? response.headers?.get?.('retry-after'));
+    const wait = Number.isFinite(retry) && retry > 0 ? Math.ceil(retry) : null;
+    const message = typeof parsed?.message === 'string' ? parsed.message
+      : `Too many requests from this address.${wait ? ` Try again in ${wait} seconds.` : ''}`;
+    const err = new Error(message);
+    err.reply = { status: 'error', code: 'RATE_LIMITED', ...(wait ? { retry_after_seconds: wait } : {}), message };
+    return err;
+  }
+  if (parsed) return new Error(readErrorMessage(parsed) || `HTTP ${response.status}`);
+  return new Error(`HTTP ${response.status}: ${errorBody.slice(0, 200)}`);
+}
+
 export class AndruClient {
   /**
    * @param {string|null} apiKey - Andru Platform API key; null before signup (only the no-key account tools work)
@@ -166,17 +187,7 @@ export class AndruClient {
         signal: controller.signal,
       });
 
-      if (!response.ok) {
-        const errorBody = await response.text().catch(() => '');
-        let errorMessage;
-        try {
-          const parsed = JSON.parse(errorBody);
-          errorMessage = readErrorMessage(parsed) || `HTTP ${response.status}`;
-        } catch {
-          errorMessage = `HTTP ${response.status}: ${errorBody.slice(0, 200)}`;
-        }
-        throw new Error(errorMessage);
-      }
+      if (!response.ok) throw await errorFor(response);
 
       return await response.json();
     } catch (error) {
@@ -210,17 +221,7 @@ export class AndruClient {
         signal: controller.signal,
       });
 
-      if (!response.ok) {
-        const errorBody = await response.text().catch(() => '');
-        let errorMessage;
-        try {
-          const parsed = JSON.parse(errorBody);
-          errorMessage = readErrorMessage(parsed) || `HTTP ${response.status}`;
-        } catch {
-          errorMessage = `HTTP ${response.status}: ${errorBody.slice(0, 200)}`;
-        }
-        throw new Error(errorMessage);
-      }
+      if (!response.ok) throw await errorFor(response);
 
       if (response.status === 204) return null; // no content (e.g. /api/mcp/connect)
       return await response.json();
