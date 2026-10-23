@@ -14,7 +14,7 @@ import {
   ReadResourceRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
 import { readFileSync } from 'node:fs';
-import { tools, resources } from './catalog.js';
+import { listedTools, resources, KEYLESS_TOOLS } from './catalog.js';
 
 // The version clients see comes from package.json, so it can't drift from the release (it said
 // 1.8.0 while 1.9.0 was being prepared, 2026-10-08).
@@ -82,6 +82,21 @@ export async function askOnceForProduct(server, client, name, args, result) {
   return { ...retried, content: [...(retried?.content || []), { type: 'text', text: note }] };
 }
 
+/** Copy batch 1 C3 (approved by Geter 2026-10-22): the same "no API key" answer as every channel. */
+export const NO_KEY_MESSAGE = "No API key yet. Your agent can set one up now: call signup_start with the person's email. Andru emails them a code and an Approve button, and your first calls each day are free. Or get a key in Andru (Settings → API access).";
+export const NO_KEY_NEXT_ACTION = { tool: 'signup_start', arguments: { email: "<the person's email>" } };
+
+/** The API key in a signup result (signup_verify, or signup_status once approved), or null. */
+export function keyFromSignup(name, result) {
+  if (name !== 'signup_verify' && name !== 'signup_status') return null;
+  try {
+    const parsed = JSON.parse(result?.content?.[0]?.text || '{}');
+    return typeof parsed.apiKey === 'string' && parsed.apiKey.startsWith('sk_') ? parsed.apiKey : null;
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Create an MCP server backed by the Andru API.
  *
@@ -109,14 +124,15 @@ export function createServer(client, { transport } = {}) {
     if (!client) return;
     const info = server.getClientVersion?.() || {};
     client.setClientInfo?.({ name: info.name, version: info.version, transport });
-    client.connect?.();
+    // The connect note needs a key; a keyless session is still seen when it calls signup.
+    if (client.apiKey !== null) client.connect?.();
   };
 
   // --- Tool listing (static catalog — no network) ---
 
   server.setRequestHandler(
     ListToolsRequestSchema,
-    async () => ({ tools })
+    async () => ({ tools: listedTools() })
   );
 
   // --- Tool execution (proxy to backend) ---
@@ -124,15 +140,25 @@ export function createServer(client, { transport } = {}) {
   server.setRequestHandler(
     CallToolRequestSchema,
     async (request) => {
-      if (!client) {
+      const { name, arguments: args } = request.params;
+      // Before signup only the no-key account tools run; everything else says how to get a key.
+      if (!client || (!client.apiKey && !KEYLESS_TOOLS.has(name))) {
         return {
-          content: [{ type: 'text', text: JSON.stringify({ error: 'ANDRU_API_KEY not configured. Tool execution requires an API key.' }) }],
+          content: [{ type: 'text', text: JSON.stringify({ status: 'error', code: 'AUTH_REQUIRED', message: NO_KEY_MESSAGE, next_action: NO_KEY_NEXT_ACTION }) }],
           isError: true,
         };
       }
-      const { name, arguments: args } = request.params;
       try {
         const result = await client.callTool(name, args || {});
+        // Signed up inside this session: use the new key for the rest of it, so the agent can go
+        // straight on to its first call. (Saving it for next time is the agent's job; the reply says so.)
+        const newKey = !client.apiKey ? keyFromSignup(name, result) : null;
+        if (newKey) {
+          client.setApiKey(newKey);
+          // Copy batch 5 G2 (approved by Geter 2026-10-23).
+          const note = 'This session now uses the new key. To keep it after this session, save it in your MCP client settings as ANDRU_API_KEY, or send it as the X-API-Key header.';
+          return { ...result, content: [...(result?.content || []), { type: 'text', text: note }] };
+        }
         return await askOnceForProduct(server, client, name, args || {}, result);
       } catch (error) {
         return {
@@ -158,12 +184,12 @@ export function createServer(client, { transport } = {}) {
   server.setRequestHandler(
     ReadResourceRequestSchema,
     async (request) => {
-      if (!client) {
+      if (!client || !client.apiKey) {
         return {
           contents: [{
             uri: request.params.uri,
             mimeType: 'text/plain',
-            text: JSON.stringify({ error: 'ANDRU_API_KEY not configured. Resource reads require an API key.' }),
+            text: JSON.stringify({ status: 'error', code: 'AUTH_REQUIRED', message: NO_KEY_MESSAGE, next_action: NO_KEY_NEXT_ACTION }),
           }],
         };
       }

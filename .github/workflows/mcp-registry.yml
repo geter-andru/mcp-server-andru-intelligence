@@ -30,6 +30,17 @@ jobs:
             if (s.name !== p.mcpName) { console.error('server.json name', s.name, 'does not match mcpName', p.mcpName); process.exit(1); }
           "
 
+      # On a tag push this races the npm workflow, and the Registry refuses a version npm doesn't
+      # have yet (1.9.13: 400 "version not found"). Wait for npm, up to 10 minutes.
+      - name: Wait for npm to have this version
+        run: |
+          VERSION=$(node -e "console.log(require('./package.json').version)")
+          for i in $(seq 1 40); do
+            if npm view "mcp-server-andru-intelligence@$VERSION" version >/dev/null 2>&1; then echo "npm has $VERSION"; exit 0; fi
+            echo "waiting for npm to publish $VERSION ($i/40)"; sleep 15
+          done
+          echo "npm never showed $VERSION"; exit 1
+
       # Pinned release (2026-08-06), not "latest".
       - name: Install mcp-publisher v1.8.1
         run: |

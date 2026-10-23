@@ -3,7 +3,7 @@
   "name": "io.github.geter-andru/andru-intelligence",
   "title": "Andru",
   "description": "Revenue intelligence for complex B2B growth.",
-  "version": "1.9.13",
+  "version": "1.10.0",
   "websiteUrl": "https://andru-ai.com/docs/mcp",
   "repository": {
     "url": "https://github.com/geter-andru/mcp-server-andru-intelligence.git",
@@ -13,15 +13,15 @@
     {
       "registryType": "npm",
       "identifier": "mcp-server-andru-intelligence",
-      "version": "1.9.13",
+      "version": "1.10.0",
       "transport": {
         "type": "stdio"
       },
       "environmentVariables": [
         {
           "name": "ANDRU_API_KEY",
-          "description": "Your Andru Platform API key. Get one at https://platform.andru-ai.com/settings/developer",
-          "isRequired": true,
+          "description": "Your Andru API key. Optional: without one, your agent can sign you up from the conversation. Or get one at https://platform.andru-ai.com/settings/developer",
+          "isRequired": false,
           "isSecret": true
         },
         {
@@ -40,8 +40,8 @@
       "headers": [
         {
           "name": "X-API-Key",
-          "description": "Your Andru Platform API key. Get one at https://platform.andru-ai.com/settings/developer",
-          "isRequired": true,
+          "description": "Your Andru API key. Optional: without one, your agent can sign you up from the conversation. Or get one at https://platform.andru-ai.com/settings/developer",
+          "isRequired": false,
           "isSecret": true
         }
       ]

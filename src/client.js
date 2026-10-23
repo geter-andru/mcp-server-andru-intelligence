@@ -28,13 +28,23 @@ export function readErrorMessage(parsed) {
 
 export class AndruClient {
   /**
-   * @param {string} apiKey - Andru Platform API key
+   * @param {string|null} apiKey - Andru Platform API key; null before signup (only the no-key account tools work)
    * @param {string} [baseUrl] - API base URL (default: https://api.andru-ai.com)
    */
   constructor(apiKey, baseUrl = DEFAULT_API_URL) {
     this.apiKey = apiKey;
     this.baseUrl = assertTrustedApiUrl(baseUrl).replace(/\/+$/, ''); // Strip trailing slashes
     this.clientInfo = {};
+  }
+
+  /** Use a key from now on (an agent just signed up inside this session). */
+  setApiKey(apiKey) {
+    if (typeof apiKey === 'string' && apiKey.trim()) this.apiKey = apiKey.trim();
+  }
+
+  /** The X-API-Key header, or nothing before signup. */
+  keyHeader() {
+    return this.apiKey ? { 'X-API-Key': this.apiKey } : {};
   }
 
   /**
@@ -148,7 +158,7 @@ export class AndruClient {
       const response = await fetch(`${this.baseUrl}${path}`, {
         method: 'GET',
         headers: {
-          'X-API-Key': this.apiKey,
+          ...this.keyHeader(),
           'User-Agent': `andru-mcp-server/${PACKAGE_VERSION}`,
           ...this.clientHeaders(),
           ...this.relayHeaders(),
@@ -191,7 +201,7 @@ export class AndruClient {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-API-Key': this.apiKey,
+          ...this.keyHeader(),
           'User-Agent': `andru-mcp-server/${PACKAGE_VERSION}`,
           ...this.clientHeaders(),
           ...this.relayHeaders(),

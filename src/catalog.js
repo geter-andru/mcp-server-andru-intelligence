@@ -786,3 +786,127 @@ export const resources = [
     mimeType: 'application/json',
   },
 ];
+
+// ── Account tools (AGENT_PLATFORM_PLAN_2026-10-22) ──────────────────────────
+// Outside the 30 intelligence tools: free, answered by the API before tool routing. The first four
+// need no API key, so an agent can sign its person up from inside the conversation. Wording:
+// approved 2026-10-18 (signup_verify, get_topup_link) and in copy batch 1 C4/C8 (Geter 2026-10-22).
+
+/** Tools that work with no API key. */
+export const KEYLESS_TOOLS = new Set(['signup_start', 'signup_verify', 'signup_status', 'preview_company']);
+
+const FOUND_VIA = {
+  type: 'string',
+  description: 'Optional: how the person or their agent found Andru: moltbook, a2a_directory, mcp_registry (includes Smithery), npm, search, ai_assistant, person or other. Other text is kept as written.',
+};
+const FREE_TOOL = { readOnlyHint: false, destructiveHint: false, openWorldHint: false };
+
+export const accountTools = [
+  {
+    name: 'preview_company',
+    description: "See what Andru reads about a company from its website before signing up: who it sells to, the buyers who decide, and what the site says versus what those buyers need to hear. Send the company's website. Takes about a minute: you get a preview_id; call again with it to collect the read. Free, no account needed. If the person signs up with signup_start and this preview_id, the read becomes their first ICP.",
+    annotations: READ_ONLY,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        website: { type: 'string', description: "The company's website, e.g. acme.com." },
+        previewId: { type: 'string', description: 'From an earlier call, to collect the read.' },
+      },
+    },
+  },
+  {
+    name: 'signup_start',
+    description: "Create an Andru account, or sign in to yours, without leaving your agent. Send the person's email. Andru emails them a 6-digit code and an Approve button. If they read you the code, call signup_verify. If they tap Approve, call signup_status with the request_id until it returns your key. They also choose how much you can spend without asking them; it starts at $0 (free calls only). Free.",
+    annotations: FREE_TOOL,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        email: { type: 'string', description: "The person's email. The code goes here." },
+        website: { type: 'string', description: 'Optional: their company website, e.g. acme.com. Andru reads it so its answers are about what they sell.' },
+        agentName: { type: 'string', description: "Optional: your agent's name. The key is named after it." },
+        foundVia: FOUND_VIA,
+        previewId: { type: 'string', description: 'Optional: from preview_company. The read becomes their first ICP.' },
+      },
+      required: ['email'],
+    },
+  },
+  {
+    name: 'signup_verify',
+    description: 'Finish signing up: send the email and the 6-digit code the person received. Returns an Andru API key for this agent. Free.',
+    annotations: FREE_TOOL,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        email: { type: 'string', description: 'The email the code was sent to.' },
+        code: { type: 'string', description: 'The 6-digit code from the email.' },
+        agentName: { type: 'string', description: "Optional: your agent's name. The key is named after it." },
+        foundVia: FOUND_VIA,
+      },
+      required: ['email', 'code'],
+    },
+  },
+  {
+    name: 'signup_status',
+    description: 'Check whether the person has approved you. Send the request_id from signup_start. Returns "waiting" (ask again after the number of seconds it gives), your API key once they approve (shown once; save it), or "expired". Free.',
+    annotations: FREE_TOOL,
+    inputSchema: {
+      type: 'object',
+      properties: { requestId: { type: 'string', description: 'The request_id from signup_start.' } },
+      required: ['requestId'],
+    },
+  },
+  {
+    name: 'whoami',
+    description: "What this API key can do: the account it belongs to, the key's name, how much it can spend today and this month without asking, the wallet balance, and free calls left today. Free.",
+    annotations: READ_ONLY,
+    inputSchema: { type: 'object', properties: {} },
+  },
+  {
+    name: 'quote',
+    description: "The exact price of a call before you make it. Send the tool name and its arguments. Returns the price, whether today's free calls cover it, the wallet balance, how much this key can still spend without asking, and a quote_id that holds the price for 30 minutes. Pass quote_id with the call to pay the quoted price. Free.",
+    annotations: READ_ONLY,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        tool: { type: 'string', description: 'The tool you plan to call, e.g. get_pre_brief.' },
+        arguments: { type: 'object', description: 'The arguments you plan to send with it.' },
+      },
+      required: ['tool'],
+    },
+  },
+  {
+    name: 'get_topup_link',
+    description: 'Get a payment link that adds money to your Andru wallet, for paid calls. Open it in a browser to pay by card. $25 to $500; $25 if no amount is given. Free.',
+    annotations: FREE_TOOL,
+    inputSchema: {
+      type: 'object',
+      properties: { amount: { type: 'number', description: 'Whole dollars to add, from 25 to 500. Default 25.' } },
+    },
+  },
+];
+
+// ── Paid tools: the billing terms (copy batch 1 C9) ─────────────────────────
+// The tools the backend lists with these terms: agentPricing.js priceFor(name).counts. generate_asset
+// is not one: its job charges the asset's catalog price, which its own description states.
+export const PAID_TOOLS = new Set([
+  'get_account_plan', 'get_pre_brief', 'simulate_buyer_persona', 'discover_prospects', 'get_thesis_match',
+  'get_sales_blueprint', 'consult_agent', 'assess_company_readiness',
+  'get_portfolio_readiness_rollup', 'generate_portfolio_brief',
+]);
+export const PAID_TOOL_LINE = 'Charged only when delivered; refunded automatically if it fails. Send an idempotencyKey to retry safely: the same key never charges twice.';
+const BILLING_PARAMS = {
+  idempotencyKey: { type: 'string', description: 'Optional: any unique string for this call. Retrying with the same key returns the first result and never charges twice.' },
+  quoteId: { type: 'string', description: 'Optional: the quote_id from quote, to pay the quoted price (held for 30 minutes).' },
+};
+
+/** Every tool a client sees: the account tools, then the 30 intelligence tools with billing terms on paid ones. */
+export function listedTools() {
+  const priced = tools.map((t) => (PAID_TOOLS.has(t.name)
+    ? {
+      ...t,
+      description: `${t.description} ${PAID_TOOL_LINE}`,
+      inputSchema: { ...t.inputSchema, properties: { ...(t.inputSchema?.properties || {}), ...BILLING_PARAMS } },
+    }
+    : t));
+  return [...accountTools, ...priced];
+}

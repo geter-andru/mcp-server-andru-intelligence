@@ -35,19 +35,16 @@ export function createHttpApp({ apiUrl, host = '0.0.0.0' }) {
     });
   });
 
-  // --- Auth middleware: require X-API-Key on MCP requests ---
-  function requireApiKey(req, res, next) {
+  // --- The key, when there is one (1.10.0) ---
+  // No key: the session still opens and lists every tool; only signup_start, signup_verify,
+  // signup_status and preview_company run, and every other call says how to get a key (server.js).
+  // A key from signup is used for the rest of that session.
+  function readApiKey(req, _res, next) {
     const key = req.headers['x-api-key'] || req.query.ANDRU_API_KEY;
-    if (!key) {
-      return res.status(401).json({
-        jsonrpc: '2.0',
-        error: { code: -32000, message: 'X-API-Key header required' },
-        id: null,
-      });
-    }
-    req.auth = { apiKey: key };
+    req.auth = { apiKey: typeof key === 'string' && key.trim() ? key.trim() : null };
     next();
   }
+  const sessionClients = new Map();
 
   // --- Rate limiting: per API key ---
   const mcpRateLimiter = rateLimit({
@@ -72,13 +69,17 @@ export function createHttpApp({ apiUrl, host = '0.0.0.0' }) {
   });
 
   // --- POST /mcp — JSON-RPC requests (initialize, tools/list, tools/call, etc.) ---
-  app.post('/mcp', requireApiKey, mcpRateLimiter, async (req, res) => {
+  app.post('/mcp', readApiKey, mcpRateLimiter, async (req, res) => {
     const sessionId = req.headers['mcp-session-id'];
     let transport = sessionId ? transports.get(sessionId) : undefined;
 
+    let client = sessionId ? sessionClients.get(sessionId) : undefined;
+    // A keyless session whose agent now sends the key it got at signup: use it from here on.
+    if (transport && client && !client.apiKey && req.auth.apiKey) client.setApiKey(req.auth.apiKey);
+
     if (!transport) {
       // New session — create per-key client, server, and transport
-      const client = new AndruClient(req.auth.apiKey, apiUrl);
+      client = new AndruClient(req.auth.apiKey, apiUrl);
       const server = createServer(client, { transport: 'http' });
 
       transport = new StreamableHTTPServerTransport({
@@ -90,6 +91,7 @@ export function createHttpApp({ apiUrl, host = '0.0.0.0' }) {
       transport.onclose = () => {
         if (transport.sessionId) {
           transports.delete(transport.sessionId);
+          sessionClients.delete(transport.sessionId);
           console.log(`[Andru MCP HTTP] Session closed: ${transport.sessionId}`);
         }
       };
@@ -101,12 +103,13 @@ export function createHttpApp({ apiUrl, host = '0.0.0.0' }) {
     // Store transport by its generated session ID (set after first handleRequest)
     if (transport.sessionId && !transports.has(transport.sessionId)) {
       transports.set(transport.sessionId, transport);
+      if (client) sessionClients.set(transport.sessionId, client);
       console.log(`[Andru MCP HTTP] Session created: ${transport.sessionId}`);
     }
   });
 
   // --- GET /mcp — SSE stream for server-initiated notifications ---
-  app.get('/mcp', requireApiKey, mcpRateLimiter, async (req, res) => {
+  app.get('/mcp', readApiKey, mcpRateLimiter, async (req, res) => {
     const sessionId = req.headers['mcp-session-id'];
     const transport = sessionId ? transports.get(sessionId) : undefined;
     if (!transport) {
@@ -126,6 +129,7 @@ export function createHttpApp({ apiUrl, host = '0.0.0.0' }) {
     if (transport) {
       await transport.close();
       transports.delete(sessionId);
+      sessionClients.delete(sessionId);
       console.log(`[Andru MCP HTTP] Session terminated: ${sessionId}`);
     }
     res.status(200).end();

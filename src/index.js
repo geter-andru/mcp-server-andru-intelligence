@@ -54,14 +54,17 @@ async function main() {
   // When no API key, server still starts (tool listing works from static catalog,
   // but tool execution will return an error). This allows registry scanners
   // to discover tools without needing credentials.
-  let client = null;
+  // No key yet: the server still runs. The agent can sign the person up from the conversation
+  // (signup_start → signup_verify / signup_status) and this session then uses the new key (1.10.0).
+  let client;
   if (apiKey) {
     const baseClient = new AndruClient(apiKey, apiUrl);
     // Wrap with cache layer (Phase 8)
     client = cacheEnabled ? createCachedClient(baseClient) : baseClient;
   } else {
-    console.error('[Andru MCP] Warning: ANDRU_API_KEY not set. Tool listing works, but execution requires an API key.');
-    console.error('[Andru MCP] Get your API key at https://platform.andru-ai.com/settings/developer');
+    client = new AndruClient(null, apiUrl);
+    // Copy batch 5 G1 (approved by Geter 2026-10-23).
+    console.error('[Andru MCP] No ANDRU_API_KEY yet. signup_start, signup_verify, signup_status and preview_company work now; the other tools work after signup.');
   }
 
   const server = createServer(client, { transport: 'stdio' });
@@ -70,9 +73,7 @@ async function main() {
   await server.connect(transport);
 
   console.error('[Andru MCP] Server running on stdio transport');
-  if (client) {
-    console.error(`[Andru MCP] API endpoint: ${apiUrl}`);
-  }
+  console.error(`[Andru MCP] API endpoint: ${apiUrl}`);
 
   // Start WebSocket sync (Phase 8) — keeps cache fresh via backend events
   if (cacheEnabled && apiKey) {

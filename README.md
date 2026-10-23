@@ -32,10 +32,12 @@ ANDRU_API_KEY=sk_live_... npx mcp-server-andru-intelligence
 
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
-| `ANDRU_API_KEY` | Yes | — | Your Andru Platform API key |
+| `ANDRU_API_KEY` | No | — | Your Andru API key. Without one, your agent can sign you up from the conversation. |
 | `ANDRU_API_URL` | No | `https://api.andru-ai.com` | API base URL. The default is Andru's production API; you don't need to change it. Your key is only sent to `*.andru-ai.com` or this machine; set `ANDRU_ALLOW_CUSTOM_API_URL=true` to use another host on purpose. |
 
 Get your API key at [platform.andru-ai.com/settings/developer](https://platform.andru-ai.com/settings/developer).
+
+No key yet? Start the server without one and ask your agent to sign you up. It calls signup_start with your email; you get a code and an Approve button; the session then uses the new key.
 
 ### Claude Desktop
 
