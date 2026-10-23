@@ -31,18 +31,15 @@
           "default": "https://api.andru-ai.com"
         }
       ]
-    },
+    }
+  ],
+  "remotes": [
     {
-      "registryType": "npm",
-      "identifier": "mcp-server-andru-intelligence",
-      "version": "1.9.12",
-      "transport": {
-        "type": "streamable-http",
-        "url": "https://mcp-server-andru-intelligence.onrender.com/mcp"
-      },
-      "environmentVariables": [
+      "type": "streamable-http",
+      "url": "https://mcp-server-andru-intelligence.onrender.com/mcp",
+      "headers": [
         {
-          "name": "ANDRU_API_KEY",
+          "name": "X-API-Key",
           "description": "Your Andru Platform API key. Get one at https://platform.andru-ai.com/settings/developer",
           "isRequired": true,
           "isSecret": true

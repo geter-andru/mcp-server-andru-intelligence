@@ -1,0 +1,43 @@
+name: Publish to the MCP Registry
+
+# The official MCP Registry entry (io.github.geter-andru/andru-intelligence) was published by hand and
+# fell behind npm (1.9.10 vs 1.9.12 on 2026-10-22). This publishes server.json after every release
+# tag, and on demand. GitHub OIDC proves the io.github.geter-andru namespace; no stored token.
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'mcp-v*'
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    name: Publish server.json
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check server.json matches package.json
+        run: |
+          node -e "
+            const p = require('./package.json'); const s = require('./server.json');
+            const bad = [s.version, ...s.packages.map((x) => x.version)].filter((v) => v !== p.version);
+            if (bad.length) { console.error('server.json versions', bad, 'do not match package.json', p.version); process.exit(1); }
+            if (s.name !== p.mcpName) { console.error('server.json name', s.name, 'does not match mcpName', p.mcpName); process.exit(1); }
+          "
+
+      # Pinned release (2026-08-06), not "latest".
+      - name: Install mcp-publisher v1.8.1
+        run: |
+          curl -fsSL "https://github.com/modelcontextprotocol/registry/releases/download/v1.8.1/mcp-publisher_linux_amd64.tar.gz" | tar xz mcp-publisher
+          ./mcp-publisher --help > /dev/null
+
+      - name: Log in with GitHub OIDC
+        run: ./mcp-publisher login github-oidc
+
+      - name: Publish
+        run: ./mcp-publisher publish
