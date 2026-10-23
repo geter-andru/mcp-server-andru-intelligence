@@ -22,6 +22,8 @@ export function createCachedClient(client) {
     /** The wrapped client's key (signup inside a session sets it there; 1.10.0). */
     get apiKey() { return client.apiKey; },
     setApiKey(key) { client.setApiKey?.(key); },
+    get signedIn() { return !!(client.apiKey || client.bearer); },
+    setBearer(token) { client.setBearer?.(token); },
     /** Client info and the connect note pass straight through (1.9.7); nothing about them is cached. */
     setClientInfo(info) {
       client.setClientInfo?.(info);

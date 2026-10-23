@@ -63,9 +63,20 @@ export class AndruClient {
     if (typeof apiKey === 'string' && apiKey.trim()) this.apiKey = apiKey.trim();
   }
 
-  /** The X-API-Key header, or nothing before signup. */
+  /** Use an OAuth access token from Andru's authorization server (hosted server; it refreshes). */
+  setBearer(token) {
+    if (typeof token === 'string' && token.trim()) this.bearer = token.trim();
+  }
+
+  /** True when this client can act for a person: an API key or an OAuth token. */
+  get signedIn() {
+    return !!(this.apiKey || this.bearer);
+  }
+
+  /** The credential header: X-API-Key, or an OAuth Bearer token, or nothing before signup. */
   keyHeader() {
-    return this.apiKey ? { 'X-API-Key': this.apiKey } : {};
+    if (this.apiKey) return { 'X-API-Key': this.apiKey };
+    return this.bearer ? { Authorization: `Bearer ${this.bearer}` } : {};
   }
 
   /**

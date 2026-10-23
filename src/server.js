@@ -143,7 +143,7 @@ export function createServer(client, { transport } = {}) {
     async (request) => {
       const { name, arguments: args } = request.params;
       // Before signup only the no-key account tools run; everything else says how to get a key.
-      if (!client || (!client.apiKey && !KEYLESS_TOOLS.has(name))) {
+      if (!client || (!client.signedIn && !KEYLESS_TOOLS.has(name))) {
         return {
           content: [{ type: 'text', text: JSON.stringify({ status: 'error', code: 'AUTH_REQUIRED', message: NO_KEY_MESSAGE, next_action: NO_KEY_NEXT_ACTION }) }],
           isError: true,
@@ -187,7 +187,7 @@ export function createServer(client, { transport } = {}) {
   server.setRequestHandler(
     ReadResourceRequestSchema,
     async (request) => {
-      if (!client || !client.apiKey) {
+      if (!client || !client.signedIn) {
         return {
           contents: [{
             uri: request.params.uri,

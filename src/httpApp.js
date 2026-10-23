@@ -9,6 +9,15 @@ import rateLimit, { ipKeyGenerator } from 'express-rate-limit';
 import { AndruClient } from './client.js';
 import { createServer } from './server.js';
 import { originOf, requestOrigin } from './clientOrigin.js';
+import { KEYLESS_TOOLS } from './catalog.js';
+
+export const OAUTH_SCOPE = 'andru:agent';
+
+/** True when a JSON-RPC message (or batch) calls a tool or reads a resource that needs the person's account. */
+export function needsAccount(body) {
+  const msgs = Array.isArray(body) ? body : [body];
+  return msgs.some((m) => m && ((m.method === 'tools/call' && !KEYLESS_TOOLS.has(m.params?.name)) || m.method === 'resources/read'));
+}
 
 /**
  * @param {{ apiUrl: string, host?: string }} options
@@ -35,13 +44,35 @@ export function createHttpApp({ apiUrl, host = '0.0.0.0' }) {
     });
   });
 
+  // --- OAuth (AGENT_OAUTH_PLAN_2026-10-23, option B) ---
+  // On only with ANDRU_OAUTH=on, once Andru's authorization server is live, so no client starts a
+  // sign-in that can't finish. RFC 9728 protected resource metadata names the authorization server.
+  const oauth = process.env.ANDRU_OAUTH === 'on';
+  const resource = process.env.MCP_PUBLIC_URL || 'https://mcp.andru-ai.com/mcp';
+  const resourceMetadataUrl = `${new URL(resource).origin}/.well-known/oauth-protected-resource`;
+  if (oauth) {
+    const resourceMetadata = (_req, res) => res.json({
+      resource,
+      authorization_servers: [process.env.ANDRU_AUTH_SERVER || 'https://api.andru-ai.com'],
+      scopes_supported: [OAUTH_SCOPE],
+      bearer_methods_supported: ['header'],
+    });
+    app.get('/.well-known/oauth-protected-resource', resourceMetadata);
+    app.get('/.well-known/oauth-protected-resource/mcp', resourceMetadata);
+  }
+
   // --- The key, when there is one (1.10.0) ---
   // No key: the session still opens and lists every tool; only signup_start, signup_verify,
   // signup_status and preview_company run, and every other call says how to get a key (server.js).
   // A key from signup is used for the rest of that session.
   function readApiKey(req, _res, next) {
     const key = req.headers['x-api-key'] || req.query.ANDRU_API_KEY;
-    req.auth = { apiKey: typeof key === 'string' && key.trim() ? key.trim() : null };
+    const authz = typeof req.headers.authorization === 'string' ? req.headers.authorization : '';
+    const bearer = authz.startsWith('Bearer ') ? authz.slice(7).trim() : '';
+    // An sk_ key sent as Bearer is a key; any other Bearer value is an OAuth access token from
+    // Andru's authorization server, which the API checks.
+    const apiKey = typeof key === 'string' && key.trim() ? key.trim() : (/^sk_(live|test)_/.test(bearer) ? bearer : null);
+    req.auth = { apiKey, bearer: !apiKey && bearer ? bearer : null };
     next();
   }
   const sessionClients = new Map();
@@ -50,7 +81,7 @@ export function createHttpApp({ apiUrl, host = '0.0.0.0' }) {
   const mcpRateLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 100, // 100 requests per API key per window
-    keyGenerator: (req) => req.auth?.apiKey || ipKeyGenerator(req.ip),
+    keyGenerator: (req) => req.auth?.apiKey || (req.auth?.bearer ? `oauth:${req.auth.bearer.slice(-24)}` : ipKeyGenerator(req.ip)),
     standardHeaders: true,
     legacyHeaders: false,
     message: {
@@ -76,10 +107,21 @@ export function createHttpApp({ apiUrl, host = '0.0.0.0' }) {
     let client = sessionId ? sessionClients.get(sessionId) : undefined;
     // A keyless session whose agent now sends the key it got at signup: use it from here on.
     if (transport && client && !client.apiKey && req.auth.apiKey) client.setApiKey(req.auth.apiKey);
+    // OAuth: each request carries the current access token (they refresh); use the latest.
+    if (transport && client && req.auth.bearer) client.setBearer(req.auth.bearer);
+
+    // Lazy authentication (OAuth on): a call that needs the person's account, sent with no credential,
+    // gets HTTP 401 pointing at this server's protected resource metadata, so the client signs in.
+    // Listing tools and the signup and preview tools still work without one.
+    if (oauth && !req.auth.apiKey && !req.auth.bearer && !(client && client.signedIn) && needsAccount(req.body)) {
+      res.set('WWW-Authenticate', `Bearer resource_metadata="${resourceMetadataUrl}", scope="${OAUTH_SCOPE}"`);
+      return res.status(401).json({ jsonrpc: '2.0', error: { code: -32001, message: 'Sign in to Andru to use this tool.' }, id: req.body?.id ?? null });
+    }
 
     if (!transport) {
       // New session — create per-key client, server, and transport
       client = new AndruClient(req.auth.apiKey, apiUrl);
+      if (req.auth.bearer) client.setBearer(req.auth.bearer);
       const server = createServer(client, { transport: 'http' });
 
       transport = new StreamableHTTPServerTransport({
