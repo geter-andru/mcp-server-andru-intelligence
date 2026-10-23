@@ -304,7 +304,7 @@ export const tools = [
 
   {
     name: 'get_pre_brief',
-    description: 'Writes your pre-call prep so you don\'t walk in cold — talk track, discovery questions tuned to this buyer, the concerns this buyer is likely to raise and what they need to hear, and the one thing you need to get done in this meeting. Just say who you\'re meeting with — Andru checks your calendar automatically.',
+    description: "Writes your pre-call prep so you don't walk in cold — talk track, discovery questions tuned to this buyer, the concerns this buyer is likely to raise and what they need to hear, and the one thing you need to get done in this meeting. Provide a company name and Andru checks your calendar automatically.",
     annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
@@ -530,7 +530,7 @@ export const tools = [
 
   {
     name: 'get_revenue_memory',
-    description: 'Query this founder\'s accumulated stakeholder understanding — metrics, deal patterns, account history, decisions, and behavioral insights Andru has learned over time. Filter by memory type (episodic facts, semantic patterns, procedural habits) or business domain.',
+    description: "Query this founder's accumulated revenue memory: metrics, deal patterns, account history, decisions and habits Andru has learned over time. Filter by category, key pattern or memory type. Free.",
     annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
@@ -555,7 +555,7 @@ export const tools = [
 
   {
     name: 'log_revenue_insight',
-    description: 'Save a revenue insight, decision, metric, or pattern into Andru\'s memory so it compounds over time. Use after any deal decision, ICP refinement, metric update, or strategic pivot. The system automatically versions previous values.',
+    description: "Save a revenue insight, decision, metric or pattern to Andru's memory so it compounds over time. Use after a deal decision, ICP refinement, metric update or strategic pivot. Saving an existing key keeps the previous value in its history. Free.",
     annotations: WRITE_OP,
     inputSchema: {
       type: 'object',
@@ -594,7 +594,7 @@ export const tools = [
 
   {
     name: 'get_founder_context',
-    description: 'Get a full context dump of everything Andru knows about this founder — organized by memory type (What I Know, Patterns I\'ve Noticed, How You Operate). Used to prime any revenue conversation with accumulated intelligence.',
+    description: "Everything Andru knows about this founder in one read: profile, product, and memory grouped as What I Know, Patterns I've Noticed and How You Operate. Use it to prime any revenue conversation. Free.",
     annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
@@ -604,7 +604,7 @@ export const tools = [
 
   {
     name: 'get_memory_history',
-    description: 'Get the version history of a specific memory — see how a metric, deal stage, or priority has evolved over time. Answers questions like "What was my MRR 3 months ago?" or "When did the Acme deal move to negotiation?"',
+    description: 'The version history of one memory: how a metric, deal stage or priority changed over time. Answers "What was my MRR 3 months ago?" or "When did the Acme deal move to negotiation?". Free.',
     annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
