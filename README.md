@@ -98,7 +98,7 @@ Already have a key? Add `--env ANDRU_API_KEY=<your key>`.
 | Tool | What It Does | Latency |
 |------|-------------|---------|
 | `discover_prospects` | Finds real companies likely to buy your product — searches the web live and links the page behind every piece of evidence | up to ~2 min |
-| `get_pre_brief` | Pre-call prep so you don't walk in cold — talk track, discovery questions, the concerns this buyer is likely to raise and what they need to hear, and the one thing to get done | 10-20s |
+| `get_pre_brief` | What the meeting is for and what each person in the room likely thinks going in, built from your buying committee and labelled as assumptions to correct | 10-20s |
 
 ### Founder Tools
 
