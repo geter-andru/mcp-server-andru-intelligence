@@ -98,30 +98,6 @@ export function createCachedClient(client) {
     async listResources() {
       return client.listResources();
     },
-
-    /**
-     * Pre-warm the cache with frequently-used data.
-     * Called after initial WebSocket sync.
-     */
-    async warmCache() {
-      const essentialResources = [
-        'andru://icp/profile',
-        'andru://pipeline/summary',
-        'andru://soul/voice',
-      ];
-
-      const results = [];
-      for (const uri of essentialResources) {
-        try {
-          const result = await client.readResource(uri);
-          set(`resource:${uri}`, result, { category: 'resource' });
-          results.push({ uri, status: 'cached' });
-        } catch {
-          results.push({ uri, status: 'failed' });
-        }
-      }
-      return results;
-    },
   };
 }
 

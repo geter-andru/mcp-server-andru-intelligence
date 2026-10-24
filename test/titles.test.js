@@ -11,7 +11,7 @@ import { AndruClient } from '../src/client.js';
 
 test('every listed tool has its approved title, and every title belongs to a listed tool', () => {
   const tools = listedTools();
-  assert.equal(tools.length, 36); // no top-up tool since 2026-10-23
+  assert.equal(tools.length, 34); // no top-up tool since 2026-10-23; wellness and capability profile retired 2026-10-24
   for (const t of tools) assert.equal(t.title, TOOL_TITLES[t.name], `${t.name} has its title`);
   assert.deepEqual(Object.keys(TOOL_TITLES).sort(), tools.map((t) => t.name).sort());
 });

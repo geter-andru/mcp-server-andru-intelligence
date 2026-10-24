@@ -164,7 +164,7 @@ export class AndruClient {
 
   /**
    * Read an MCP resource by URI.
-   * @param {string} uri - Resource URI (e.g., "andru://icp/profile")
+   * @param {string} uri - Resource URI (e.g., "andru://accounts")
    * @returns {Promise<{ contents: Array<{ uri: string, mimeType: string, text: string }> }>}
    */
   async readResource(uri) {

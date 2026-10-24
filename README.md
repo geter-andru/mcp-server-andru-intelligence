@@ -92,7 +92,6 @@ Already have a key? Add `--env ANDRU_API_KEY=<your key>`.
 |------|-------------|---------|
 | `get_account_plan` | Builds the account plan in your Andru account and returns its link with a short summary ($12; a plan from the last 30 days is free). Returns a job_id; `get_asset` collects it | 1–3 min |
 | `get_icp_profile` | Returns everything Andru knows about your ideal customer — all 5 intelligence layers and the patterns that predict churn | <100ms |
-| `get_capability_profile` | Machine-readable snapshot of what your product does and who it's for — designed for buyer-side evaluation | <50ms |
 
 ### Prospecting & Meetings
 
@@ -107,7 +106,6 @@ Already have a key? Add `--env ANDRU_API_KEY=<your key>`.
 |------|-------------|---------|
 | `get_sales_blueprint` | First sales hire blueprint — JD, comp model, interview questions, and 90-day ramp plan for the stage you're at | 10-20s |
 | `get_thesis_match` | Up to 3 VC firms investing now in companies like yours, each with a recent deal or stated focus and a link to the page it came from; the full analysis is the Pure Signal Investor Resonance asset | ~30s |
-| `get_founder_wellness` | Burnout risk from your work days, late nights and meeting load, with recovery actions — "not scored yet" until Andru has your activity or calendar data | <200ms |
 | `simulate_buyer_persona` | Prepare for a meeting with the people who'll be in the room: a free brief of what each person likely thinks going in (10 a day), then a Deal Prep session ($5, 25 turns) where Andru plays them, one or several at once | 5-15s |
 
 
@@ -196,8 +194,6 @@ Run a full ICP pipeline at [platform.andru-ai.com](https://platform.andru-ai.com
 
 | URI | Description |
 |-----|-------------|
-| `andru://icp/profile` | The complete profile of the companies you should actually be selling to — 5 intelligence layers, 7 critical questions, and churn prediction patterns |
-| `andru://pipeline/runs` | All your pipeline runs and what each one produced — ICP layers, lead gen strategy, account plans, and deck output |
 | `andru://accounts` | Your tracked accounts — tier, pipeline value, stakeholder count, and account plan status |
 
 ## How It Works

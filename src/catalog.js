@@ -221,20 +221,6 @@ export const tools = [
   },
 
   {
-    name: 'get_capability_profile',
-    description: 'Returns a machine-readable snapshot of what your product actually does and who it\'s for — capabilities, verified outcomes, trust signals, pricing model, and integrations. Designed for buyer-side agent evaluation.',
-    annotations: READ_ONLY,
-    inputSchema: {
-      type: 'object',
-      properties: {
-        includeOutcomes: { type: 'boolean', description: 'Include verified outcomes (default: true)' },
-        includeTrustSignals: { type: 'boolean', description: 'Include trust signals (default: true)' },
-        forceRefresh: { type: 'boolean', description: 'Force regeneration even if cached (default: false)' },
-      },
-    },
-  },
-
-  {
     name: 'get_evaluation_criteria',
     description: 'Scores how well you match what this buyer needs — across pain coverage, outcome clarity, capability fit, and 3 more dimensions. Returns 0-100 per dimension plus overall alignment score. Pass the buyer\'s `buyerPainPoints` and `requiredCapabilities`; pain coverage and capability fit are scored against them. Use `get_icp_fit_score` to check whether a company is worth pursuing at all, and this tool once you know what the buyer needs.',
     annotations: READ_ONLY,
@@ -428,22 +414,6 @@ export const tools = [
         },
       },
       required: ['productDescription', 'stage'],
-    },
-  },
-
-  {
-    name: 'get_founder_wellness',
-    description: 'Checks for early signs of burnout from your work days, late nights and meeting load, then gives you a risk score and specific recovery actions. Until Andru has your activity or calendar data, it says the risk is not scored yet.',
-    annotations: READ_ONLY,
-    inputSchema: {
-      type: 'object',
-      properties: {
-        mode: {
-          type: 'string',
-          enum: ['assessment', 'dashboard'],
-          description: 'assessment = burnout risk score + recommendations. dashboard = full wellness data. Default: assessment.',
-        },
-      },
     },
   },
 
@@ -769,21 +739,9 @@ export const tools = [
   },
 ];
 
-// ── 3 Resources ─────────────────────────────────────────────────────────────
+// ── 1 Resource ─────────────────────────────────────────────────────────────
 
 export const resources = [
-  {
-    uri: 'andru://icp/profile',
-    name: 'ICP Profile',
-    description: 'The complete profile of the companies you should actually be selling to — 5 intelligence layers, 7 critical buyer questions, and the patterns that predict churn.',
-    mimeType: 'application/json',
-  },
-  {
-    uri: 'andru://pipeline/runs',
-    name: 'Pipeline Runs',
-    description: 'All your pipeline runs and what each one produced — ICP layers, lead gen strategy, account plans, and deck output.',
-    mimeType: 'application/json',
-  },
   {
     uri: 'andru://accounts',
     name: 'Account Plans',
@@ -793,7 +751,7 @@ export const resources = [
 ];
 
 // ── Account tools (AGENT_PLATFORM_PLAN_2026-10-22) ──────────────────────────
-// Outside the 30 intelligence tools: free, answered by the API before tool routing. The first four
+// Outside the 28 intelligence tools: free, answered by the API before tool routing. The first four
 // need no API key, so an agent can sign its person up from inside the conversation. Wording:
 // approved 2026-10-18 (signup_verify, get_topup_link) and in copy batch 1 C4/C8 (Geter 2026-10-22).
 
@@ -901,7 +859,7 @@ const BILLING_PARAMS = {
   maxAmountCents: { type: 'integer', minimum: 0, description: 'Optional: the most this call may cost, in cents. If the price is higher, nothing runs and nothing is charged.' },
 };
 
-/** Every tool a client sees: the account tools, then the 30 intelligence tools with billing terms on paid ones. */
+/** Every tool a client sees: the account tools, then the 28 intelligence tools with billing terms on paid ones. */
 /**
  * Tool titles (copy batch 12 T1–T37, approved by Geter 2026-10-23): what Claude shows a person when it
  * asks to run a tool. Short and plain; no prices or promotion.
@@ -923,7 +881,6 @@ export const TOOL_TITLES = {
   get_messaging_framework: "Messaging for each buyer",
   get_competitive_positioning: "Compare with a competitor",
   get_evaluation_criteria: "Score fit to a buyer's needs",
-  get_capability_profile: "Your product's capability profile",
   get_account_plan: "Build an account plan",
   discover_prospects: "Find likely buyers",
   get_pre_brief: "Prepare for a meeting",
@@ -931,7 +888,6 @@ export const TOOL_TITLES = {
   get_sales_blueprint: "Plan your first sales hire",
   get_thesis_match: "Find investors who fit",
   get_market_signals: "See what's moving in your market",
-  get_founder_wellness: "Check burnout risk",
   get_founder_context: "Read what Andru knows about you",
   get_revenue_memory: "Search revenue memory",
   get_memory_history: "Show how a memory changed",

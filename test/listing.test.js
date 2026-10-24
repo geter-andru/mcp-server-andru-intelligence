@@ -11,17 +11,24 @@ const pkg = JSON.parse(read('package.json'));
 const server = JSON.parse(read('server.json'));
 const readme = read('README.md');
 
-test('30 tools, and the CRM tools are held back until CRM sync is ready', () => {
-  assert.equal(tools.length, 30);
+// 2026-10-24 (Geter): get_founder_wellness and get_capability_profile retired, 30 → 28.
+test('28 tools, and the CRM tools are held back until CRM sync is ready', () => {
+  assert.equal(tools.length, 28);
+  for (const retired of ['get_founder_wellness', 'get_capability_profile']) assert.ok(!tools.some((t) => t.name === retired), retired);
   const names = tools.map((t) => t.name);
   for (const held of ['get_syndication_status', 'trigger_syndication', 'sync_crm_deals']) assert.ok(!names.includes(held), held);
   assert.equal(new Set(names).size, names.length, 'tool names are unique');
 });
 
-test('the README states the real counts and no retired claims', () => {
-  assert.match(readme, new RegExp(`${tools.length} tools`));
+// The README's "30 tools" line is public copy: its new wording awaits Geter (2026-10-24). Until it is
+// approved this check is a todo, and it must pass again before the next npm publish.
+test('the README states the real tool count', { todo: 'README count wording awaits Geter (2026-10-24)' }, () => {
+  assert.match(readme, new RegExp(`\\b${tools.length} tools`));
+});
+
+test('the README states the real asset count and no retired claims', () => {
   assert.match(readme, /catalog of 139 assets/);
-  assert.doesNotMatch(readme, /\b(28|19) (tools|of these tools)\b|138|20 years|Operational Empathy|syndication|Chrome Web Store/i);
+  assert.doesNotMatch(readme, /\b19 (tools|of these tools)\b|138|20 years|Operational Empathy|syndication|Chrome Web Store/i);
   for (const t of tools) assert.ok(readme.includes(`\`${t.name}\``), `README documents ${t.name}`);
 });
 
@@ -67,11 +74,7 @@ test('tool claims match what the backend returns', () => {
   assert.match(d('get_competitive_positioning'), /competitorFeatures/);
   assert.doesNotMatch(d('get_evaluation_criteria'), /actually/i);
   assert.doesNotMatch(readme, /what you have in common|app\.andru-ai\.com/);
-  // 2026-10-16: prospects come from a web search for the user's product, not past winners;
-  // wellness says "not scored yet" without data instead of reporting low risk.
+  // 2026-10-16: prospects come from a web search for the user's product, not past winners.
   assert.doesNotMatch(d('discover_prospects'), /winners|15-30 seconds/i);
   assert.match(d('discover_prospects'), /links the page behind every piece of evidence/);
-  assert.doesNotMatch(d('get_founder_wellness'), /before you notice/i);
-  assert.match(d('get_founder_wellness'), /not scored yet/);
-  assert.equal(tools.find((t) => t.name === 'get_founder_wellness').inputSchema.properties.userId, undefined);
 });
