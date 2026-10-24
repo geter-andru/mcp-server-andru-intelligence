@@ -1,3 +1,4 @@
+import { TOOL_DESCRIPTIONS } from './toolDescriptions.js';
 /**
  * Static Tool & Resource Catalog
  *
@@ -662,7 +663,7 @@ export const tools = [
     inputSchema: {
       type: 'object',
       properties: {
-        portfolioId: { type: 'string', description: 'The portfolio to roll up. Must belong to the caller.' },
+        portfolioId: { type: 'string', description: 'The portfolio to roll up. whoami lists yours with their ids.' }, // copy batch 16 P2
       },
       required: ['portfolioId'],
     },
@@ -945,15 +946,17 @@ export const TOOL_TITLES = {
 };
 
 /** Server instructions (copy batch 12 I, approved by Geter 2026-10-23): when to use Andru, how to start, when not to. */
-export const SERVER_INSTRUCTIONS = 'Andru helps B2B founders and PE/VC operating partners understand their buyers and prepare to sell. Use it when the person asks who to sell to, whether a company or deal is worth pursuing, who is on a buying committee and what each person needs, how to prepare for a specific sales meeting, how to make a first sales hire, which investors fit their company, or how their portfolio companies\' go-to-market is going.\n\nStart with set_product_context if Andru doesn\'t yet know what the person sells. Lookups that read the person\'s own data are free. Some tools cost money: quote returns the exact price first, and a paid call is charged only when it delivers. Tools that take minutes return a job_id; collect the result with get_asset.\n\nDon\'t use Andru for general web research, for companies unrelated to the person\'s own sales or portfolio, or to send messages to anyone.';
+export const SERVER_INSTRUCTIONS = 'Andru helps B2B founders and PE/VC operating partners understand their buyers and prepare to sell. Use it when the person asks who to sell to, whether a company or deal is worth pursuing, who is on a buying committee and what each person needs, how to prepare for a specific sales meeting, how to make a first sales hire, which investors fit their company, or how their portfolio companies\' go-to-market is going.\n\nIf a tool says it needs to know what you sell, call set_product_context, then try that tool again. Lookups that read the person\'s own data are free. Some tools cost money: quote returns the exact price first, and a paid call is charged only when it delivers. Tools that take minutes return a job_id; collect the result with get_asset.\n\nDon\'t use Andru for general web research, for companies unrelated to the person\'s own sales or portfolio, or to send messages to anyone.';
 
 export function listedTools() {
-  const priced = tools.map((t) => (PAID_TOOLS.has(t.name)
+  // Copy batches 15 and 16: the approved "Use this when…" descriptions (toolDescriptions.js).
+  const described = (t) => (TOOL_DESCRIPTIONS[t.name] ? { ...t, description: TOOL_DESCRIPTIONS[t.name] } : t);
+  const priced = tools.map(described).map((t) => (PAID_TOOLS.has(t.name)
     ? {
       ...t,
       description: `${t.description} ${PAID_TOOL_LINE}`,
       inputSchema: { ...t.inputSchema, properties: { ...(t.inputSchema?.properties || {}), ...BILLING_PARAMS } },
     }
     : t));
-  return [...accountTools, ...priced].map((t) => ({ ...t, title: TOOL_TITLES[t.name] }));
+  return [...accountTools.map(described), ...priced].map((t) => ({ ...t, title: TOOL_TITLES[t.name] }));
 }
