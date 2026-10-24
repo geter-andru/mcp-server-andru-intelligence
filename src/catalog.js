@@ -135,11 +135,6 @@ export const tools = [
         },
         channel: { type: 'string', description: 'Channel (email, linkedin, phone, etc.)' },
         personaType: { type: 'string', description: 'Target buyer title' },
-        mbtiCategory: {
-          type: 'string',
-          enum: ['Analytical', 'Driver', 'Expressive', 'Amiable'],
-          description: 'Communication style to adapt the message to',
-        },
         ...COLD_START_PARAMS,
       },
     },
@@ -250,15 +245,7 @@ export const tools = [
     annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
-      properties: {
-        layers: {
-          type: 'array',
-          items: { type: 'number', enum: [1, 2, 3, 4, 5] },
-          description: 'Specific layers to include (1-5). Omit for all layers.',
-        },
-        includeSevenAnswers: { type: 'boolean', description: 'Include seven critical buyer answers (default: true)' },
-        includeAntiPatterns: { type: 'boolean', description: 'Include anti-patterns and churn predictors (default: true)' },
-      },
+      properties: {},
     },
   },
 

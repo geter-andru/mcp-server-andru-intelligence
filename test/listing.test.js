@@ -52,7 +52,7 @@ test('the README says free calls are shared across MCP and A2A, names no persona
 });
 
 test('tool copy uses buyer-side language (approved by Geter, 2026-10-09)', () => {
-  // Descriptions only; the mbtiCategory field name stays so existing callers keep working.
+  // Descriptions only. mbtiCategory is no longer listed (item 22, 2026-10-24); the backend still accepts it.
   const descriptions = [];
   const walk = (v) => {
     if (Array.isArray(v)) v.forEach(walk);
