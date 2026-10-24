@@ -287,26 +287,41 @@ export const tools = [
     inputSchema: {
       type: 'object',
       properties: {
+        meetingId: {
+          type: 'string',
+          description: 'The meeting from the person\'s calendar (an id from a previous reply). Leave it out and describe the meeting in `meeting` instead.',
+        },
+        meeting: {
+          type: 'string',
+          description: 'The meeting in a sentence if it isn\'t on their calendar, e.g. \'pricing call with the company\'s VP of Finance and their IT lead\'.',
+        },
         companyName: {
           type: 'string',
-          description: 'Company you\'re meeting with. Andru finds the matching calendar event and pulls attendee context automatically.',
+          description: 'Company you\'re meeting. Andru looks for the matching meeting on the person\'s calendar.',
         },
-        contactName: {
+        situation: {
           type: 'string',
-          description: 'Name of the person you\'re meeting (optional — helps match the right event and personalize the brief).',
+          enum: ['discovery', 'deal', 'customer_review'],
+          description: 'What kind of meeting: a discovery call, where they speak first; a deal meeting (demo, pricing, pilot, procurement); or a customer review.',
         },
-        eventId: {
-          type: 'string',
-          description: 'Calendar event ID (from Andru calendar integration). If provided, skips calendar search.',
+        stage: {
+          type: 'integer',
+          minimum: 0,
+          maximum: 7,
+          description: 'Where the deal is, by the last thing the buyer did (required for a deal meeting).',
         },
-        dealId: {
-          type: 'string',
-          description: 'Associated deal ID for additional deal intelligence',
-        },
-        briefType: {
-          type: 'string',
-          enum: ['general', 'discovery', 'demo', 'negotiation', 'renewal', 'expansion'],
-          description: 'Type of meeting brief to generate (default: general)',
+        room: {
+          type: 'array',
+          maxItems: 8,
+          items: {
+            type: 'object',
+            properties: {
+              title: { type: 'string' },
+              buyerKey: { type: 'string' },
+            },
+            required: ['title'],
+          },
+          description: 'Who will be there: up to 8 people, each with their title and, if you know it, which of the six buyers they are.',
         },
       },
     },
