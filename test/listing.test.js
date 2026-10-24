@@ -20,9 +20,9 @@ test('28 tools, and the CRM tools are held back until CRM sync is ready', () => 
   assert.equal(new Set(names).size, names.length, 'tool names are unique');
 });
 
-// The README's "30 tools" line is public copy: its new wording awaits Geter (2026-10-24). Until it is
-// approved this check is a todo, and it must pass again before the next npm publish.
-test('the README states the real tool count', { todo: 'README count wording awaits Geter (2026-10-24)' }, () => {
+// The README states the real tool count;
+// the count wording was approved 2026-10-24 (listings, 41).
+test('the README states the real tool count', () => {
   assert.match(readme, new RegExp(`\\b${tools.length} tools`));
 });
 
@@ -45,7 +45,7 @@ test('the server reports the package version', () => {
 });
 
 test('the README says free calls are shared across MCP and A2A, names no personas, and points at real commands', () => {
-  assert.match(readme, /5 free calls a day, shared across MCP and A2A, cover pre-meeting briefs and quick thesis checks/);
+  assert.match(readme, /5 free calls a day, shared across MCP and A2A, cover quick thesis checks/);
   assert.doesNotMatch(readme, /another 5|sk_live_your_key_here|sk_live_\.\.\./);
   assert.doesNotMatch(readme, /\$3 or less/);
   assert.doesNotMatch(readme, /named buyer personas|andru-intel usage/);

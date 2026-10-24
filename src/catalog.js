@@ -283,7 +283,7 @@ export const tools = [
   {
     name: 'get_pre_brief',
     description: "Writes your pre-call prep so you don't walk in cold — talk track, discovery questions tuned to this buyer, the concerns this buyer is likely to raise and what they need to hear, and the one thing you need to get done in this meeting. Provide a company name and Andru checks your calendar automatically.",
-    annotations: PAID_ASKS_FIRST,
+    annotations: WRITE_OP, // free, but it saves a brief (and may start building the six buyers)
     inputSchema: {
       type: 'object',
       properties: {
@@ -847,7 +847,8 @@ export const accountTools = [
 // The tools the backend lists with these terms: agentPricing.js priceFor(name).counts. generate_asset
 // is not one: its job charges the asset's catalog price, which its own description states.
 export const PAID_TOOLS = new Set([
-  'get_account_plan', 'get_pre_brief', 'simulate_buyer_persona', 'discover_prospects', 'get_thesis_match',
+  // get_pre_brief is free since 2026-10-24 (the Deal Prep brief, up to 10 a day).
+  'get_account_plan', 'simulate_buyer_persona', 'discover_prospects', 'get_thesis_match',
   'get_sales_blueprint', 'consult_agent', 'assess_company_readiness',
   'get_portfolio_readiness_rollup', 'generate_portfolio_brief',
 ]);

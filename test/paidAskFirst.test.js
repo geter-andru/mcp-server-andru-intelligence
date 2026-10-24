@@ -14,7 +14,7 @@ test('no paid tool is marked read-only, so Claude asks before each paid call', (
     assert.equal(t.annotations.readOnlyHint, false, `${name} asks first`);
     assert.equal(t.annotations.destructiveHint, false, `${name} deletes nothing`);
   }
-  assert.equal(PAID_TOOLS.size, 10);
+  assert.equal(PAID_TOOLS.size, 9); // get_pre_brief is free since 2026-10-24
 });
 
 test('free lookups stay read-only, so they still run without a prompt', () => {

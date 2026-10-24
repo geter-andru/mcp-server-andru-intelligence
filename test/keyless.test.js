@@ -51,8 +51,10 @@ test('no key: list everything, refuse paid work with how to sign up, sign up, th
     for (const n of ['preview_company', 'signup_start', 'signup_verify', 'signup_status', 'whoami', 'quote', 'get_pre_brief']) {
       assert.ok(names.includes(n), `${n} listed`);
     }
-    const brief = tools.find((t) => t.name === 'get_pre_brief');
+    // The pre-meeting brief is free since 2026-10-24; the thesis check is a paid example.
+    const brief = tools.find((t) => t.name === 'get_thesis_match');
     assert.ok(brief.description.endsWith(PAID_TOOL_LINE), 'paid tools carry the billing terms');
+    assert.ok(!tools.find((t) => t.name === 'get_pre_brief').description.endsWith(PAID_TOOL_LINE), 'the free brief carries no billing terms');
     assert.ok(brief.inputSchema.properties.idempotencyKey && brief.inputSchema.properties.quoteId);
     // Copy batch 6 J1: the agent's own price ceiling, as the backend lists it.
     assert.deepEqual(brief.inputSchema.properties.maxAmountCents, { type: 'integer', minimum: 0, description: 'Optional: the most this call may cost, in cents. If the price is higher, nothing runs and nothing is charged.' });
@@ -102,12 +104,12 @@ test('a keyed session works as before', async () => {
 // The billing terms go on exactly the tools the backend lists with them (agentPricing priceFor().counts,
 // checked against backend cdbd597 on 2026-10-23). generate_asset is billed by its job at the asset's
 // catalog price and carries no billing terms; 1.10.0's draft wrongly added them.
-test('the billing terms are on the same ten tools as the backend', async () => {
+test('the billing terms are on the same nine tools as the backend (the brief is free since 2026-10-24)', async () => {
   const { listedTools, PAID_TOOL_LINE: line } = await import('../src/catalog.js');
   const paid = listedTools().filter((t) => t.description.endsWith(line)).map((t) => t.name).sort();
   assert.deepEqual(paid, [
     'assess_company_readiness', 'consult_agent', 'discover_prospects', 'generate_portfolio_brief', 'get_account_plan',
-    'get_portfolio_readiness_rollup', 'get_pre_brief', 'get_sales_blueprint', 'get_thesis_match', 'simulate_buyer_persona',
+    'get_portfolio_readiness_rollup', 'get_sales_blueprint', 'get_thesis_match', 'simulate_buyer_persona',
   ]);
   const asset = listedTools().find((t) => t.name === 'generate_asset');
   assert.equal(asset.inputSchema.properties.idempotencyKey, undefined);
