@@ -147,11 +147,11 @@ export const tools = [
     inputSchema: {
       type: 'object',
       properties: {
-        competitorName: { type: 'string', description: 'Competitor company name' },
+        competitorName: { type: 'string', description: 'The alternative the buyer is weighing (a product or company).' },
         competitorFeatures: {
           type: 'array',
           items: { type: 'string' },
-          description: 'Known competitor features or capabilities',
+          description: 'What that alternative offers, as you know it.',
         },
         context: {
           type: 'string',
