@@ -745,7 +745,7 @@ export const resources = [
   {
     uri: 'andru://accounts',
     name: 'Account Plans',
-    description: 'Your tracked accounts — tier, pipeline value, stakeholder count, and account plan status.',
+    description: 'Your account plans: each target account\'s tier, pipeline value, number of opportunities and contacts, likely champion, and whether the plan is ready. Read this before asking get_account_plan for a company, to see what already exists.',
     mimeType: 'application/json',
   },
 ];
