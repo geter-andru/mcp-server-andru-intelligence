@@ -18,7 +18,7 @@
  *   npx andru-intel get_thesis_match --productDescription "AI sales platform" --stage "Series A"
  *   npx andru-intel simulate_buyer_persona --persona CFO --productDescription "DevOps automation"
  *   npx andru-intel get_sales_blueprint --companyStage "Series A" --arrTarget "$5M"
- *   npx andru-intel get_icp_fit_score --companyName "Acme Corp" --industry "SaaS"
+ *   npx andru-intel get_icp_fit_score --companyName "<company>" --industry "SaaS"
  *
  * Environment:
  *   ANDRU_API_KEY  (required) — Your Andru Platform API key

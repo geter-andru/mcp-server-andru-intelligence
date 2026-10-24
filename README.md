@@ -6,7 +6,7 @@ Andru is a revenue intelligence layer for complex B2B growth. Give your agent 30
 
 - **Pure Signal Market Resonance:** who needs your product most, and why now (Framework $12; your first ICP is free)
 - **Buying Committee Navigation:** the committee, its objectors and the order to engage them (Framework $12)
-- **Champion Enablement Kit:** what your champion needs to win the meetings you're not in (Framework $12)
+- **Champion Enablement Kit:** what your champion needs for the meetings you're not in (Framework $12)
 - **Technical Sales Translator:** technical features in the language buyers pay for (Framework $12)
 - **Executive Business Case Builder:** the case your champion takes to the people who sign (Decision $49)
 
@@ -82,8 +82,8 @@ Already have a key? Add `--env ANDRU_API_KEY=<your key>`.
 | Tool | What It Does | Latency |
 |------|-------------|---------|
 | `get_persona_profile` | Look up who you're actually talking to — what they care about at 7 AM, what they need before they say yes, and exactly how to open | <50ms |
-| `get_messaging_framework` | Words that fit each buyer, adapted to how each person prefers to communicate, so the analytical CTO and the results-driven VP Sales each get a version that fits them | <50ms |
-| `get_competitive_positioning` | How you compare with a specific competitor, from the buyer's point of view: pass their features to see where you overlap, where you're different and where you're the better fit; without them, the concerns this buyer is likely to raise | <100ms |
+| `get_messaging_framework` | Your story in one buyer's terms: what they respond to, the problem in their words, and the concerns they need answered, built from your ICP | <50ms |
+| `get_competitive_positioning` | When a buyer is weighing another option: where it fits them better, where yours does, and questions that help them decide for themselves | <100ms |
 | `get_evaluation_criteria` | Scores how well you match what a buyer needs — across pain coverage, outcome clarity, capability fit, and 3 more dimensions | <100ms |
 
 ### Account & Pipeline
@@ -91,7 +91,7 @@ Already have a key? Add `--env ANDRU_API_KEY=<your key>`.
 | Tool | What It Does | Latency |
 |------|-------------|---------|
 | `get_account_plan` | Builds the account plan in your Andru account and returns its link with a short summary ($12; a plan from the last 30 days is free). Returns a job_id; `get_asset` collects it | 1–3 min |
-| `get_icp_profile` | Returns everything Andru knows about your ideal customer — all 5 intelligence layers and the patterns that predict churn | <100ms |
+| `get_icp_profile` | Your ICP, built from what you sell: the buyers who decide, what each is measured on and needs answered, the signals a company is ready to change, and who isn't a fit | <100ms |
 
 ### Prospecting & Meetings
 
@@ -171,7 +171,7 @@ npx andru-intel blueprint --stage "Series A" --arr "$2M"
 npx andru-intel thesis "AI sales platform" --stage "Seed"
 npx andru-intel roleplay CTO
 npx andru-intel wellness
-npx andru-intel run get_competitive_positioning --companyName "Acme"
+npx andru-intel run get_competitive_positioning --competitorName "<the alternative>"
 ```
 
 ## Cold-Start Support
