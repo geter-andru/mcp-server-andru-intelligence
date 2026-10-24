@@ -26,6 +26,8 @@ Or run directly:
 npx mcp-server-andru-intelligence
 ```
 
+Or connect to the hosted server at https://mcp.andru-ai.com/mcp.
+
 ## Configuration
 
 ### Environment Variables

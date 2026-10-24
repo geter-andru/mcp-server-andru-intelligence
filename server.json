@@ -36,6 +36,18 @@
   "remotes": [
     {
       "type": "streamable-http",
+      "url": "https://mcp.andru-ai.com/mcp",
+      "headers": [
+        {
+          "name": "X-API-Key",
+          "description": "Your Andru API key. Optional: without one, your agent can sign you up from the conversation. Or get one at https://platform.andru-ai.com/settings/developer",
+          "isRequired": false,
+          "isSecret": true
+        }
+      ]
+    },
+    {
+      "type": "streamable-http",
       "url": "https://mcp-server-andru-intelligence.onrender.com/mcp",
       "headers": [
         {

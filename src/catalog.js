@@ -121,7 +121,7 @@ export const tools = [
 
   {
     name: 'get_messaging_framework',
-    description: 'Words that fit each buyer, by buyer type, channel and funnel stage, adapted to how each person prefers to communicate, so the analytical CTO and the results-driven VP Sales each get a version that fits them. Returns value propositions, answers to the concerns each buyer raises, voice variants and outbound templates. Set `mbtiCategory` for one communication style, or leave it out to get all four. Use `get_persona_profile` to learn who the buyer is, and `get_pre_brief` to prepare for one specific meeting. Free.',
+    description: 'Words that fit each buyer, by buyer type, channel and funnel stage, adapted to how each person prefers to communicate, so the analytical CTO and the results-driven VP Sales each get a version that fits them. Returns value propositions, answers to the concerns each buyer raises, voice variants and outbound templates. Set `mbtiCategory` for one communication style, or leave it out to get all four. Use `get_persona_profile` to learn who the buyer is, and `get_pre_brief` to prepare for one specific meeting.',
     annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
@@ -146,7 +146,7 @@ export const tools = [
 
   {
     name: 'get_competitive_positioning',
-    description: 'How you compare with a specific competitor, from the buyer\'s point of view. Pass the competitor\'s features in `competitorFeatures` to get where you overlap, where you\'re different, and where you\'re the better fit; without them you get the concerns this buyer is likely to raise. Free. For a written comparison to share, generate the Competitive Positioning Framework with `generate_asset`.',
+    description: 'How you compare with a specific competitor, from the buyer\'s point of view. Pass the competitor\'s features in `competitorFeatures` to get where you overlap, where you\'re different, and where you\'re the better fit; without them you get the concerns this buyer is likely to raise.',
     annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
@@ -195,7 +195,7 @@ export const tools = [
 
   {
     name: 'get_account_plan',
-    description: 'Builds an account plan for a target company in your Andru account: the buying committee, the opportunities that fit what you sell, the champion to work with, talk tracks and next steps, from sourced research. Returns the link to the plan with a short summary. $12, charged only if the plan is saved; a plan for the same company from the last 30 days comes back free. Takes 1 to 3 minutes: returns a job_id; call get_asset with it.',
+    description: 'Builds an account plan for a target company in your Andru account: the buying committee, the opportunities that fit what you sell, the champion to work with, talk tracks and next steps, from sourced research. Returns the link to the plan with a short summary. A plan for the same company from the last 30 days comes back at once. Takes 1 to 3 minutes: returns a job_id; call get_asset with it.',
     annotations: WRITE_OP,
     inputSchema: {
       type: 'object',
@@ -235,7 +235,7 @@ export const tools = [
 
   {
     name: 'get_evaluation_criteria',
-    description: 'Scores how well you match what this buyer needs — across pain coverage, outcome clarity, capability fit, and 3 more dimensions. Returns 0-100 per dimension plus overall alignment score. Pass the buyer\'s `buyerPainPoints` and `requiredCapabilities`; pain coverage and capability fit are scored against them. Use `get_icp_fit_score` to check whether a company is worth pursuing at all, and this tool once you know what the buyer needs. Free.',
+    description: 'Scores how well you match what this buyer needs — across pain coverage, outcome clarity, capability fit, and 3 more dimensions. Returns 0-100 per dimension plus overall alignment score. Pass the buyer\'s `buyerPainPoints` and `requiredCapabilities`; pain coverage and capability fit are scored against them. Use `get_icp_fit_score` to check whether a company is worth pursuing at all, and this tool once you know what the buyer needs.',
     annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
@@ -277,7 +277,7 @@ export const tools = [
 
   {
     name: 'discover_prospects',
-    description: 'Finds real companies likely to buy your product. Searches the web for companies showing they have the problem you solve right now (hiring, launches, funding, expansion) and links the page behind every piece of evidence. Uses the product saved on your account. Takes up to a couple of minutes; nothing is charged if no company has sourced evidence.',
+    description: 'Finds real companies likely to buy your product. Searches the web for companies showing they have the problem you solve right now (hiring, launches, funding, expansion) and links the page behind every piece of evidence. Uses the product saved on your account. Takes up to a couple of minutes. Only companies with sourced evidence are returned.',
     annotations: PAID_ASKS_FIRST,
     inputSchema: {
       type: 'object',
@@ -403,7 +403,7 @@ export const tools = [
 
   {
     name: 'get_thesis_match',
-    description: 'Finds up to 3 VC firms investing now in companies like yours, each with a recent deal or stated focus and a link to the page it came from (a live web search, about 30 seconds). For the full investor analysis, generate the Pure Signal Investor Resonance asset. Nothing is charged if no firm has sourced evidence.',
+    description: 'Finds up to 3 VC firms investing now in companies like yours, each with a recent deal or stated focus and a link to the page it came from (a live web search, about 30 seconds). Only firms with sourced evidence are returned.',
     annotations: PAID_ASKS_FIRST,
     inputSchema: {
       type: 'object',
@@ -448,7 +448,7 @@ export const tools = [
 
   {
     name: 'simulate_buyer_persona',
-    description: 'Prepare for a meeting with the people who\'ll be in the room. Andru writes a free brief of what each person likely thinks going in, then plays them, one or several at once, asking what your real buyers ask. The brief is free (10 a day). A Deal Prep session is $5 for 25 turns, charged at your first reply. Say "End role-play. How did I do?" for a scored debrief and what to take into the meeting.',
+    description: 'Prepare for a meeting with the people who\'ll be in the room. Andru writes a brief of what each person likely thinks going in (10 briefs a day), then plays them, one or several at once, in a Deal Prep session of 25 turns, asking what your real buyers ask. Say "End role-play. How did I do?" for a scored debrief and what to take into the meeting.',
     annotations: WRITE_OP,
     inputSchema: {
       type: 'object',
@@ -534,7 +534,7 @@ export const tools = [
 
   {
     name: 'get_revenue_memory',
-    description: "Query this founder's accumulated revenue memory: metrics, deal patterns, account history, decisions and habits Andru has learned over time. Filter by category, key pattern or memory type. Free.",
+    description: "Query this founder's accumulated revenue memory: metrics, deal patterns, account history, decisions and habits Andru has learned over time. Filter by category, key pattern or memory type.",
     annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
@@ -559,7 +559,7 @@ export const tools = [
 
   {
     name: 'log_revenue_insight',
-    description: "Save a revenue insight, decision, metric or pattern to Andru's memory so it compounds over time. Use after a deal decision, ICP refinement, metric update or strategic pivot. Saving an existing key keeps the previous value in its history. Free.",
+    description: "Save a revenue insight, decision, metric or pattern to Andru's memory so it compounds over time. Use after a deal decision, ICP refinement, metric update or strategic pivot. Saving an existing key keeps the previous value in its history.",
     annotations: WRITE_OP,
     inputSchema: {
       type: 'object',
@@ -598,7 +598,7 @@ export const tools = [
 
   {
     name: 'get_founder_context',
-    description: "Everything Andru knows about this founder in one read: profile, product, and memory grouped as What I Know, Patterns I've Noticed and How You Operate. Use it to prime any revenue conversation. Free.",
+    description: "Everything Andru knows about this founder in one read: profile, product, and memory grouped as What I Know, Patterns I've Noticed and How You Operate. Use it to prime any revenue conversation.",
     annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
@@ -608,7 +608,7 @@ export const tools = [
 
   {
     name: 'get_memory_history',
-    description: 'The version history of one memory: how a metric, deal stage or priority changed over time. Answers "What was my MRR 3 months ago?" or "When did the Acme deal move to negotiation?". Free.',
+    description: 'The version history of one memory: how a metric, deal stage or priority changed over time. Answers "What was my MRR 3 months ago?" or "When did the Acme deal move to negotiation?".',
     annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
@@ -669,7 +669,7 @@ export const tools = [
   },
   {
     name: 'generate_portfolio_brief',
-    description: "A brief on your portfolio's go-to-market activity for a period: what Andru's work across your portfolio companies found (targets, opportunities, overlaps), each company's public go-to-market news, and the market signals around their buyers, with sources. Not a financial or performance report. Send the companies (name and website, up to 15) or a portfolioId; with neither, Andru suggests the companies on your firm's website for you to confirm, free. $49, charged only if the brief is saved. Takes a few minutes: returns a job_id; call get_asset with it.",
+    description: "A brief on your portfolio's go-to-market activity for a period: what Andru's work across your portfolio companies found (targets, opportunities, overlaps), each company's public go-to-market news, and the market signals around their buyers, with sources. Not a financial or performance report. Send the companies (name and website, up to 15) or a portfolioId; with neither, Andru suggests the companies on your firm's website for you to confirm. Takes a few minutes: returns a job_id; call get_asset with it.",
     annotations: WRITE_OP,
     inputSchema: {
       type: 'object',
@@ -693,7 +693,7 @@ export const tools = [
   },
   {
     name: 'consult_agent',
-    description: "Consult one of Andru's domain expert agents in natural language and get a domain-scoped answer (it may call free lookup tools; paid tools must be called directly). $3 per turn. One consultation turn per call; pass prior turns as `history` to continue. Use `module` to pick the expert (e.g. 'market-clarity', 'deal-acceleration', 'due-diligence', 'portfolio-ops').",
+    description: "Consult one of Andru's domain expert agents in natural language and get a domain-scoped answer (it may call lookup tools; tools that cost money must be called directly). One consultation turn per call; pass prior turns as `history` to continue. Use `module` to pick the expert (e.g. 'market-clarity', 'deal-acceleration', 'due-diligence', 'portfolio-ops').",
     annotations: PAID_ASKS_FIRST,
     inputSchema: {
       type: 'object',
@@ -708,7 +708,7 @@ export const tools = [
   // ── Asset catalog (1.6.0): find, generate and collect any of Andru's 139 assets ──
   {
     name: 'list_assets',
-    description: "Search Andru's catalog of sales, hiring, fundraising and buying assets — 139 deliverables from email drafts to board decks. Each entry says what it is, the business outcome, its price (Tool $3, Framework $12, Decision $49), whether it needs your own data, and whether it can be generated today. Free. Then call generate_asset with the asset's name.",
+    description: "Search Andru's catalog of sales, hiring, fundraising and buying assets — 139 deliverables from email drafts to board decks. Each entry says what it is, the business outcome, its price, whether it needs your own data, and whether it can be generated today. Then call generate_asset with the asset's name.",
     annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
@@ -722,7 +722,7 @@ export const tools = [
   },
   {
     name: 'generate_asset',
-    description: "Generate an asset from Andru's catalog (find it with list_assets) — e.g. 'Board Presentation', 'Buying Committee Navigation'. Charged at its catalog price (Tool $3, Framework $12, Decision $49); your first ICP is free. Built from everything Andru knows about your company and saved to your Andru library. Takes up to a few minutes: returns a job_id — call get_asset with it to receive the asset as markdown.",
+    description: "Generate an asset from Andru's catalog (find it with list_assets) — e.g. 'Board Presentation', 'Buying Committee Navigation'. Built from everything Andru knows about your company and saved to your Andru library. Takes up to a few minutes: returns a job_id — call get_asset with it to receive the asset as markdown.",
     annotations: WRITE_OP,
     inputSchema: {
       type: 'object',
@@ -736,7 +736,7 @@ export const tools = [
   },
   {
     name: 'get_asset',
-    description: 'Collect an asset started with generate_asset, a brief started with generate_portfolio_brief, or an account plan started with get_account_plan. While it is building you get its progress; when it is done you get the asset or brief in full as markdown, or the account plan\'s link and summary (all saved to your Andru account). Free.',
+    description: 'Collect an asset started with generate_asset, a brief started with generate_portfolio_brief, or an account plan started with get_account_plan. While it is building you get its progress; when it is done you get the asset or brief in full as markdown, or the account plan\'s link and summary (all saved to your Andru account).',
     annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
@@ -754,7 +754,7 @@ export const tools = [
   // ── Product context (2026-10-07): say what you sell once ──────────────────
   {
     name: 'set_product_context',
-    description: 'Tell Andru what you sell, once. Give your company website (Andru reads it and remembers your product) or a short product description. Every later call uses it, so tools stop asking for product context. Call with no arguments to see what Andru has saved. Free.',
+    description: 'Tell Andru what you sell, once. Give your company website (Andru reads it and remembers your product) or a short product description. Every later call uses it, so tools stop asking for product context. Call with no arguments to see what Andru has saved.',
     annotations: { readOnlyHint: false, idempotentHint: true, openWorldHint: true },
     inputSchema: {
       type: 'object',
@@ -808,7 +808,7 @@ const FREE_TOOL = { readOnlyHint: false, destructiveHint: false, openWorldHint: 
 export const accountTools = [
   {
     name: 'preview_company',
-    description: "See what Andru reads about a company from its website before signing up: who it sells to, the buyers who decide, and what the site says versus what those buyers need to hear. Send the company's website. Takes about a minute: you get a preview_id; call again with it to collect the read. Free, no account needed. If the person signs up with signup_start and this preview_id, the read becomes their first ICP.",
+    description: "See what Andru reads about a company from its website before signing up: who it sells to, the buyers who decide, and what the site says versus what those buyers need to hear. Send the company's website. No account needed. Takes about a minute: you get a preview_id; call again with it to collect the read. If the person signs up with signup_start and this preview_id, the read becomes their first ICP.",
     annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
@@ -820,7 +820,7 @@ export const accountTools = [
   },
   {
     name: 'signup_start',
-    description: "Create an Andru account, or sign in to yours, without leaving your agent. Send the person's email. Andru emails them a 6-digit code and an Approve button. If they read you the code, call signup_verify. If they tap Approve, call signup_status with the request_id until it returns your key. They also choose how much you can spend without asking them; it starts at $0 (free calls only). Free.",
+    description: "Create an Andru account, or sign in to yours, without leaving your agent. Send the person's email. Andru emails them a 6-digit code and an Approve button. If they read you the code, call signup_verify. If they tap Approve, call signup_status with the request_id until it returns your key. They also choose how much you can spend without asking them; it starts at nothing beyond the daily free calls.",
     annotations: FREE_TOOL,
     inputSchema: {
       type: 'object',
@@ -836,7 +836,7 @@ export const accountTools = [
   },
   {
     name: 'signup_verify',
-    description: 'Finish signing up: send the email and the 6-digit code the person received. Returns an Andru API key for this agent. Free.',
+    description: 'Finish signing up: send the email and the 6-digit code the person received. Returns an Andru API key for this agent.',
     annotations: FREE_TOOL,
     inputSchema: {
       type: 'object',
@@ -851,7 +851,7 @@ export const accountTools = [
   },
   {
     name: 'signup_status',
-    description: 'Check whether the person has approved you. Send the request_id from signup_start. Returns "waiting" (ask again after the number of seconds it gives), your API key once they approve (shown once; save it), or "expired". Free.',
+    description: 'Check whether the person has approved you. Send the request_id from signup_start. Returns "waiting" (ask again after the number of seconds it gives), your API key once they approve (shown once; save it), or "expired".',
     annotations: FREE_TOOL,
     inputSchema: {
       type: 'object',
@@ -861,13 +861,13 @@ export const accountTools = [
   },
   {
     name: 'whoami',
-    description: "What this API key can do: the account it belongs to, the key's name, how much it can spend today and this month without asking, the wallet balance, and free calls left today. Free.",
+    description: "What this API key can do: the account it belongs to, the key's name, how much it can spend today and this month without asking, the wallet balance, and free calls left today.",
     annotations: READ_ONLY,
     inputSchema: { type: 'object', properties: {} },
   },
   {
     name: 'quote',
-    description: "The exact price of a call before you make it. Send the tool name and its arguments. Returns the price, whether today's free calls cover it, the wallet balance, how much this key can still spend without asking, and a quote_id that holds the price for 30 minutes. Pass quote_id with the call to pay the quoted price. Free.",
+    description: "The exact price of a call before you make it. Send the tool name and its arguments. Returns the price, whether today's free calls cover it, the wallet balance, how much this key can still spend without asking, and a quote_id that holds the price for 30 minutes. Pass quote_id with the call to pay the quoted price.",
     annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
@@ -890,7 +890,9 @@ export const PAID_TOOLS = new Set([
   'get_sales_blueprint', 'consult_agent', 'assess_company_readiness',
   'get_portfolio_readiness_rollup', 'generate_portfolio_brief',
 ]);
-export const PAID_TOOL_LINE = 'Charged only when delivered; refunded automatically if it fails. Send an idempotencyKey to retry safely: the same key never charges twice.';
+// Copy batch 13 X (Geter 2026-10-23: "approve batch 13 with X yes"): paid tools say they cost money,
+// with no price; the price is in quote and every result.
+export const PAID_TOOL_LINE = 'Paid. Check the price with quote before running.';
 const BILLING_PARAMS = {
   idempotencyKey: { type: 'string', description: 'Optional: any unique string for this call. Retrying with the same key returns the first result and never charges twice.' },
   quoteId: { type: 'string', description: 'Optional: the quote_id from quote, to pay the quoted price (held for 30 minutes).' },
