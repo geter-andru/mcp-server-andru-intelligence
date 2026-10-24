@@ -198,7 +198,7 @@ export const tools = [
       properties: {
         accountName: {
           type: 'string',
-          description: 'The company to plan for, e.g. \"Acme Logistics\".'
+          description: 'The company to plan for.'
         },
         productDescription: {
           type: 'string',
@@ -566,7 +566,7 @@ export const tools = [
 
   {
     name: 'get_memory_history',
-    description: 'The version history of one memory: how a metric, deal stage or priority changed over time. Answers "What was my MRR 3 months ago?" or "When did the Acme deal move to negotiation?".',
+    description: 'The version history of one memory: how a metric, deal stage or priority changed over time. Answers "What was my MRR 3 months ago?" or "When did my biggest deal move into procurement?".',
     annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
