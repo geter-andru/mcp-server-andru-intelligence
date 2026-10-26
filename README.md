@@ -151,7 +151,7 @@ Already have a key? Add `--env ANDRU_API_KEY=<your key>`.
 
 The same work costs the same as in the Andru platform, from the same wallet:
 - **Answers from your own data** (fit scores, ICP, personas, account plan…): always free.
-- **Tool, $3:** a pre-meeting brief, a diagnostic, one expert-agent turn, or a single-piece catalog asset.
+- **Tool, $3:** a diagnostic, one expert-agent turn, or a single-piece catalog asset.
 - **Framework, $12** and **Decision, $49:** the rest of the catalog.
 - **Deal Prep session, $5:** 25 turns of buyer role-play and coaching (`simulate_buyer_persona`).
 
