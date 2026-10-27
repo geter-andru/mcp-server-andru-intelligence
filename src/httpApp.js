@@ -39,6 +39,19 @@ export function needsAccount(body) {
   return msgs.some((m) => m && ((m.method === 'tools/call' && !KEYLESS_TOOLS.has(m.params?.name)) || m.method === 'resources/read'));
 }
 
+// Sessions live in memory, so a deploy drops them. A request with a session id this server doesn't
+// know gets 404, which tells an MCP client to start a new session (Streamable HTTP: "MUST respond …
+// with HTTP 404"). Wording approved by Geter 2026-10-27 ("fix the session bug").
+export const SESSION_NOT_FOUND_MESSAGE = 'Session not found. Start a new session with initialize.';
+const isInitialize = (body) => (Array.isArray(body) ? body : [body]).some((m) => m?.method === 'initialize');
+function sessionNotFound(req, res) {
+  return res.status(404).json({
+    jsonrpc: '2.0',
+    error: { code: -32001, message: SESSION_NOT_FOUND_MESSAGE },
+    id: (Array.isArray(req.body) ? null : req.body?.id) ?? null,
+  });
+}
+
 /**
  * @param {{ apiUrl: string, host?: string }} options
  * @returns {{ app: import('express').Express, transports: Map<string, StreamableHTTPServerTransport> }}
@@ -146,6 +159,11 @@ export function createHttpApp({ apiUrl, host = '0.0.0.0' }) {
       });
     }
 
+    // An unknown session id (expired, or dropped by a deploy): 404 so the client re-initializes. An
+    // initialize sent with a stale id starts a new session. With no session id at all, the SDK answers
+    // a non-initialize request with 400 "Server not initialized", as before.
+    if (sessionId && !transport && !isInitialize(req.body)) return sessionNotFound(req, res);
+
     if (!transport) {
       // New session — create per-key client, server, and transport
       client = new AndruClient(req.auth.apiKey, apiUrl);
@@ -182,6 +200,7 @@ export function createHttpApp({ apiUrl, host = '0.0.0.0' }) {
   app.get('/mcp', readApiKey, mcpRateLimiter, async (req, res) => {
     const sessionId = req.headers['mcp-session-id'];
     const transport = sessionId ? transports.get(sessionId) : undefined;
+    if (sessionId && !transport) return sessionNotFound(req, res);
     if (!transport) {
       return res.status(400).json({
         jsonrpc: '2.0',
@@ -196,6 +215,7 @@ export function createHttpApp({ apiUrl, host = '0.0.0.0' }) {
   app.delete('/mcp', async (req, res) => {
     const sessionId = req.headers['mcp-session-id'];
     const transport = sessionId ? transports.get(sessionId) : undefined;
+    if (sessionId && !transport) return sessionNotFound(req, res);
     if (transport) {
       await transport.close();
       transports.delete(sessionId);
