@@ -5,7 +5,7 @@
     "ANDRU_API_KEY": {
       "type": "string",
       "x-from": {
-        "query": "ANDRU_API_KEY"
+        "header": "x-api-key"
       },
       "x-order": 0,
       "description": "Your Andru API key. Optional: without one, your agent can sign you up from the conversation. Or get one at https://platform.andru-ai.com/settings/developer"

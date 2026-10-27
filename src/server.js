@@ -85,6 +85,9 @@ export async function askOnceForProduct(server, client, name, args, result) {
 /** Copy batch 1 C3 (approved by Geter 2026-10-22): the same "no API key" answer as every channel. */
 export const NO_KEY_MESSAGE = "No API key yet. Your agent can set one up now: call signup_start with the person's email. Andru emails them a code and an Approve button, and your first calls each day are free. Or get a key in Andru (Settings → API access).";
 export const NO_KEY_NEXT_ACTION = { tool: 'signup_start', arguments: { email: "<the person's email>" } };
+/** Where a key is managed and where MCP setup is documented: the backend's SETUP_URL and SETUP_DOCS_URL (src/mcp/noKeyHint.js). */
+export const SETUP_URL = 'https://platform.andru-ai.com/settings/developer';
+export const SETUP_DOCS_URL = 'https://andru-ai.com/docs/mcp';
 
 /** The API key in a signup result (signup_verify, or signup_status once approved), or null. */
 export function keyFromSignup(name, result) {

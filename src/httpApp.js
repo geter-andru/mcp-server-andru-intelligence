@@ -7,11 +7,31 @@ import { createMcpExpressApp } from '@modelcontextprotocol/sdk/server/express.js
 import { randomUUID } from 'node:crypto';
 import rateLimit, { ipKeyGenerator } from 'express-rate-limit';
 import { AndruClient } from './client.js';
-import { createServer } from './server.js';
+import { createServer, NO_KEY_NEXT_ACTION, SETUP_URL, SETUP_DOCS_URL } from './server.js';
 import { originOf, requestOrigin } from './clientOrigin.js';
 import { KEYLESS_TOOLS } from './catalog.js';
 
 export const OAUTH_SCOPE = 'andru:agent';
+
+const RATE_WINDOW_MS = 15 * 60 * 1000;
+/** Seconds until the caller's rate-limit window resets (express-rate-limit's req.rateLimit), at least 1. */
+export function retryAfterSeconds(req, now = Date.now()) {
+  const reset = req.rateLimit?.resetTime;
+  const ms = reset instanceof Date ? reset.getTime() - now : RATE_WINDOW_MS;
+  return Math.max(1, Math.ceil(ms / 1000));
+}
+
+/** Copy batch 14 E1 + batch 1 C3, joined (copy batch 17 A1, approved by Geter 2026-10-27). */
+export const SIGN_IN_MESSAGE = "Sign in to Andru to use this tool. Or set up a key now: call signup_start with the person's email. Andru emails them a code and an Approve button.";
+
+/** What the hosted limit counted: an API key, a sign-in, or the address (copy batch 17 B1). */
+export function countedBy(req) {
+  if (req.auth?.apiKey) return 'key';
+  if (req.auth?.bearer) return 'connection';
+  return 'address';
+}
+/** Copy batch 11 R3, with the word for what was counted (copy batch 17 B1, approved 2026-10-27). */
+export const tooManyMessage = (by, seconds) => `Too many requests from this ${by}. Try again in ${seconds} seconds.`;
 
 /** True when a JSON-RPC message (or batch) calls a tool or reads a resource that needs the person's account. */
 export function needsAccount(body) {
@@ -66,7 +86,10 @@ export function createHttpApp({ apiUrl, host = '0.0.0.0' }) {
   // signup_status and preview_company run, and every other call says how to get a key (server.js).
   // A key from signup is used for the rest of that session.
   function readApiKey(req, _res, next) {
-    const key = req.headers['x-api-key'] || req.query.ANDRU_API_KEY;
+    // Never from the URL (2026-10-27, Geter: "check usage then drop ?ANDRU_API_KEY"): URLs end up in
+    // logs, proxies and browser history. No outside key made a call in the 30 days before; Smithery
+    // now sends the key in this header (smithery-config.json).
+    const key = req.headers['x-api-key'];
     const authz = typeof req.headers.authorization === 'string' ? req.headers.authorization : '';
     const bearer = authz.startsWith('Bearer ') ? authz.slice(7).trim() : '';
     // An sk_ key sent as Bearer is a key; any other Bearer value is an OAuth access token from
@@ -79,22 +102,21 @@ export function createHttpApp({ apiUrl, host = '0.0.0.0' }) {
 
   // --- Rate limiting: per API key ---
   const mcpRateLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
+    windowMs: RATE_WINDOW_MS, // 15 minutes
     max: 100, // 100 requests per API key per window
     keyGenerator: (req) => req.auth?.apiKey || (req.auth?.bearer ? `oauth:${req.auth.bearer.slice(-24)}` : ipKeyGenerator(req.ip)),
     standardHeaders: true,
     legacyHeaders: false,
-    message: {
-      jsonrpc: '2.0',
-      error: { code: -32000, message: 'Rate limit exceeded. Try again later.' },
-      id: null,
-    },
     handler: (req, res) => {
       console.warn(`[Andru MCP HTTP] Rate limit exceeded for key: ${req.auth?.apiKey?.slice(0, 8)}...`);
+      // How long to wait (copy batch 17 B1, approved 2026-10-27), in the header and the body, as the
+      // backend's 429 does (batch 11 R3/R4), so an agent can wait instead of failing.
+      const seconds = retryAfterSeconds(req);
+      res.set('Retry-After', String(seconds));
       res.status(429).json({
         jsonrpc: '2.0',
-        error: { code: -32000, message: 'Rate limit exceeded. Try again later.' },
-        id: null,
+        error: { code: -32000, message: tooManyMessage(countedBy(req), seconds), data: { code: 'RATE_LIMITED', retry_after_seconds: seconds } },
+        id: req.body?.id ?? null,
       });
     },
   });
@@ -115,7 +137,13 @@ export function createHttpApp({ apiUrl, host = '0.0.0.0' }) {
     // Listing tools and the signup and preview tools still work without one.
     if (oauth && !req.auth.apiKey && !req.auth.bearer && !(client && client.signedIn) && needsAccount(req.body)) {
       res.set('WWW-Authenticate', `Bearer resource_metadata="${resourceMetadataUrl}", scope="${OAUTH_SCOPE}"`);
-      return res.status(401).json({ jsonrpc: '2.0', error: { code: -32001, message: 'Sign in to Andru to use this tool.' }, id: req.body?.id ?? null });
+      // The next call for a client that uses a key instead of signing in (copy batch 17 A1, approved
+      // 2026-10-27): the same next_action, setup page and docs as every no-key answer.
+      return res.status(401).json({
+        jsonrpc: '2.0',
+        error: { code: -32001, message: SIGN_IN_MESSAGE, data: { next_action: NO_KEY_NEXT_ACTION, setup: SETUP_URL, docs: SETUP_DOCS_URL } },
+        id: req.body?.id ?? null,
+      });
     }
 
     if (!transport) {

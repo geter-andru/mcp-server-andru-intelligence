@@ -728,7 +728,7 @@ export const tools = [
   {
     name: 'set_product_context',
     description: 'Tell Andru what you sell, once. Give your company website (Andru reads it and remembers your product) or a short product description. Every later call uses it, so tools stop asking for product context. Call with no arguments to see what Andru has saved.',
-    annotations: { readOnlyHint: false, idempotentHint: true, openWorldHint: true },
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: true }, // it replaces the saved product (copy batch 17 F, Geter 2026-10-27)
     inputSchema: {
       type: 'object',
       properties: {
