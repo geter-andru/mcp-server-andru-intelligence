@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
 import { listedTools, TOOL_TITLES, SERVER_INSTRUCTIONS } from '../src/catalog.js';
+import { TOOL_DESCRIPTIONS } from '../src/toolDescriptions.js';
 import { createServer } from '../src/server.js';
 import { AndruClient } from '../src/client.js';
 
@@ -45,4 +46,17 @@ test('the server sends the approved instructions when a client connects, and the
 test('there is no top-up tool: money is added only on Andru\'s billing page (Geter 2026-10-23)', () => {
   assert.equal(listedTools().find((t) => t.name === 'get_topup_link'), undefined);
   assert.equal(TOOL_TITLES.get_topup_link, undefined);
+});
+
+// Copy batch 22 (approved by Geter 2026-10-27: "approve batch 22"): the same words as the backend.
+test('batch 22: what Claude reads without the server instructions', () => {
+  const by = Object.fromEntries(listedTools().map((t) => [t.name, t]));
+  assert.ok(by.get_founder_context.description.includes("Andru is the person's enterprise buyer specialist."));
+  assert.equal(TOOL_TITLES.get_revenue_memory, 'Search what Andru remembers');
+  assert.equal(TOOL_TITLES.log_revenue_insight, 'Save what a deal taught');
+  assert.ok(by.get_revenue_memory.description.startsWith('What Andru has learned about their buyers and deals:'));
+  assert.ok(by.list_assets.description.includes("Searches Andru's catalog of 139 assets, from enterprise deals to hiring, fundraising and buying."));
+  assert.ok(by.get_icp_profile.description.includes('the enterprise buyers who decide'));
+  assert.ok(by.whoami.description.startsWith('Use this when the person asks what this key or connection can spend'));
+  assert.equal(TOOL_DESCRIPTIONS.whoami, by.whoami.description);
 });

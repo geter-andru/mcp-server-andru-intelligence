@@ -910,9 +910,9 @@ export const TOOL_TITLES = {
   get_thesis_match: "Find investors who fit",
   get_market_signals: "See what's moving in your market",
   get_founder_context: "Read what Andru knows about you",
-  get_revenue_memory: "Search revenue memory",
+  get_revenue_memory: "Search what Andru remembers", // copy batch 22 B2 (Geter 2026-10-27)
   get_memory_history: "Show how a memory changed",
-  log_revenue_insight: "Save a revenue insight",
+  log_revenue_insight: "Save what a deal taught", // copy batch 22 B3 (Geter 2026-10-27)
   consult_agent: "Ask an Andru specialist",
   list_assets: "Search the asset catalog",
   generate_asset: "Build an asset",
