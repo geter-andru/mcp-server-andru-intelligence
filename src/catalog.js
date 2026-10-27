@@ -717,11 +717,12 @@ export const tools = [
         job_id: {
           type: 'string',
           description: 'The job_id returned by generate_asset, generate_portfolio_brief or get_account_plan.'
+        },
+        asset_id: {
+          type: 'string',
+          description: 'The asset_id from list_my_assets.' // copy batch 19 (Geter 2026-10-27)
         }
-      },
-      required: [
-        'job_id'
-      ]
+      }
     }
   },
   // Copy batch 17 C1, C2-trim, C3 (Geter 2026-10-27): stop an asset build. Free.
@@ -734,6 +735,13 @@ export const tools = [
       properties: { job_id: { type: 'string', description: 'The job_id returned by generate_asset.' } },
       required: ['job_id'],
     },
+  },
+  // Copy batch 19 (Geter 2026-10-27): what the account has already built. Free, read-only.
+  {
+    name: 'list_my_assets',
+    description: "Use this when the person asks what Andru has already built for them, or wants to open something they made earlier. Lists the assets saved to their Andru library: each one's name, when it was built, and whether it was built in part. Open one with get_asset and its asset_id.",
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+    inputSchema: { type: 'object', properties: {} },
   },
   // ── Product context (2026-10-07): say what you sell once ──────────────────
   {
@@ -911,6 +919,7 @@ export const TOOL_TITLES = {
   generate_asset: "Build an asset",
   get_asset: "Collect a finished result",
   cancel_job: "Stop an asset build",
+  list_my_assets: "List my saved assets", // copy batch 19 (Geter 2026-10-27)
   assess_company_readiness: "Score a company's revenue readiness",
   get_portfolio_readiness_rollup: "Portfolio readiness scorecard",
   generate_portfolio_brief: "Brief on portfolio go-to-market",
