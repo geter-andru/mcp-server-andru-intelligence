@@ -12,8 +12,8 @@ const server = JSON.parse(read('server.json'));
 const readme = read('README.md');
 
 // 2026-10-24 (Geter): get_founder_wellness and get_capability_profile retired, 30 → 28.
-test('28 tools, and the CRM tools are held back until CRM sync is ready', () => {
-  assert.equal(tools.length, 28);
+test('29 tools, and the CRM tools are held back until CRM sync is ready', () => {
+  assert.equal(tools.length, 29); // cancel_job added 2026-10-27
   for (const retired of ['get_founder_wellness', 'get_capability_profile']) assert.ok(!tools.some((t) => t.name === retired), retired);
   const names = tools.map((t) => t.name);
   for (const held of ['get_syndication_status', 'trigger_syndication', 'sync_crm_deals']) assert.ok(!names.includes(held), held);

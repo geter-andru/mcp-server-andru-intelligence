@@ -2,7 +2,7 @@
 
 Revenue intelligence for complex B2B growth. Your agent builds the assets technical founders sell with, and prepares them for real buyer conversations.
 
-Andru is a revenue intelligence layer for complex B2B growth. Give your agent 28 tools and a catalog of 139 assets, built from what Andru knows about your company and buyers. Start with:
+Andru is a revenue intelligence layer for complex B2B growth. Give your agent 29 tools and a catalog of 139 assets, built from what Andru knows about your company and buyers. Start with:
 
 - **Pure Signal Market Resonance:** who needs your product most, and why now (Framework $12; your first ICP is free)
 - **Buying Committee Navigation:** the committee, its objectors and the order to engage them (Framework $12)
@@ -140,6 +140,7 @@ Already have a key? Add `--env ANDRU_API_KEY=<your key>`.
 | `list_assets` | Search Andru's catalog of 139 sales, hiring, fundraising and buying assets: what each is, its business outcome, price, and whether it can be generated today | Free |
 | `generate_asset` | Generate any catalog asset from everything Andru knows about your company; saved to your Andru library | Its catalog price: Tool $3, Framework $12, Decision $49 (your first ICP is free) |
 | `get_asset` | Collect a generated asset or portfolio brief as markdown, or an account plan's link and summary | Free |
+| `cancel_job` | Stop an asset that `generate_asset` is still building; what it had written is discarded. A build that already finished stays as it is | Free |
 
 ### Product Context
 

@@ -724,6 +724,17 @@ export const tools = [
       ]
     }
   },
+  // Copy batch 17 C1, C2-trim, C3 (Geter 2026-10-27): stop an asset build. Free.
+  {
+    name: 'cancel_job',
+    description: "Use this when the person wants to stop an asset that generate_asset is still building. Send the job_id. What it had written is discarded. A build that already finished stays as it is; collect it with get_asset. Briefs and account plans can't be stopped.",
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: false },
+    inputSchema: {
+      type: 'object',
+      properties: { job_id: { type: 'string', description: 'The job_id returned by generate_asset.' } },
+      required: ['job_id'],
+    },
+  },
   // ── Product context (2026-10-07): say what you sell once ──────────────────
   {
     name: 'set_product_context',
@@ -899,6 +910,7 @@ export const TOOL_TITLES = {
   list_assets: "Search the asset catalog",
   generate_asset: "Build an asset",
   get_asset: "Collect a finished result",
+  cancel_job: "Stop an asset build",
   assess_company_readiness: "Score a company's revenue readiness",
   get_portfolio_readiness_rollup: "Portfolio readiness scorecard",
   generate_portfolio_brief: "Brief on portfolio go-to-market",
