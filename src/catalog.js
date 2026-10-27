@@ -905,7 +905,19 @@ export const TOOL_TITLES = {
 };
 
 /** Server instructions (copy batch 12 I, approved by Geter 2026-10-23): when to use Andru, how to start, when not to. */
-export const SERVER_INSTRUCTIONS = 'Andru helps B2B founders and PE/VC operating partners understand their buyers and prepare to sell. Use it when the person asks who to sell to, whether a company or deal is worth pursuing, who is on a buying committee and what each person needs, how to prepare for a specific sales meeting, how to make a first sales hire, which investors fit their company, or how their portfolio companies\' go-to-market is going.\n\nIf a tool says it needs to know what you sell, call set_product_context, then try that tool again. Lookups that read the person\'s own data are free. Some tools cost money: quote returns the exact price first, and a paid call is charged only when it delivers. Tools that take minutes return a job_id; collect the result with get_asset.\n\nDon\'t use Andru for general web research, for companies unrelated to the person\'s own sales or portfolio, or to send messages to anyone.';
+// The start-here every Andru discovery surface carries, word for word (AGENT_PLATFORM_PLAN §5.1;
+// Geter 2026-10-26: "add start-here to the discovery files"). Its source is the backend
+// (src/a2a/startHere.js), published on the agent card as startHere.text; test/startHere.test.js pins
+// this copy to the same words.
+export const START_HERE = [
+  'Start here:',
+  "1. Try preview_company with the company's website. It's free and needs no account: it returns who the company sells to, the buyers who decide, and what the site says versus what those buyers need to hear.",
+  "2. Call signup_start with the person's email. Andru emails them a code and an Approve button.",
+  '3. Call any tool. Lookups are free, plus 5 free calls a day shared across A2A and MCP.',
+  'Docs: https://andru-ai.com/docs/api#authentication',
+].join('\n');
+
+export const SERVER_INSTRUCTIONS = 'Andru helps B2B founders and PE/VC operating partners understand their buyers and prepare to sell. Use it when the person asks who to sell to, whether a company or deal is worth pursuing, who is on a buying committee and what each person needs, how to prepare for a specific sales meeting, how to make a first sales hire, which investors fit their company, or how their portfolio companies\' go-to-market is going.\n\n' + START_HERE + '\n\nIf a tool says it needs to know what you sell, call set_product_context, then try that tool again. Lookups that read the person\'s own data are free. Some tools cost money: quote returns the exact price first, and a paid call is charged only when it delivers. Tools that take minutes return a job_id; collect the result with get_asset.\n\nDon\'t use Andru for general web research, for companies unrelated to the person\'s own sales or portfolio, or to send messages to anyone.';
 
 export function listedTools() {
   // Copy batches 15 and 16: the approved "Use this when…" descriptions (toolDescriptions.js).
