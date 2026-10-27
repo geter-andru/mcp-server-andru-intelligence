@@ -206,7 +206,7 @@ export const tools = [
         },
         refresh: {
           type: 'boolean',
-          description: 'Build a new plan even if one from the last 30 days exists ($12). Default false.'
+          description: 'Build a new plan even if one from the last 30 days exists. Default false.'
         }
       },
       required: [
@@ -429,7 +429,7 @@ export const tools = [
         mode: {
           type: 'string',
           enum: ['meetings', 'brief', 'opening', 'reply', 'list'],
-          description: 'meetings = the user\'s calendar meetings in the next 7 days (free). brief = the free brief for a meeting (10 a day). opening = open a session ($5) from a brief_id, or with one buyer. reply = the founder\'s next message; speaker picks who answers. list = the user\'s six buyers (free).',
+          description: 'meetings = the user\'s calendar meetings in the next 7 days. brief = the brief for a meeting (10 a day). opening = open a Deal Prep session from a brief_id, or with one buyer. reply = the founder\'s next message; speaker picks who answers. list = the user\'s six buyers.',
         },
         situation: {
           type: 'string',
@@ -681,7 +681,7 @@ export const tools = [
   // ── Asset catalog (1.6.0): find, generate and collect any of Andru's 139 assets ──
   {
     name: 'list_assets',
-    description: "Search Andru's catalog of sales, hiring, fundraising and buying assets — 139 deliverables from email drafts to board decks. Each entry says what it is, the business outcome, its price, whether it needs your own data, and whether it can be generated today. Then call generate_asset with the asset's name.",
+    description: "Search Andru's catalog of sales, hiring, fundraising and buying assets — 139 deliverables from email drafts to board decks. Each entry says what it is, the business outcome, whether it needs your own data, and whether it can be generated today. Then call generate_asset with the asset's name.",
     annotations: READ_ONLY,
     inputSchema: {
       type: 'object',
@@ -871,9 +871,8 @@ export const PAID_TOOLS = new Set([
   'get_sales_blueprint', 'consult_agent', 'assess_company_readiness',
   'get_portfolio_readiness_rollup', 'generate_portfolio_brief',
 ]);
-// Copy batch 13 X (Geter 2026-10-23: "approve batch 13 with X yes"): paid tools say they cost money,
-// with no price; the price is in quote and every result.
-export const PAID_TOOL_LINE = 'Paid. Check the price with quote before running.';
+// Copy batch 13 X's paid-tool line is no longer listed (copy batch 20 D1, approved by Geter 2026-10-27:
+// "remove prices from results"): nothing before a call steers to a price. A2A capabilities still carry it.
 const BILLING_PARAMS = {
   idempotencyKey: { type: 'string', description: 'Optional: any unique string for this call. Retrying with the same key returns the first result and never charges twice.' },
   quoteId: { type: 'string', description: 'Optional: the quote_id from quote, to pay the quoted price (held for 30 minutes).' },
@@ -938,7 +937,7 @@ export const START_HERE = [
   'Docs: https://andru-ai.com/docs/api#authentication',
 ].join('\n');
 
-export const SERVER_INSTRUCTIONS = 'Andru helps B2B founders and PE/VC operating partners understand their buyers and prepare to sell. Use it when the person asks who to sell to, whether a company or deal is worth pursuing, who is on a buying committee and what each person needs, how to prepare for a specific sales meeting, how to make a first sales hire, which investors fit their company, or how their portfolio companies\' go-to-market is going.\n\n' + START_HERE + '\n\nIf a tool says it needs to know what you sell, call set_product_context, then try that tool again. Lookups that read the person\'s own data are free. Some tools cost money: quote returns the exact price first, and a paid call is charged only when it delivers. Tools that take minutes return a job_id; collect the result with get_asset.\n\nDon\'t use Andru for general web research, for companies unrelated to the person\'s own sales or portfolio, or to send messages to anyone.';
+export const SERVER_INSTRUCTIONS = 'Andru helps B2B founders and PE/VC operating partners understand their buyers and prepare to sell. Use it when the person asks who to sell to, whether a company or deal is worth pursuing, who is on a buying committee and what each person needs, how to prepare for a specific sales meeting, how to make a first sales hire, which investors fit their company, or how their portfolio companies\' go-to-market is going.\n\n' + START_HERE + '\n\nIf a tool says it needs to know what you sell, call set_product_context, then try that tool again. Lookups that read the person\'s own data are free. Some tools draw on the person\'s prepaid Andru wallet and are charged only when they deliver; quote gives the price if the person asks. Tools that take minutes return a job_id; collect the result with get_asset.\n\nDon\'t use Andru for general web research, for companies unrelated to the person\'s own sales or portfolio, or to send messages to anyone.';
 
 export function listedTools() {
   // Copy batches 15 and 16: the approved "Use this when…" descriptions (toolDescriptions.js).
@@ -946,7 +945,6 @@ export function listedTools() {
   const priced = tools.map(described).map((t) => (PAID_TOOLS.has(t.name)
     ? {
       ...t,
-      description: `${t.description} ${PAID_TOOL_LINE}`,
       inputSchema: { ...t.inputSchema, properties: { ...(t.inputSchema?.properties || {}), ...BILLING_PARAMS } },
     }
     : t));

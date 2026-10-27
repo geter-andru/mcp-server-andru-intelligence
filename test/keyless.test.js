@@ -4,7 +4,6 @@ import http from 'node:http';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
 import { createHttpApp } from '../src/httpApp.js';
-import { PAID_TOOL_LINE } from '../src/catalog.js';
 
 // 1.10.0 (AGENT_PLATFORM_PLAN_2026-10-22): with no key, a session opens and lists every tool; only
 // the signup and preview tools run; a key from signup is used for the rest of the session.
@@ -53,8 +52,9 @@ test('no key: list everything, refuse paid work with how to sign up, sign up, th
     }
     // The pre-meeting brief is free since 2026-10-24; the thesis check is a paid example.
     const brief = tools.find((t) => t.name === 'get_thesis_match');
-    assert.ok(brief.description.endsWith(PAID_TOOL_LINE), 'paid tools carry the billing terms');
-    assert.ok(!tools.find((t) => t.name === 'get_pre_brief').description.endsWith(PAID_TOOL_LINE), 'the free brief carries no billing terms');
+    // Copy batch 20 D1: no paid-tool line; paid tools keep the billing parameters, the free brief has none.
+    assert.ok(!brief.description.includes('Check the price'), 'no paid-tool line');
+    assert.equal(tools.find((t) => t.name === 'get_pre_brief').inputSchema.properties.idempotencyKey, undefined, 'the free brief carries no billing terms');
     assert.ok(brief.inputSchema.properties.idempotencyKey && brief.inputSchema.properties.quoteId);
     // Copy batch 6 J1: the agent's own price ceiling, as the backend lists it.
     assert.deepEqual(brief.inputSchema.properties.maxAmountCents, { type: 'integer', minimum: 0, description: 'Optional: the most this call may cost, in cents. If the price is higher, nothing runs and nothing is charged.' });
@@ -105,8 +105,8 @@ test('a keyed session works as before', async () => {
 // checked against backend cdbd597 on 2026-10-23). generate_asset is billed by its job at the asset's
 // catalog price and carries no billing terms; 1.10.0's draft wrongly added them.
 test('the billing terms are on the same nine tools as the backend (the brief is free since 2026-10-24)', async () => {
-  const { listedTools, PAID_TOOL_LINE: line } = await import('../src/catalog.js');
-  const paid = listedTools().filter((t) => t.description.endsWith(line)).map((t) => t.name).sort();
+  const { listedTools } = await import('../src/catalog.js');
+  const paid = listedTools().filter((t) => t.inputSchema?.properties?.idempotencyKey).map((t) => t.name).sort();
   assert.deepEqual(paid, [
     'assess_company_readiness', 'consult_agent', 'discover_prospects', 'generate_portfolio_brief', 'get_account_plan',
     'get_portfolio_readiness_rollup', 'get_sales_blueprint', 'get_thesis_match', 'simulate_buyer_persona',
