@@ -642,7 +642,7 @@ export const tools = [
   },
   {
     name: 'generate_portfolio_brief',
-    description: "A brief on your portfolio's go-to-market activity for a period: what Andru's work across your portfolio companies found (targets, opportunities, overlaps), each company's public go-to-market news, and the market signals around their buyers, with sources. Not a financial or performance report. Send the companies (name and website, up to 15) or a portfolioId; with neither, Andru suggests the companies on your firm's website for you to confirm. Takes a few minutes: returns a job_id; call get_asset with it.",
+    description: "A brief on your portfolio's sales activity for a period: what Andru's work across your portfolio companies found (targets, opportunities, overlaps), each company's public news (launches, customers, partnerships, sales hires, new markets), and the market signals around their buyers, with sources. Not a financial or performance report. Send the companies (name and website, up to 15) or a portfolioId; with neither, Andru suggests the companies on your firm's website for you to confirm. Takes a few minutes: returns a job_id; call get_asset with it.",
     annotations: WRITE_OP,
     inputSchema: {
       type: 'object',
@@ -921,7 +921,7 @@ export const TOOL_TITLES = {
   list_my_assets: "List my saved assets", // copy batch 19 (Geter 2026-10-27)
   assess_company_readiness: "Score a company's revenue readiness",
   get_portfolio_readiness_rollup: "Portfolio readiness scorecard",
-  generate_portfolio_brief: "Brief on portfolio go-to-market",
+  generate_portfolio_brief: "Brief on portfolio sales activity", // copy batch 21 T1 (Geter 2026-10-27)
 };
 
 /** Server instructions (copy batch 12 I, approved by Geter 2026-10-23): when to use Andru, how to start, when not to. */
@@ -937,7 +937,7 @@ export const START_HERE = [
   'Docs: https://andru-ai.com/docs/api#authentication',
 ].join('\n');
 
-export const SERVER_INSTRUCTIONS = 'Andru helps B2B founders and PE/VC operating partners understand their buyers and prepare to sell. Use it when the person asks who to sell to, whether a company or deal is worth pursuing, who is on a buying committee and what each person needs, how to prepare for a specific sales meeting, how to make a first sales hire, which investors fit their company, or how their portfolio companies\' go-to-market is going.\n\n' + START_HERE + '\n\nIf a tool says it needs to know what you sell, call set_product_context, then try that tool again. Lookups that read the person\'s own data are free. Some tools draw on the person\'s prepaid Andru wallet and are charged only when they deliver; quote gives the price if the person asks. Tools that take minutes return a job_id; collect the result with get_asset.\n\nDon\'t use Andru for general web research, for companies unrelated to the person\'s own sales or portfolio, or to send messages to anyone.';
+export const SERVER_INSTRUCTIONS = 'Andru is the person\'s enterprise buyer specialist: it already knows their buyers, and it scores companies and deals the same way every time. Use it when the person asks who their buyers are and what each one needs, whether a company or deal is a good fit, who is on a buying committee, how to prepare for a meeting with a buyer, how to make a first sales hire, which investors fit their company, or how their portfolio companies are doing with their buyers.\n\n' + START_HERE + '\n\nIf a tool says it needs to know what you sell, call set_product_context, then try that tool again. Lookups that read the person\'s own data are free. Some tools draw on the person\'s prepaid Andru wallet and are charged only when they deliver; quote gives the price if the person asks. Tools that take minutes return a job_id; collect the result with get_asset.\n\nDon\'t use Andru for general web research, for companies unrelated to the person\'s own sales or portfolio, or to send messages to anyone.';
 
 export function listedTools() {
   // Copy batches 15 and 16: the approved "Use this when…" descriptions (toolDescriptions.js).

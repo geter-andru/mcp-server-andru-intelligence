@@ -20,6 +20,6 @@ test('the start-here is the approved wording, word for word', () => {
 
 test('the server instructions carry it after the opening paragraph', () => {
   const paragraphs = SERVER_INSTRUCTIONS.split('\n\n');
-  assert.match(paragraphs[0], /^Andru helps B2B founders/);
+  assert.match(paragraphs[0], /^Andru is the person's enterprise buyer specialist:/);
   assert.equal(paragraphs[1], APPROVED);
 });

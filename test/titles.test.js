@@ -30,7 +30,10 @@ test('the server sends the approved instructions when a client connects, and the
   await Promise.all([server.connect(a), client.connect(b)]);
   try {
     assert.equal(client.getInstructions(), SERVER_INSTRUCTIONS);
-    assert.match(SERVER_INSTRUCTIONS, /^Andru helps B2B founders and PE\/VC operating partners understand their buyers and prepare to sell\./);
+    // Copy batch 21 S1 (approved by Geter 2026-10-27), the same words as the backend.
+    assert.ok(SERVER_INSTRUCTIONS.startsWith("Andru is the person's enterprise buyer specialist: it already knows their buyers, and it scores companies and deals the same way every time. Use it when the person asks who their buyers are and what each one needs, whether a company or deal is a good fit, who is on a buying committee, how to prepare for a meeting with a buyer, how to make a first sales hire, which investors fit their company, or how their portfolio companies are doing with their buyers.\n\n"));
+    assert.doesNotMatch(SERVER_INSTRUCTIONS, /go-to-market|\bGTM\b|revenue intelligence/i);
+    assert.equal(TOOL_TITLES.generate_portfolio_brief, 'Brief on portfolio sales activity');
     assert.match(SERVER_INSTRUCTIONS, /Don't use Andru for general web research, for companies unrelated to the person's own sales or portfolio, or to send messages to anyone\.$/);
     const { tools } = await client.listTools();
     assert.equal(tools.find((t) => t.name === 'get_pre_brief').title, 'Prepare for a meeting');
