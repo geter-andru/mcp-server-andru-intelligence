@@ -11,7 +11,7 @@ test('list_my_assets is listed with its approved title, description and read-onl
   assert.equal(t.title, 'List my saved assets');
   assert.equal(t.description, "Use this when the person asks what Andru has already built for them, or wants to open something they made earlier. Lists the assets saved to their Andru library: each one's name, when it was built, and whether it was built in part. Open one with get_asset and its asset_id.");
   assert.doesNotMatch(t.description, /\$\d|\bFree\.|charged/i);
-  assert.deepEqual(t.annotations, { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false });
+  assert.deepEqual(t.annotations, { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false, title: 'List my saved assets' });
   assert.deepEqual(t.inputSchema.properties, {});
 });
 

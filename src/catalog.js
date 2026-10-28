@@ -948,5 +948,11 @@ export function listedTools() {
       inputSchema: { ...t.inputSchema, properties: { ...(t.inputSchema?.properties || {}), ...BILLING_PARAMS } },
     }
     : t));
-  return [...accountTools.map(described), ...priced].map((t) => ({ ...t, title: TOOL_TITLES[t.name] }));
+  // The title goes in annotations.title too (2026-10-27): the Connectors Directory reads its listing
+  // name from there, and the MCP spec allows both. Same approved TOOL_TITLES, every tool.
+  return [...accountTools.map(described), ...priced].map((t) => ({
+    ...t,
+    title: TOOL_TITLES[t.name],
+    annotations: { ...(t.annotations || {}), title: TOOL_TITLES[t.name] },
+  }));
 }

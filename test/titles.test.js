@@ -60,3 +60,23 @@ test('batch 22: what Claude reads without the server instructions', () => {
   assert.ok(by.whoami.description.startsWith('Use this when the person asks what this key or connection can spend'));
   assert.equal(TOOL_DESCRIPTIONS.whoami, by.whoami.description);
 });
+
+// The Connectors Directory reads each tool's listing name from annotations.title (2026-10-27: 36/36
+// tools flagged "Missing title annotation"). Same text as the top-level title, every listed tool.
+test('every listed tool has annotations.title equal to its title, and keeps its hints', async () => {
+  const listed = listedTools();
+  assert.equal(listed.length, 36);
+  for (const t of listed) {
+    assert.ok(t.title, `${t.name} has a title`);
+    assert.equal(t.annotations?.title, t.title, t.name);
+  }
+  assert.equal(listed.find((t) => t.name === 'preview_company').annotations.readOnlyHint, true);
+  // Over the wire too.
+  const client = new Client({ name: 'test', version: '1' });
+  const [a, b] = InMemoryTransport.createLinkedPair();
+  await createServer(new AndruClient(null, 'http://127.0.0.1:1')).connect(b);
+  await client.connect(a);
+  const { tools } = await client.listTools();
+  for (const t of tools) assert.equal(t.annotations?.title, t.title, t.name);
+  await client.close();
+});
