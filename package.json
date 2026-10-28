@@ -2,7 +2,7 @@
   "name": "mcp-server-andru-intelligence",
   "version": "2.0.8",
   "mcpName": "io.github.geter-andru/andru-intelligence",
-  "description": "Revenue intelligence for complex B2B growth. Your agent builds the assets technical founders sell with, and prepares them for real buyer conversations.",
+  "description": "An enterprise buyer specialist that already knows your buyers. Your agent builds the assets technical founders sell with, and prepares them for real buyer conversations.",
   "type": "module",
   "bin": {
     "mcp-server-andru-intelligence": "./src/index.js",

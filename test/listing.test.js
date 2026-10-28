@@ -44,8 +44,11 @@ test('the server reports the package version', () => {
   assert.doesNotMatch(read('src/server.js'), /version: '\d+\.\d+\.\d+'/);
 });
 
-test('the README says free calls are shared across MCP and A2A, names no personas, and points at real commands', () => {
-  assert.match(readme, /5 free calls a day, shared across MCP and A2A, cover quick thesis checks/);
+// README copy (approved by Geter 2026-10-27): no prices; they're on andru-ai.com/pricing.
+test('the README names no prices, points to the pricing page, names no personas, and points at real commands', () => {
+  assert.match(readme, /at the same prices as the platform: \[andru-ai\.com\/pricing\]\(https:\/\/andru-ai\.com\/pricing\)/);
+  assert.doesNotMatch(readme.replace(/--arr "\$2M"/g, ''), /\$\d/);
+  assert.doesNotMatch(readme, /revenue intelligence|go-to-market/i);
   assert.doesNotMatch(readme, /another 5|sk_live_your_key_here|sk_live_\.\.\./);
   assert.doesNotMatch(readme, /\$3 or less/);
   assert.doesNotMatch(readme, /named buyer personas|andru-intel usage/);

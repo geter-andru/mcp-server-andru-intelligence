@@ -26,5 +26,6 @@ test('get_asset opens a saved asset by asset_id, or collects by job_id', () => {
 test('the README ICP lines say every account starts with a free cold-read ICP', () => {
   const readme = readFileSync(new URL('../README.md', import.meta.url), 'utf8');
   assert.doesNotMatch(readme, /first ICP is free/);
-  assert.equal(readme.match(/every account starts with a free cold-read ICP/g).length, 2);
+  // README copy (approved 2026-10-27): once, on the lead ICP line; the Price column that repeated it is gone.
+  assert.equal(readme.match(/every account starts with a free cold-read ICP/g).length, 1);
 });

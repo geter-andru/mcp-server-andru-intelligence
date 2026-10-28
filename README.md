@@ -1,16 +1,16 @@
 # Andru MCP Server
 
-Revenue intelligence for complex B2B growth. Your agent builds the assets technical founders sell with, and prepares them for real buyer conversations.
+An enterprise buyer specialist that already knows your buyers. Your agent builds the assets technical founders sell with, and prepares them for real buyer conversations.
 
-Andru is a revenue intelligence layer for complex B2B growth. Give your agent 30 tools and a catalog of 139 assets, built from what Andru knows about your company and buyers. Start with:
+Andru is an enterprise buyer specialist for complex B2B deals: it already knows your buyers and scores deals the same way every time. Give your agent 30 tools and a catalog of 139 assets, built from what Andru knows about your company and buyers. Start with:
 
-- **Pure Signal Market Resonance:** who needs your product most, and why now (Framework $12; every account starts with a free cold-read ICP)
-- **Buying Committee Navigation:** the committee, its objectors and the order to engage them (Framework $12)
-- **Champion Enablement Kit:** what your champion needs for the meetings you're not in (Framework $12)
-- **Technical Sales Translator:** technical features in the language buyers pay for (Framework $12)
-- **Executive Business Case Builder:** the case your champion takes to the people who sign (Decision $49)
+- **Pure Signal Market Resonance:** who needs your product most, and why now (every account starts with a free cold-read ICP)
+- **Buying Committee Navigation:** the committee, its objectors and the order to engage them
+- **Champion Enablement Kit:** what your champion needs for the meetings you're not in
+- **Technical Sales Translator:** technical features in the language buyers pay for
+- **Executive Business Case Builder:** the case your champion takes to the people who sign
 
-Prepare for real conversations with buyer role-play ($5 for a 25-turn session) and pre-meeting briefs (free, up to 10 a day). Lookups are free. Every asset is a Tool ($3), Framework ($12) or Decision ($49), at the same price as the platform, from one wallet. 5 free calls a day, shared across MCP and A2A, cover quick thesis checks; catalog assets are always paid.
+Prepare for real conversations with buyer role-play and pre-meeting briefs (up to 10 a day). Lookups are free. Assets and role-play draw on one prepaid wallet, at the same prices as the platform: andru-ai.com/pricing.
 
 Build any of them with `generate_asset` (for example `generate_asset` with `asset: "Champion Enablement Kit"`), and find the rest with `list_assets`.
 
@@ -90,7 +90,7 @@ Already have a key? Add `--env ANDRU_API_KEY=<your key>`.
 
 | Tool | What It Does | Latency |
 |------|-------------|---------|
-| `get_account_plan` | Builds the account plan in your Andru account and returns its link with a short summary ($12; a plan from the last 30 days is free). Returns a job_id; `get_asset` collects it | 1–3 min |
+| `get_account_plan` | Builds the account plan in your Andru account and returns its link with a short summary. A plan from the last 30 days comes back at once. Returns a job_id; `get_asset` collects it | 1–3 min |
 | `get_icp_profile` | Your ICP, built from what you sell: the buyers who decide, what each is measured on and needs answered, the signals a company is ready to change, and who isn't a fit | <100ms |
 
 ### Prospecting & Meetings
@@ -105,17 +105,17 @@ Already have a key? Add `--env ANDRU_API_KEY=<your key>`.
 | Tool | What It Does | Latency |
 |------|-------------|---------|
 | `get_sales_blueprint` | First sales hire blueprint — JD, comp model, interview questions, and 90-day ramp plan for the stage you're at | 10-20s |
-| `get_thesis_match` | Up to 3 VC firms investing now in companies like yours, each with a recent deal or stated focus and a link to the page it came from; the full analysis is the Pure Signal Investor Resonance asset | ~30s |
-| `simulate_buyer_persona` | Prepare for a meeting with the people who'll be in the room: a free brief of what each person likely thinks going in (10 a day), then a Deal Prep session ($5, 25 turns) where Andru plays them, one or several at once | 5-15s |
+| `get_thesis_match` | Up to 3 VC firms investing now in companies like yours, each with a recent deal or stated focus and a link to the page it came from | ~30s |
+| `simulate_buyer_persona` | Prepare for a meeting with the people who'll be in the room: a brief of what each person likely thinks going in (10 a day), then a Deal Prep session where Andru plays them, one or several at once | 5-15s |
 
 
-### Revenue Memory
+### What Andru Remembers
 
 | Tool | What It Does | Latency |
 |------|-------------|---------|
 | `get_revenue_memory` | Query what Andru has learned about your business over time: metrics, deal patterns, account history, decisions | varies |
 | `log_revenue_insight` | Save an insight, decision, metric or pattern to Andru's memory; earlier values are versioned automatically | varies |
-| `get_founder_context` | Everything Andru knows about you, organised by memory type, to prime any revenue conversation | varies |
+| `get_founder_context` | Everything Andru knows about you, organised by memory type | varies |
 | `get_memory_history` | How a metric, deal stage or priority has changed over time ("What was my MRR 3 months ago?") | varies |
 
 ### Market & Portfolio Intelligence
@@ -125,39 +125,33 @@ Already have a key? Add `--env ANDRU_API_KEY=<your key>`.
 | `get_market_signals` | What's moving in your market now: ranked signals, each with its buyer impact and a recommended action | varies |
 | `assess_company_readiness` | Scores a company's Revenue Readiness Index (0–100) from its operating metrics, with its #1 growth constraint | varies |
 | `get_portfolio_readiness_rollup` | A board-ready scorecard of every portfolio company by Revenue Readiness Index, with aggregates | varies |
-| `generate_portfolio_brief` | A brief on your portfolio's go-to-market activity for a period, with sources (not a financial or performance report) | $49 |
+| `generate_portfolio_brief` | A brief on your portfolio's sales activity for a period, with sources (not a financial or performance report) | a few min |
 
 ### Consultation
 
 | Tool | What It Does | Latency |
 |------|-------------|---------|
-| `consult_agent` | Ask one of Andru's domain expert agents in natural language and get a domain-scoped answer ($3 per turn) | varies |
+| `consult_agent` | Ask one of Andru's domain expert agents in natural language and get a domain-scoped answer | varies |
 
 ### Asset Catalog
 
-| Tool | What It Does | Price |
-|------|-------------|-------|
-| `list_assets` | Search Andru's catalog of 139 sales, hiring, fundraising and buying assets: what each is, its business outcome, price, and whether it can be generated today | Free |
-| `generate_asset` | Generate any catalog asset from everything Andru knows about your company; saved to your Andru library | Its catalog price: Tool $3, Framework $12, Decision $49 (every account starts with a free cold-read ICP) |
-| `get_asset` | Collect a generated asset or portfolio brief as markdown, or an account plan's link and summary | Free |
-| `cancel_job` | Stop an asset that `generate_asset` is still building; what it had written is discarded. A build that already finished stays as it is | Free |
-| `list_my_assets` | List the assets saved to your Andru library: each one's name, when it was built, and whether it was built in part. Open one with `get_asset` and its asset_id | Free |
+| Tool | What It Does |
+|------|-------------|
+| `list_assets` | Search Andru's catalog of 139 assets, from enterprise deals to hiring, fundraising and buying: what each is, its business outcome, and whether it can be generated today |
+| `generate_asset` | Generate any catalog asset from everything Andru knows about your company; saved to your Andru library |
+| `get_asset` | Collect a generated asset or portfolio brief as markdown, or an account plan's link and summary |
+| `cancel_job` | Stop an asset that `generate_asset` is still building; what it had written is discarded. A build that already finished stays as it is |
+| `list_my_assets` | List the assets saved to your Andru library: each one's name, when it was built, and whether it was built in part. Open one with `get_asset` and its asset_id |
 
 ### Product Context
 
-| Tool | What It Does | Price |
-|------|-------------|-------|
-| `set_product_context` | Tell Andru what you sell, once: your company website (Andru reads it) or a short description. Every later call uses it | Free |
+| Tool | What It Does |
+|------|-------------|
+| `set_product_context` | Tell Andru what you sell, once: your company website (Andru reads it) or a short description. Every later call uses it |
 
 ## Pricing
 
-The same work costs the same as in the Andru platform, from the same wallet:
-- **Answers from your own data** (fit scores, ICP, personas, account plan…): always free.
-- **Tool, $3:** a diagnostic, one expert-agent turn, or a single-piece catalog asset.
-- **Framework, $12** and **Decision, $49:** the rest of the catalog.
-- **Deal Prep session, $5:** 25 turns of buyer role-play and coaching (`simulate_buyer_persona`).
-
-**5 free calls a day,** shared across MCP and A2A, cover quick thesis checks; Deal Prep sessions, consultations and catalog assets are always paid. A call that only asks you for more information is never charged. Your wallet balance is at [platform.andru-ai.com/settings/billing](https://platform.andru-ai.com/settings/billing).
+Andru charges from a prepaid wallet, at the same prices as the platform: [andru-ai.com/pricing](https://andru-ai.com/pricing). Answers from your own data are free, and a call that only asks you for more information is never charged. Your wallet balance is at [platform.andru-ai.com/settings/billing](https://platform.andru-ai.com/settings/billing).
 
 ## CLI
 

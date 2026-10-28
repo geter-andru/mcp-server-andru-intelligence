@@ -1,6 +1,6 @@
 {
   "$schema": "https://glama.ai/mcp/schemas/server.json",
-  "description": "Revenue intelligence for complex B2B growth. Your agent builds the assets technical founders sell with, and prepares them for real buyer conversations.",
+  "description": "An enterprise buyer specialist that already knows your buyers. Your agent builds the assets technical founders sell with, and prepares them for real buyer conversations.",
   "maintainers": [
     "geter-andru"
   ]

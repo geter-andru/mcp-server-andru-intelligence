@@ -2,7 +2,7 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.geter-andru/andru-intelligence",
   "title": "Andru",
-  "description": "Revenue intelligence for complex B2B growth.",
+  "description": "An enterprise buyer specialist for complex B2B deals.",
   "version": "2.0.8",
   "websiteUrl": "https://andru-ai.com/docs/mcp",
   "repository": {
