@@ -24,6 +24,15 @@ export function retryAfterSeconds(req, now = Date.now()) {
 /** Copy batch 14 E1 + batch 1 C3, joined (copy batch 17 A1, approved by Geter 2026-10-27). */
 export const SIGN_IN_MESSAGE = "Sign in to Andru to use this tool. Or set up a key now: call signup_start with the person's email. Andru emails them a code and an Approve button.";
 
+/**
+ * The sign-in-first address, /mcp?signin=first (Geter 2026-10-29: "build a separate sign-in-first
+ * address for Cursor and VS Code"). Cursor runs its browser sign-in only when connecting is refused,
+ * not when one tool call is (its logs, 2026-10-29), so on this address every request with no
+ * credential gets the 401, initialize included. /mcp itself is unchanged. DRAFT wording for Geter.
+ */
+export const SIGN_IN_FIRST_MESSAGE = 'Sign in with your Andru account to connect.';
+export const signInFirst = (req) => req.query?.signin === 'first';
+
 /** What the hosted limit counted: an API key, a sign-in, or the address (copy batch 17 B1). */
 export function countedBy(req) {
   if (req.auth?.apiKey) return 'key';
@@ -148,7 +157,16 @@ export function createHttpApp({ apiUrl, host = '0.0.0.0' }) {
     // Lazy authentication (OAuth on): a call that needs the person's account, sent with no credential,
     // gets HTTP 401 pointing at this server's protected resource metadata, so the client signs in.
     // Listing tools and the signup and preview tools still work without one.
-    if (oauth && !req.auth.apiKey && !req.auth.bearer && !(client && client.signedIn) && needsAccount(req.body)) {
+    const noCredential = !req.auth.apiKey && !req.auth.bearer && !(client && client.signedIn);
+    if (oauth && noCredential && signInFirst(req)) {
+      res.set('WWW-Authenticate', `Bearer resource_metadata="${resourceMetadataUrl}", scope="${OAUTH_SCOPE}"`);
+      return res.status(401).json({
+        jsonrpc: '2.0',
+        error: { code: -32001, message: SIGN_IN_FIRST_MESSAGE, data: { setup: SETUP_URL, docs: SETUP_DOCS_URL } },
+        id: (Array.isArray(req.body) ? null : req.body?.id) ?? null,
+      });
+    }
+    if (oauth && noCredential && needsAccount(req.body)) {
       res.set('WWW-Authenticate', `Bearer resource_metadata="${resourceMetadataUrl}", scope="${OAUTH_SCOPE}"`);
       // The next call for a client that uses a key instead of signing in (copy batch 17 A1, approved
       // 2026-10-27): the same next_action, setup page and docs as every no-key answer.

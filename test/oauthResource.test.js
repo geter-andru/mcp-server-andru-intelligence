@@ -89,3 +89,39 @@ test('OAuth off (today): no metadata, and an unauthenticated call is answered by
     assert.notEqual(r.status, 401);
   } finally { await s.close(); }
 });
+
+test('sign-in-first address: with no credential even initialize gets the 401; with a token it works; /mcp is unchanged', async () => {
+  const s = await start({ ANDRU_OAUTH: 'on', MCP_PUBLIC_URL: 'https://mcp.andru-ai.com/mcp' });
+  try {
+    const init = { jsonrpc: '2.0', id: 1, method: 'initialize', params: { protocolVersion: '2025-06-18', capabilities: {}, clientInfo: { name: 'cursor', version: '1' } } };
+    const r = await fetch(`http://127.0.0.1:${s.port}/mcp?signin=first`, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json, text/event-stream' }, body: JSON.stringify(init) });
+    assert.equal(r.status, 401);
+    assert.equal(r.headers.get('www-authenticate'), 'Bearer resource_metadata="https://mcp.andru-ai.com/.well-known/oauth-protected-resource", scope="andru:agent"');
+    const body = await r.json();
+    assert.equal(body.error.message, 'Sign in with your Andru account to connect.');
+    assert.equal(body.id, 1);
+
+    assert.equal((await rpc(s.port, init)).status, 200, '/mcp still opens a session with no credential');
+
+    const authed = new Client({ name: 'cursor', version: '1' });
+    await authed.connect(new StreamableHTTPClientTransport(new URL(`http://127.0.0.1:${s.port}/mcp?signin=first`), { requestInit: { headers: { Authorization: 'Bearer eyJ.oauth.token' } } }));
+    assert.ok((await authed.listTools()).tools.length > 30);
+    await authed.callTool({ name: 'get_pre_brief', arguments: { companyName: 'a logistics software company' } });
+    assert.equal(s.api.calls.find((c) => c.tool === 'get_pre_brief').authorization, 'Bearer eyJ.oauth.token');
+    await authed.close();
+
+    const keyed = new Client({ name: 'cursor', version: '1' });
+    await keyed.connect(new StreamableHTTPClientTransport(new URL(`http://127.0.0.1:${s.port}/mcp?signin=first`), { requestInit: { headers: { 'X-API-Key': 'sk_test_abc' } } }));
+    assert.ok((await keyed.listTools()).tools.length > 30, 'an API key works there too');
+    await keyed.close();
+  } finally { await s.close(); }
+});
+
+test('sign-in-first address with OAuth off: behaves like /mcp (no sign-in that could not finish)', async () => {
+  const s = await start({ ANDRU_OAUTH: 'off' });
+  try {
+    const init = { jsonrpc: '2.0', id: 1, method: 'initialize', params: { protocolVersion: '2025-06-18', capabilities: {}, clientInfo: { name: 'cursor', version: '1' } } };
+    const r = await fetch(`http://127.0.0.1:${s.port}/mcp?signin=first`, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json, text/event-stream' }, body: JSON.stringify(init) });
+    assert.equal(r.status, 200);
+  } finally { await s.close(); }
+});
