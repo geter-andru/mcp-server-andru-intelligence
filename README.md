@@ -28,6 +28,8 @@ npx mcp-server-andru-intelligence
 
 Or connect to the hosted server at https://mcp.andru-ai.com/mcp.
 
+In Cursor or VS Code, add the hosted server in one click: see [Add to Cursor or VS Code](https://andru-ai.com/docs/mcp#add-to-cursor-or-vs-code).
+
 ## Configuration
 
 ### Environment Variables
